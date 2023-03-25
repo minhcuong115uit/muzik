@@ -1,4 +1,4 @@
-package com.example.muzik.viewmodels
+package com.example.muzik.viewmodels.authentication
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -9,25 +9,11 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class AuthViewModel  : ViewModel() {
+ class SignInViewModel: ViewModel() {
     private var firebaseAuth: FirebaseAuth = FirebaseAuthManager.getInstance();
-     var email: MutableLiveData<String> = MutableLiveData();
-     var password : MutableLiveData<String> = MutableLiveData();
+    var email: MutableLiveData<String> = MutableLiveData();
+    var password : MutableLiveData<String> = MutableLiveData();
 
-
-    private fun handleSignUp (email: String?, password:String?){
-        firebaseAuth.createUserWithEmailAndPassword(email!!, password!!)
-            .addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("SIGN UP", "createUserWithEmail:success")
-                    val user: FirebaseUser? = firebaseAuth.getCurrentUser()
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("SIGN UP", "createUserWithEmail:failure", task.exception)
-                }
-            })
-    }
     private fun handleSignIn(email: String?, password:String?){
         if(email.isNullOrEmpty() || password.isNullOrEmpty()){
             Log.d("AUTHENTICATION", "email or password is invalid")
@@ -44,7 +30,7 @@ class AuthViewModel  : ViewModel() {
                 }
             })
     }
-    public fun onContinueBtnClicked () {
+    fun onLoginButtonClicked () {
         handleSignIn(email.value,password.value);
     }
 

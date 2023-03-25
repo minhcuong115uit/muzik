@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.muzik.viewmodels.authentication.SignInViewModel" />
+            type="com.example.muzik.viewmodels.authentication.SignUpViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
             android:layout_marginTop="96dp"
             android:backgroundTint="@color/white"
             android:textColor="@color/black"
-            android:text="@string/sign_in_google"
+            android:text="@string/sign_up_google"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,7 +45,7 @@
 
             android:drawableLeft="@drawable/icon_fb"
             android:layout_marginTop="8dp"
-            android:text="@string/sign_in_fb"
+            android:text="@string/sign_up_fb"
             android:backgroundTint="#4880F0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,8 +56,8 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="28dp"
-            android:text="Continue"
-            android:onClick="@{() -> viewmodel.onLoginButtonClicked()}"
+            android:text="@string/sign_up_with_email"
+            android:onClick="@{() -> viewmodel.onSignUpBtnClicked()}"
             android:backgroundTint="#979797"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -73,7 +73,7 @@
             android:fontWeight="@integer/font_weight_bold"
             android:textSize="@dimen/font_size_heading"
 
-            android:text="Sign in"
+            android:text="@string/create_account"
             app:layout_constraintBottom_toBottomOf="@+id/btn_navigate_back"
             app:layout_constraintStart_toEndOf="@+id/btn_navigate_back"
             app:layout_constraintTop_toTopOf="@+id/btn_navigate_back" />
@@ -106,19 +106,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_email" />
 
-        <TextView
-            android:id="@+id/btn_forgot_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/black"
-            android:textAllCaps="false"
-            android:text="@string/forget_password"
-            android:textSize="@dimen/font_size_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.045"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_continue" />
 
         <ImageView
             android:id="@+id/imageView"
