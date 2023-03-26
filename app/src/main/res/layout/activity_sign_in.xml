@@ -71,7 +71,7 @@
             android:layout_marginStart="24dp"
             android:textStyle="bold"
             android:fontWeight="@integer/font_weight_bold"
-            android:textSize="@dimen/font_size_heading"
+            android:textSize="@dimen/font_size_heading_3"
 
             android:text="Sign in"
             app:layout_constraintBottom_toBottomOf="@+id/btn_navigate_back"

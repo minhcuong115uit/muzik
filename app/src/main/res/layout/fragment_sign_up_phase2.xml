@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.SignUpPhase2">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/edt_firstName"
+            android:hint="First Name"
+            android:inputType="number"
+            android:text="@={viewmodel.email}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            style="@style/Auth.EditText"
+
+            />
+        <EditText
+            android:id="@+id/edt_lastName"
+            android:hint="Last Name"
+            android:inputType="number"
+            android:text="@={viewmodel.email}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_firstName"
+            app:layout_constraintRight_toRightOf="parent"
+            style="@style/Auth.EditText"
+            />
+        <EditText
+            android:id="@+id/edt_age"
+            android:hint="Age"
+            android:inputType="number"
+            android:text="@={viewmodel.email}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_lastName"
+            app:layout_constraintRight_toRightOf="parent"
+            style="@style/Auth.EditText"
+            />
+        <EditText
+            android:id="@+id/edt_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Gender"
+            android:text="@={viewmodel.password}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_age"
+            android:inputType="textPassword"
+            style="@style/Auth.EditText"
+            />
+        <Button
+            android:id="@+id/btn_continue"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_gender"
+            android:text="@string/sign_up_continue"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="#979797"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

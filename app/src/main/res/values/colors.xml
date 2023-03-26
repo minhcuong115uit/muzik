@@ -10,5 +10,5 @@
     <color name="blue_500">#4880F0</color>
     <color name="primary_blue_300">#7EA2FF</color>
     <color name="sub_blue_200">#BECAF2</color>
-
+    <color name="light_gray">#979797</color>
 </resources>
