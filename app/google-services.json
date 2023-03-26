@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "57263066016",
+    "firebase_url": "https://muzik-c5c9a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "muzik-c5c9a",
+    "storage_bucket": "muzik-c5c9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57263066016:android:0c4b756df9f61728a0f2c5",
+        "android_client_info": {
+          "package_name": "com.example.muzik"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57263066016-j79qfsjki4vhhq3r9gpiptldhip10rmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKLay1hJBXdufyVudtS3AuH6up7MvLZ3I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57263066016-j79qfsjki4vhhq3r9gpiptldhip10rmp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
