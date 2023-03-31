@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragments.SignUpPhase2">
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.muzik.viewmodels.authentication.SignUpViewModel" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:padding="24dp"
+        tools:context=".ui.fragments.SignUpPhase2"
         android:layout_height="match_parent">
         <EditText
             android:id="@+id/edt_firstName"
             android:hint="First Name"
             android:inputType="number"
-            android:text="@={viewmodel.email}"
+            android:text="@={viewmodel.firstName}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -23,31 +27,30 @@
             android:id="@+id/edt_lastName"
             android:hint="Last Name"
             android:inputType="number"
-            android:text="@={viewmodel.email}"
+            android:text="@={viewmodel.lastName}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_firstName"
             app:layout_constraintRight_toRightOf="parent"
             style="@style/Auth.EditText"
             />
-        <EditText
-            android:id="@+id/edt_age"
-            android:hint="Age"
-            android:inputType="number"
-            android:text="@={viewmodel.email}"
+        <Spinner
+            android:id="@+id/spinner_age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/blue_500"
+            app:items="@{viewmodel.ages}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_lastName"
-            app:layout_constraintRight_toRightOf="parent"
-            style="@style/Auth.EditText"
-            />
+            app:layout_constraintRight_toRightOf="parent"/>
         <EditText
             android:id="@+id/edt_gender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Gender"
-            android:text="@={viewmodel.password}"
+            android:text="@={viewmodel.gender}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_age"
+            app:layout_constraintTop_toBottomOf="@id/spinner_age"
             android:inputType="textPassword"
             style="@style/Auth.EditText"
             />
@@ -57,13 +60,12 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edt_gender"
             android:text="@string/sign_up_continue"
+            android:onClick="@{() -> viewmodel.handleNavigateToSignUpPhase3()}"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="40dp"
             android:backgroundTint="#979797"
             />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+</layout>

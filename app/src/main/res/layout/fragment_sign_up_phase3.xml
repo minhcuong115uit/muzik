@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.SignUpPhase3">
 
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.muzik.viewmodels.authentication.SignUpViewModel" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        tools:context=".ui.fragments.SignUpPhase3"
+        android:padding="24dp"
         android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="Almost done"
             android:textAlignment="textStart"
             android:textSize="@dimen/font_size_heading_3"
@@ -34,11 +37,11 @@
             app:layout_constraintTop_toBottomOf="@+id/tv1" />
 
         <EditText
-            android:id="@+id/edt_firstName"
+            android:id="@+id/edt_displayName"
             style="@style/Auth.EditText"
-            android:hint="Last Name"
+            android:hint="Display Name"
             android:inputType="number"
-            android:text="@={viewmodel.email}"
+            android:text="@={viewmodel.displayName}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageButton" />
@@ -50,10 +53,11 @@
             android:layout_height="56dp"
             android:layout_marginTop="40dp"
             android:backgroundTint="#979797"
-            android:text="@string/sign_up_continue"
+            android:text="Save &amp; Continue"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_firstName" />
+            app:layout_constraintTop_toBottomOf="@id/edt_displayName" />
 
         <ImageButton
             android:id="@+id/imageButton"
@@ -71,4 +75,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</FrameLayout>
+</layout>
