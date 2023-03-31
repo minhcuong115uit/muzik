@@ -1,6 +1,7 @@
 package com.example.muzik.data.repositories
 
 import android.util.Log
+import com.example.muzik.data.models.User
 import com.example.muzik.listeners.AuthListener
 import com.example.muzik.utils.FirebaseAuthManager
 import com.google.android.gms.tasks.OnCompleteListener
@@ -39,14 +40,18 @@ class AuthFirebaseRepository private constructor() {
             })
     }
 
-    fun signUpWithEmail(email: String?, password: String?, authListener: AuthListener) {
+    fun signUpWithEmail(email: String?, password: String?, user: User, authListener: AuthListener) {
         firebaseAuth.createUserWithEmailAndPassword(email!!, password!!)
             .addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("LOG SIGN UP", "createUserWithEmail:success")
                     authListener.onSuccess();
-                    val user: FirebaseUser? = firebaseAuth.getCurrentUser()
+                    val z: FirebaseUser? = firebaseAuth.getCurrentUser()
+
+                    Log.i("z",z.toString());
+                    UserRepository.instance!!.createUser(user);
+
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("LOG SIGN UP", "createUserWithEmail:failure", task.exception)

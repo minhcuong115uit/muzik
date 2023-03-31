@@ -4,7 +4,8 @@ data class User(
     val firstName: String,
     val lastName: String,
     val displayName: String,
-    val gender: Byte,
-    val avatar: String,
+    val gender: String,
+//    val avatar: String,
+    val age:Int,
     val official: Boolean,
     )

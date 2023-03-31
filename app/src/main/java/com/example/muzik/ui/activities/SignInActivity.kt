@@ -2,6 +2,7 @@ package com.example.muzik.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -36,5 +37,6 @@ class SignInActivity : AppCompatActivity() , AuthListener  {
         signInViewModel.setAuthListener(this);
         binding.viewmodel = signInViewModel;
         setContentView(binding.root)
+
     }
 }

@@ -9,5 +9,30 @@
         android:id="@+id/signUpPhase1"
         android:name="com.example.muzik.ui.fragments.SignUpPhase1"
         android:label="fragment_sign_up_phase1"
-        tools:layout="@layout/fragment_sign_up_phase1" />
+        tools:layout="@layout/fragment_sign_up_phase1" >
+        <action
+            android:id="@+id/action_signUpPhase1_to_signUpPhase2"
+            app:destination="@id/signUpPhase2"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpPhase3"
+        android:name="com.example.muzik.ui.fragments.SignUpPhase3"
+        android:label="fragment_sign_up_phase3"
+        tools:layout="@layout/fragment_sign_up_phase3" />
+    <fragment
+        android:id="@+id/signUpPhase2"
+        android:name="com.example.muzik.ui.fragments.SignUpPhase2"
+        android:label="SignUpPhase2" >
+        <action
+            android:id="@+id/action_signUpPhase2_to_signUpPhase3"
+            app:destination="@id/signUpPhase3"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 </navigation>
