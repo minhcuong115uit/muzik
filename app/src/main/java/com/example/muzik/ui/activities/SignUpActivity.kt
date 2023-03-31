@@ -1,18 +1,18 @@
 package com.example.muzik.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.example.muzik.R
 import com.example.muzik.databinding.ActivitySignUpBinding
 import com.example.muzik.listeners.AuthListener
-import com.example.muzik.ui.fragments.SignUpPhase1
 import com.example.muzik.utils.ViewUtils
 import com.example.muzik.viewmodels.authentication.SignUpViewModel
 
@@ -30,13 +30,14 @@ class SignUpActivity : AppCompatActivity(), AuthListener {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         signUpViewModel.setNavController((navController));
-        setContentView(binding.root)
-
-//        val fragmentManager: FragmentManager = supportFragmentManager
-//        val transaction = fragmentManager.beginTransaction()
-//        val fragment = SignUpPhase1()
-//        transaction.add(R.id.nav_host_fragment, fragment)
-//        transaction.commit()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Use WindowInsetsController to hide the status bar.
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            // Use the deprecated method to hide the status bar.
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
+           setContentView(binding.root)
     }
 
     override fun onStarted() {

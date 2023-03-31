@@ -20,13 +20,13 @@ import com.google.firebase.auth.FirebaseUser
 class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     private var firebaseAuth: FirebaseAuth = FirebaseAuthManager.getInstance();
     private lateinit var navController: NavController
-    private var authListener: AuthListener? = null
+    private lateinit var authListener: AuthListener;
     //user data
     var email: MutableLiveData<String> = MutableLiveData();
     var password : MutableLiveData<String> = MutableLiveData();
     var firstName: MutableLiveData<String> = MutableLiveData();
     var lastName : MutableLiveData<String> = MutableLiveData();
-    var age: MutableLiveData<String> = MutableLiveData();
+    var age: MutableLiveData<Int> = MutableLiveData();
     var gender : MutableLiveData<String> = MutableLiveData();
     var displayName : MutableLiveData<String> = MutableLiveData();
 
@@ -35,25 +35,21 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     fun setNavController(controller: NavController) {
         navController = controller
     }
-    private fun handleSignUp (email: String?, password:String?){
-        if(email.isNullOrEmpty() || password.isNullOrEmpty())
-            return;
-        AuthFirebaseRepository.instance?.signUpWithEmail(email,password,this.authListener!!);
-        handleCreateUser();
+    fun handleSignUp (){
+       //check data
+        //        ....
+        age.value = 18;
+        val user = User(
+            firstName.value!!,lastName.value!!, displayName.value!!,
+            gender.value!!,age.value!!, false)
 
+        AuthFirebaseRepository.instance!!.
+            signUpWithEmail(email.value!!, password.value!!, user ,this.authListener);
     }
 
 
 
-    fun handleCreateUser () {
 
-//        val user:User = User(
-//            firstName.value,lastName.value, displayName.value,
-//            gender.value,age.value, official = false)
-//
-//        UserRepository.instance.createUser();
-
-    }
 
     fun setAuthListener(authListener: AuthListener) {
         this.authListener = authListener
@@ -64,9 +60,7 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     fun handleNavigateToSignUpPhase3(){
         navController.navigate(R.id.action_signUpPhase2_to_signUpPhase3);
     }
-    fun onAgeChanged() {
-        Log.d("ViewModel - AgeChange","Age Changed")
-    }
+
 
 
 }
