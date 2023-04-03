@@ -12,8 +12,6 @@ import com.google.firebase.auth.FirebaseUser
 
 class AuthFirebaseRepository private constructor() {
     private var firebaseAuth: FirebaseAuth = FirebaseAuthManager.getInstance();
-
-
     companion object {
         var instance: AuthFirebaseRepository? = null
             get() {
