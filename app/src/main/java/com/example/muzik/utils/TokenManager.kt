@@ -3,8 +3,8 @@ package com.example.muzik.utils
 import android.content.Context
 import android.content.SharedPreferences
 
-class TokenManager private constructor ( context : Context){
-
+class TokenManager private constructor (applicationContext: Context){
+    private val context: Context = applicationContext;
     private val tokenPrefs: SharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
         companion object{
             private const val TOKEN_PREFS = "token_prefs"
@@ -13,11 +13,11 @@ class TokenManager private constructor ( context : Context){
 
             @Volatile
             private var instance: TokenManager? = null
-
-            fun getInstance(context: Context) =
-                instance ?: synchronized(this) {
-                    instance ?: TokenManager(context.applicationContext).also { instance = it }
+            fun getInstance(applicationContext: Context): TokenManager {
+                return instance ?: synchronized(this) {
+                    instance ?: TokenManager(applicationContext).also { instance = it }
                 }
+            }
         }
 
     fun saveAccessToken(accessToken: String) {

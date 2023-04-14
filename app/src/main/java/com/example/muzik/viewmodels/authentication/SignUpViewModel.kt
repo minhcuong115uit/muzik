@@ -1,6 +1,8 @@
 package com.example.muzik.viewmodels.authentication
 
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -18,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
-    private var firebaseAuth: FirebaseAuth = FirebaseAuthManager.getInstance();
     private lateinit var navController: NavController
     private lateinit var authListener: AuthListener;
     //user data
@@ -26,34 +27,34 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     var password : MutableLiveData<String> = MutableLiveData();
     var firstName: MutableLiveData<String> = MutableLiveData();
     var lastName : MutableLiveData<String> = MutableLiveData();
-    var age: MutableLiveData<Int> = MutableLiveData();
-    var gender : MutableLiveData<String> = MutableLiveData();
+    var age: MutableLiveData<String> = MutableLiveData();
+    var selectedGender : MutableLiveData<String> = MutableLiveData();
     var displayName : MutableLiveData<String> = MutableLiveData();
+    val genderList =  ArrayList<String>().apply {
+        add("Female");
+        add("Male");
+        add("Custom");
+        add("Refer not to say");
+    }
 
-    //
-    val ages = listOf("18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40")
     fun setNavController(controller: NavController) {
         navController = controller
     }
     fun handleSignUp (){
        //check data
         //        ....
-        age.value = 18;
-        val user = User(
+        age.value = "18";
+        val user = User("",
             firstName.value!!,lastName.value!!, displayName.value!!,
-            gender.value!!,age.value!!, false)
-
+            selectedGender.value!!,age.value!!, false)
         AuthFirebaseRepository.instance!!.
             signUpWithEmail(email.value!!, password.value!!, user ,this.authListener);
     }
 
-
-
-
-
     fun setAuthListener(authListener: AuthListener) {
         this.authListener = authListener
     }
+
     fun handleNavigateToSignUpPhase2(){
         navController.navigate(R.id.action_signUpPhase1_to_signUpPhase2);
     }
@@ -61,6 +62,12 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
         navController.navigate(R.id.action_signUpPhase2_to_signUpPhase3);
     }
 
+    fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        // Xử lý sự kiện onItemSelected ở đây
+    }
+    fun setSelectedGender(gender:String){
+        selectedGender.value = gender
+    }
 
 
 }

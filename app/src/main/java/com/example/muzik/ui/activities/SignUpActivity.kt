@@ -27,19 +27,18 @@ class SignUpActivity : AppCompatActivity(), AuthListener {
         signUpViewModel.setAuthListener(this)
         binding.viewmodel = signUpViewModel
 
-
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         signUpViewModel.setNavController((navController));
 
         //
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // Use WindowInsetsController to hide the status bar.
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            // Use the deprecated method to hide the status bar.
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            // Use WindowInsetsController to hide the status bar.
+//            window.insetsController?.hide(WindowInsets.Type.statusBars())
+//        } else {
+//            // Use the deprecated method to hide the status bar.
+//            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+//        }
            setContentView(binding.root)
     }
 

@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "57263066016-j79qfsjki4vhhq3r9gpiptldhip10rmp.apps.googleusercontent.com",
+          "client_id": "57263066016-0lfmtccj6hpp1pspmjgnknom193v989j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.muzik",
+            "certificate_hash": "5f6a5504d1f44ceb8d0ebc2ccdfc3348ad2c3901"
+          }
+        },
+        {
+          "client_id": "57263066016-tatb3emn5jaoa1e4er6jaaegdp6qaiuf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

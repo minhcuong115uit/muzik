@@ -22,6 +22,7 @@
             android:layout_height="50dp"
             android:background="@drawable/round_button"
             app:backgroundTint="@null"
+            android:padding="12dp"
             android:drawableLeft="@drawable/ic_action_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -42,11 +43,11 @@
 
 
         <ImageView
+
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="60dp"
-
             android:src="@drawable/logo_no_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +64,6 @@
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             app:defaultNavHost = "true"
-
             app:layout_constraintHeight_percent="0.7"
             app:navGraph="@navigation/sign_up_nav_graph"
             android:layout_width="match_parent"
