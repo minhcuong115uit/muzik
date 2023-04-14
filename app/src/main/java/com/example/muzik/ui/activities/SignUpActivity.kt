@@ -27,9 +27,12 @@ class SignUpActivity : AppCompatActivity(), AuthListener {
         signUpViewModel.setAuthListener(this)
         binding.viewmodel = signUpViewModel
 
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         signUpViewModel.setNavController((navController));
+
+        //
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Use WindowInsetsController to hide the status bar.
             window.insetsController?.hide(WindowInsets.Type.statusBars())
