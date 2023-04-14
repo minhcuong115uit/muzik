@@ -6,14 +6,10 @@ import com.google.firebase.auth.FirebaseAuth
 class FirebaseAuthManager private constructor() {
     companion object {
         @Volatile
-        private var instance: FirebaseAuth? = null
+        private var instance: FirebaseAuth = FirebaseAuth.getInstance();
 
         fun getInstance(): FirebaseAuth {
-            return instance ?: synchronized(this) {
-                val newInstance = FirebaseAuth.getInstance()
-                instance = newInstance
-                newInstance
-            }
+            return instance;
         }
     }
 }

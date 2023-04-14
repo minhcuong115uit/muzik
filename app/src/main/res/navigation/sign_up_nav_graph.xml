@@ -9,7 +9,7 @@
         android:id="@+id/signUpPhase1"
         android:name="com.example.muzik.ui.fragments.SignUpPhase1"
         android:label="fragment_sign_up_phase1"
-        tools:layout="@layout/fragment_sign_up_phase1" >
+        tools:layout="@layout/fragment_sign_up_phase1">
         <action
             android:id="@+id/action_signUpPhase1_to_signUpPhase2"
             app:destination="@id/signUpPhase2"
@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/signUpPhase2"
         android:name="com.example.muzik.ui.fragments.SignUpPhase2"
-        android:label="SignUpPhase2" >
+        android:label="SignUpPhase2">
         <action
             android:id="@+id/action_signUpPhase2_to_signUpPhase3"
             app:destination="@id/signUpPhase3"

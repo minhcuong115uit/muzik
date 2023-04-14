@@ -14,51 +14,52 @@
         android:layout_height="match_parent">
         <EditText
             android:id="@+id/edt_firstName"
-            android:hint="First Name"
-            android:inputType="number"
+            android:hint="@string/first_name"
+
             android:text="@={viewmodel.firstName}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             style="@style/Auth.EditText"
-
             />
+
         <EditText
             android:id="@+id/edt_lastName"
-            android:hint="Last Name"
-            android:inputType="number"
+            android:hint="@string/last_name"
+
             android:text="@={viewmodel.lastName}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_firstName"
             app:layout_constraintRight_toRightOf="parent"
             style="@style/Auth.EditText"
             />
-        <Spinner
-            android:id="@+id/spinner_age"
+        <EditText
+            android:id="@+id/edt_age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue_500"
-            app:items="@{viewmodel.ages}"
+            android:text="@={viewmodel.age}"
+            android:hint="@string/age"
+            style="@style/Auth.EditText"
+            android:inputType="number"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_lastName"
             app:layout_constraintRight_toRightOf="parent"/>
-        <EditText
-            android:id="@+id/edt_gender"
+        <Spinner
+            android:id="@+id/spinner_gender"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Gender"
-            android:text="@={viewmodel.gender}"
+            android:layout_height="60dp"
+            style="@style/Auth.EditText"
+            android:spinnerMode="dialog"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spinner_age"
-            android:inputType="textPassword"
-            style="@style/Auth.EditText"
+            app:layout_constraintTop_toBottomOf="@id/edt_age"
+            android:layout_marginTop="40dp"
             />
         <Button
             android:id="@+id/btn_continue"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_gender"
+            app:layout_constraintTop_toBottomOf="@id/spinner_gender"
             android:text="@string/sign_up_continue"
             android:onClick="@{() -> viewmodel.handleNavigateToSignUpPhase3()}"
             android:layout_width="match_parent"

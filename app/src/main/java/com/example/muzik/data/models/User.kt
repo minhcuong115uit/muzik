@@ -1,11 +1,12 @@
 package com.example.muzik.data.models
 
 data class User(
-    val firstName: String,
-    val lastName: String,
-    val displayName: String,
-    val gender: String,
+    var userId: String,
+    var firstName: String,
+    var lastName: String,
+    var displayName: String,
+    var gender: String,
 //    val avatar: String,
-    val age:Int,
-    val official: Boolean,
+    var age:String,
+    var official: Boolean,
     )

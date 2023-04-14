@@ -2,45 +2,39 @@ package com.example.muzik.utils
 
 import android.R
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
-import androidx.databinding.InverseBindingAdapter
+import androidx.appcompat.widget.AppCompatSpinner
+import androidx.databinding.*
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingListener
 import androidx.navigation.NavController
 
-object BindingAdapter {
-    @JvmStatic
-    @BindingAdapter("shortValue")
-    fun setShortValue(view: EditText, value: Short?) {
-        view.setText(value?.toString() ?: "")
-    }
-
-    @JvmStatic
-    @InverseBindingAdapter(attribute = "shortValue", event = "shortValueAttrChanged")
-    fun getShortValue(view: EditText): Short? {
-        val valueString = view.text.toString()
-        return if (valueString.isEmpty()) null else valueString.toShort()
-    }
-
-    @JvmStatic
-    @BindingAdapter("shortValueAttrChanged")
-    fun setShortValueAttrChanged(view: EditText, listener: InverseBindingListener?) {
-        if (listener != null) {
-            view.setOnFocusChangeListener { v, hasFocus ->
-                if (!hasFocus) {
-                    listener.onChange()
-                }
-            }
+@BindingAdapter(value = ["selectedValue", "selectedValueAttrChanged"], requireAll = false)
+fun bindSpinnerData(
+    spinner: Spinner,
+    newValue: String?,
+    inverseBindingListener: InverseBindingListener
+) {
+    // Thiết lập OnItemSelectedListener cho Spinner
+    spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            // Khi giá trị được chọn thay đổi, ta gọi inverseBindingListener để thông báo cho Data Binding biết rằng giá trị đã thay đổi
+            inverseBindingListener.onChange()
         }
-    }
-    @JvmStatic
-    @BindingAdapter("app:items")
-    fun Spinner.setItems(items: List<String>) {
-        val adapter = ArrayAdapter(context, R.layout.simple_spinner_item, items)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        this.adapter = adapter
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
     }
 
+    // Nếu giá trị mới được truyền vào khác null, ta sẽ đặt lại giá trị được chọn trong Spinner
+    newValue?.let {
+        val adapter = spinner.adapter as? ArrayAdapter<String>
+        val position = adapter?.getPosition(it) ?: 0
+        spinner.setSelection(position, false)
+    }
+}
+
+@InverseBindingAdapter(attribute = "selectedValue", event = "selectedValueAttrChanged")
+fun captureSelectedValue(spinner: Spinner): String? {
+    return spinner.selectedItem as? String
 }
