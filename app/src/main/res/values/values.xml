@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="exo_styled_controls_repeat_all">@drawable/ic_repeat_all</drawable>
+    <drawable name="exo_styled_controls_repeat_off">@drawable/ic_repeat_off</drawable>
+    <drawable name="exo_styled_controls_repeat_one">@drawable/ic_repeat_one</drawable>
+</resources>
