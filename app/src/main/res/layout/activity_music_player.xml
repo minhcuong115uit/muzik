@@ -48,15 +48,16 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.fragment.app.FragmentContainerView
-                android:layout_width="match_parent"
-                tools:layout="@layout/fragment_music_disc"
-                android:layout_weight="1"
-                android:id="@+id/fragment_container_music_disc"
-                android:name="com.example.muzik.ui.fragments.MusicDisc"
-                android:layout_height="wrap_content"/>
             <!--    TextView Title-->
             <!--    TextView ArtistName-->
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_container_music_disc"
+                android:name="com.example.muzik.ui.fragments.MusicDisc"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                tools:layout="@layout/fragment_music_disc" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="vertical"
@@ -102,7 +103,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:id="@+id/duration_txt"
-                    android:text="11:11"
+                    android:text=""
+                    android:minWidth="20dp"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 
@@ -122,8 +124,7 @@
                 tools:layout="@layout/fragment_bottom_actions_bar"
                 android:id="@+id/frag_container_bottom_bar"
                 android:name="com.example.muzik.ui.fragments.BottomActionsBar"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_height="40dp"
                 />
         </LinearLayout>
 </layout>
