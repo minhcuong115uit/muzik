@@ -5,9 +5,9 @@
     android:orientation="horizontal"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
+    android:layout_gravity="center"
     tools:context=".ui.fragments.BottomActionsBar">
 
-    <!-- TODO: Update blank fragment layout -->
     <ImageButton
         android:id="@+id/action_bar_heart"
         style="@style/ExoMediaButton"
@@ -15,7 +15,6 @@
         android:layout_weight="1"
         android:layout_height="24dp"
 
-        android:background="@drawable/circle_background_selector"
 
         android:contentDescription="@string/exo_controls_next_description"
         android:scaleType="fitCenter"
@@ -46,7 +45,6 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="24dp"
-
         android:contentDescription="@string/exo_controls_next_description"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_share" />

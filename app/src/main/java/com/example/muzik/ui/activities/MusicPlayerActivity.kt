@@ -9,13 +9,13 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.example.muzik.R
 import com.example.muzik.databinding.ActivityMusicPlayerBinding
+import com.example.muzik.ui.fragments.MusicDisc
 import com.example.muzik.utils.Formater
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.PlayerControlView.ProgressUpdateListener
 import com.google.android.exoplayer2.ui.TimeBar
-import com.google.android.exoplayer2.ui.TimeBar.OnScrubListener
+
 
 
 class MusicPlayerActivity : AppCompatActivity() {
@@ -24,7 +24,6 @@ class MusicPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_music_player)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_music_player);
         player = ExoPlayer.Builder(this).build()
         var fisrtItem = MediaItem.fromUri("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
@@ -62,8 +61,7 @@ class MusicPlayerActivity : AppCompatActivity() {
                     binding.timeBar.setDuration(player.duration)
                     Log.i("Media-Change",player.duration.toString())
                     val durationText = findViewById<TextView>(R.id.duration_txt);
-                    durationText.text = Formater.formatDuration(player.duration);0
-
+                    durationText.text = Formater.formatDuration(player.duration);
                 }
             }
 
@@ -76,6 +74,18 @@ class MusicPlayerActivity : AppCompatActivity() {
                 handleChangeRepeatMode(listModeBtnId,repeatMode);
                 Log.i("RepeatModeChanged", repeatMode.toString())
             }
+
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                super.onPlayWhenReadyChanged(playWhenReady, reason)
+                val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container_music_disc) as? MusicDisc
+
+                if (playWhenReady) {
+                    fragment?.resumeAnimation()
+
+                } else {
+                    fragment?.stopAnimation()
+                }
+            }
         })
         binding.playerControlView.setProgressUpdateListener { position, bufferedPosition ->
             binding.timeBar.setPosition(position)
@@ -84,11 +94,12 @@ class MusicPlayerActivity : AppCompatActivity() {
             currentTxt.text = Formater.formatDuration(position);
 
         }
-        player.repeatMode = Player.REPEAT_MODE_ONE
+        player.repeatMode = Player.REPEAT_MODE_ALL
         val btn = findViewById<ImageButton>(R.id.play_next_btn)
         btn.setOnClickListener(View.OnClickListener {
             player.seekToNext();
         })
+        setOnChangeShuffleMode();
     }
     fun handleChangeRepeatMode(ListModeButton :List<Int>, currentRepeatMode :Int ){
         val selectedBtnId = when(currentRepeatMode){
@@ -118,6 +129,22 @@ class MusicPlayerActivity : AppCompatActivity() {
                 Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_OFF
                 else -> Player.REPEAT_MODE_OFF
             }
+        })
+    }
+
+    private fun setOnChangeShuffleMode(){
+        val shuffleOffBtn = findViewById<ImageButton>(R.id.shuffle_off_btn)
+        val shuffleOnBtn = findViewById<ImageButton>(R.id.shuffle_on_btn)
+        shuffleOnBtn.setOnClickListener(View.OnClickListener {
+            player.shuffleModeEnabled = false;
+            it.visibility = View.GONE;
+            shuffleOffBtn.visibility = View.VISIBLE;
+        })
+        shuffleOffBtn.setOnClickListener(View.OnClickListener {
+            player.shuffleModeEnabled = true;
+            it.visibility = View.GONE;
+            shuffleOnBtn.visibility = View.VISIBLE;
+
         })
     }
 }

@@ -22,16 +22,34 @@
 <!--            android:layout_height="24dp"-->
 <!--            android:scaleType="fitCenter"-->
 <!--            android:src="@drawable/ic_play_random" />-->
+<!--        <ImageButton-->
+<!--            android:id="@+id/exo_shuffle"-->
+<!--            style="@style/ExoMediaButton"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_height="24dp"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            android:src="@drawable/ic_play_random"-->
+<!--            />-->
         <ImageButton
-            android:id="@+id/exo_shuffle"
+            android:id="@+id/shuffle_on_btn"
+            style="@style/ExoMediaButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="24dp"
+            android:visibility="gone"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play_random"
+            />
+        <ImageButton
+            android:id="@+id/shuffle_off_btn"
             style="@style/ExoMediaButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="24dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_play_random"
+            android:src="@drawable/ic_play_random_off"
             />
-
         <ImageButton
             android:id="@id/exo_prev"
             style="@style/ExoMediaButton"
