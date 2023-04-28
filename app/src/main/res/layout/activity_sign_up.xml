@@ -13,7 +13,7 @@
         android:background="@drawable/gradient_background"
 
         android:layout_height="match_parent"
-        tools:context=".ui.activities.SignInActivity">
+        tools:context=".ui.activities.authentication.SignInActivity">
         <Button
             android:layout_marginLeft="24dp"
             android:layout_marginTop="24dp"

@@ -18,22 +18,16 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.AuthActivity"
+            android:name=".ui.activities.authentication.AuthActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.activities.WelcomeActivity"
+            android:name=".ui.activities.authentication.WelcomeActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -46,24 +40,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.SignUpActivity"
-            android:exported="true">
+            android:name=".ui.activities.authentication.SignUpActivity"
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.activities.SignInActivity"
-            android:exported="true">
+            android:name=".ui.activities.authentication.SignInActivity"
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"

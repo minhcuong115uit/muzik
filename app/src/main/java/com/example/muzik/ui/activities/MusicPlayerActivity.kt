@@ -21,13 +21,13 @@ import com.google.android.exoplayer2.ui.TimeBar
 class MusicPlayerActivity : AppCompatActivity() {
     lateinit var binding: ActivityMusicPlayerBinding
     lateinit var player: ExoPlayer
-
+    var repeatState = 0;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_music_player);
         player = ExoPlayer.Builder(this).build()
-        var fisrtItem = MediaItem.fromUri("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
-        var secItem = MediaItem.fromUri(" https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3")
+        val fisrtItem = MediaItem.fromUri("https://p.scdn.co/mp3-preview/0496b1c18c7653d9124a2f39e148ec3babcae737?cid=cfe923b2d660439caf2b557b21f31221")
+        val secItem = MediaItem.fromUri(" https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3")
         player.addMediaItem(fisrtItem)
         player.addMediaItem(secItem)
 
@@ -41,26 +41,37 @@ class MusicPlayerActivity : AppCompatActivity() {
         binding.timeBar.addListener(object : TimeBar.OnScrubListener {
             override fun onScrubMove(timeBar: TimeBar, position: Long) {
                 // Điều chỉnh thời gian của Player
-                player.seekTo(position)
+
+                Log.i("onScrubMove",player.duration.toString())
             }
 
             override fun onScrubStart(timeBar: TimeBar, position: Long) {
                 // Tạm dừng Player khi người dùng bắt đầu tua
                 player.playWhenReady = false
+                Log.i("onScrubMove","start")
+
 
             }
             override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
                 // Bắt đầu lại Player khi người dùng kết thúc tua
+
+                player.seekTo(position)
                 player.playWhenReady = true
+                Log.i("onScrubMove","stop")
+
             }
         })
-        player.addListener(object : Player.Listener {
 
+        player.addListener(object : Player.Listener {
+            val durationText = findViewById<TextView>(R.id.duration_txt);
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                super.onMediaItemTransition(mediaItem, reason)
+                binding.timeBar.setDuration(player.duration)
+                durationText.text = Formater.formatDuration(player.duration);
+            }
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 if (isPlaying) {
                     binding.timeBar.setDuration(player.duration)
-                    Log.i("Media-Change",player.duration.toString())
-                    val durationText = findViewById<TextView>(R.id.duration_txt);
                     durationText.text = Formater.formatDuration(player.duration);
                 }
             }
@@ -78,15 +89,17 @@ class MusicPlayerActivity : AppCompatActivity() {
             override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
                 super.onPlayWhenReadyChanged(playWhenReady, reason)
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container_music_disc) as? MusicDisc
-
                 if (playWhenReady) {
                     fragment?.resumeAnimation()
+                    player.play();
 
                 } else {
                     fragment?.stopAnimation()
                 }
             }
+
         })
+
         binding.playerControlView.setProgressUpdateListener { position, bufferedPosition ->
             binding.timeBar.setPosition(position)
             binding.timeBar.setBufferedPosition(bufferedPosition)

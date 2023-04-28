@@ -1,19 +1,14 @@
 package com.example.muzik.data.repositories
 
-import android.app.Application
 import android.util.Log
-import com.example.muzik.R
 import com.example.muzik.data.models.User
 import com.example.muzik.listeners.AuthListener
-import com.example.muzik.ui.activities.SignInActivity
 import com.example.muzik.utils.FirebaseAuthManager
-import com.example.muzik.utils.TokenManager
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GetTokenResult
 
 
 class AuthFirebaseRepository private constructor() {
