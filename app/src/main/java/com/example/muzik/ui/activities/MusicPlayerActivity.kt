@@ -21,7 +21,8 @@ import com.google.android.exoplayer2.ui.TimeBar
 class MusicPlayerActivity : AppCompatActivity() {
     lateinit var binding: ActivityMusicPlayerBinding
     lateinit var player: ExoPlayer
-    var repeatState = 0;
+    var repeatState = Player.REPEAT_MODE_OFF;
+    var isShuffled = false;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_music_player);
@@ -37,33 +38,25 @@ class MusicPlayerActivity : AppCompatActivity() {
         player.play();
     }
     fun setUpMusicPlayer(){
-        binding.playerControlView.player = player;
-        binding.timeBar.addListener(object : TimeBar.OnScrubListener {
-            override fun onScrubMove(timeBar: TimeBar, position: Long) {
-                // Điều chỉnh thời gian của Player
+        val shuffleBtn = findViewById<ImageButton>(R.id.shuffle_mode)
+        val repeatBtn = findViewById<ImageButton>(R.id.exo_repeat_mode);
+        val btn = findViewById<ImageButton>(R.id.play_next_btn)
 
-                Log.i("onScrubMove",player.duration.toString())
-            }
-
-            override fun onScrubStart(timeBar: TimeBar, position: Long) {
-                // Tạm dừng Player khi người dùng bắt đầu tua
-                player.playWhenReady = false
-                Log.i("onScrubMove","start")
-
-
-            }
-            override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
-                // Bắt đầu lại Player khi người dùng kết thúc tua
-
-                player.seekTo(position)
-                player.playWhenReady = true
-                Log.i("onScrubMove","stop")
-
-            }
+        btn.setOnClickListener(View.OnClickListener {
+            player.seekToNext();
+        })
+        shuffleBtn.setOnClickListener(View.OnClickListener {
+            handleShuffleModeChange(shuffleBtn)
+        })
+        repeatBtn.setOnClickListener(View.OnClickListener {
+            handleRepeatModeChange(repeatBtn)
         })
 
+        binding.playerControlView.player = player;
         player.addListener(object : Player.Listener {
             val durationText = findViewById<TextView>(R.id.duration_txt);
+            val disFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_music_disc) as? MusicDisc
+
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 super.onMediaItemTransition(mediaItem, reason)
                 binding.timeBar.setDuration(player.duration)
@@ -74,30 +67,39 @@ class MusicPlayerActivity : AppCompatActivity() {
                     binding.timeBar.setDuration(player.duration)
                     durationText.text = Formater.formatDuration(player.duration);
                 }
+                else{
+                    disFragment?.stopAnimation()
+                }
             }
 
             override fun onRepeatModeChanged(repeatMode: Int) {
                 super.onRepeatModeChanged(repeatMode)
-                val listModeBtnId =  listOf(
-                    R.id.exo_repeat_mode_off,
-                    R.id.exo_repeat_mode_all,
-                    R.id.exo_repeat_mode_one);
-                handleChangeRepeatMode(listModeBtnId,repeatMode);
                 Log.i("RepeatModeChanged", repeatMode.toString())
             }
-
             override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
                 super.onPlayWhenReadyChanged(playWhenReady, reason)
-                val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container_music_disc) as? MusicDisc
                 if (playWhenReady) {
-                    fragment?.resumeAnimation()
+                    disFragment?.resumeAnimation()
                     player.play();
 
                 } else {
-                    fragment?.stopAnimation()
+                    disFragment?.stopAnimation()
                 }
             }
+        })
+        binding.timeBar.addListener(object : TimeBar.OnScrubListener {
+            override fun onScrubMove(timeBar: TimeBar, position: Long) {
+            }
 
+            override fun onScrubStart(timeBar: TimeBar, position: Long) {
+                // Tạm dừng Player khi người dùng bắt đầu tua
+                player.playWhenReady = false
+            }
+            override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
+                // Bắt đầu lại Player khi người dùng kết thúc tua
+                player.seekTo(position)
+                player.playWhenReady = true
+            }
         })
 
         binding.playerControlView.setProgressUpdateListener { position, bufferedPosition ->
@@ -107,57 +109,35 @@ class MusicPlayerActivity : AppCompatActivity() {
             currentTxt.text = Formater.formatDuration(position);
 
         }
-        player.repeatMode = Player.REPEAT_MODE_ALL
-        val btn = findViewById<ImageButton>(R.id.play_next_btn)
-        btn.setOnClickListener(View.OnClickListener {
-            player.seekToNext();
-        })
-        setOnChangeShuffleMode();
+        player.repeatMode = repeatState
     }
-    fun handleChangeRepeatMode(ListModeButton :List<Int>, currentRepeatMode :Int ){
-        val selectedBtnId = when(currentRepeatMode){
+    fun handleShuffleModeChange(btn: ImageButton){
+        isShuffled = !isShuffled
+        player.shuffleModeEnabled = isShuffled;
+        if(isShuffled){
+            btn.setImageResource(R.drawable.ic_play_random)
+        }
+        else{
+            btn.setImageResource(R.drawable.ic_play_random_off)
+        }
+    }
+    fun handleRepeatModeChange(repeatBtn: ImageButton){
+        when(repeatState){
             0->{
-                R.id.exo_repeat_mode_off
+                repeatBtn.setImageResource(R.drawable.exo_styled_controls_repeat_one);
+                // reassign repeatState for next repeatModeChanged event
+                repeatState = 1;
             }
             1->{
-                R.id.exo_repeat_mode_one
+                repeatBtn.setImageResource(R.drawable.exo_styled_controls_repeat_all);
+                repeatState = 2;
             }
             2->{
-                R.id.exo_repeat_mode_all
+                repeatBtn.setImageResource(R.drawable.exo_styled_controls_repeat_off);
+                repeatState = 0;
             }
-            else -> R.id.exo_repeat_mode_off
+            else -> repeatBtn.setBackgroundResource(R.drawable.exo_styled_controls_repeat_off);
         }
-        ListModeButton.forEach {
-            if (it != selectedBtnId) {
-                val btn = findViewById<ImageButton>(it);
-                btn.visibility = View.GONE;
-            }
-        }
-        val selectedBtn = findViewById<ImageButton>(selectedBtnId);
-        selectedBtn.visibility = View.VISIBLE;
-        selectedBtn.setOnClickListener(View.OnClickListener {
-            player.repeatMode = when (currentRepeatMode) {
-                Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ONE
-                Player.REPEAT_MODE_ONE -> Player.REPEAT_MODE_ALL
-                Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_OFF
-                else -> Player.REPEAT_MODE_OFF
-            }
-        })
-    }
-
-    private fun setOnChangeShuffleMode(){
-        val shuffleOffBtn = findViewById<ImageButton>(R.id.shuffle_off_btn)
-        val shuffleOnBtn = findViewById<ImageButton>(R.id.shuffle_on_btn)
-        shuffleOnBtn.setOnClickListener(View.OnClickListener {
-            player.shuffleModeEnabled = false;
-            it.visibility = View.GONE;
-            shuffleOffBtn.visibility = View.VISIBLE;
-        })
-        shuffleOffBtn.setOnClickListener(View.OnClickListener {
-            player.shuffleModeEnabled = true;
-            it.visibility = View.GONE;
-            shuffleOnBtn.visibility = View.VISIBLE;
-
-        })
+        player.repeatMode = repeatState
     }
 }
