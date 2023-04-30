@@ -1,6 +1,7 @@
 package com.example.muzik.viewmodels.musicplayer
 
 import android.util.Log
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +19,7 @@ import java.util.UUID
 //class PlayerViewModel(private val repo :ReactionRepository): ViewModel() {
 class PlayerViewModel(): ViewModel() {
     private lateinit var navController: NavController
-    var commentContent = MutableLiveData<String>();
+    var commentContent = ObservableField<String>();
     val currentUser = FirebaseAuth.getInstance().currentUser
     val user =  User("1212","first","last", "displayName","male","18",official = false, avatarUrl = "")
     val comment = Comment(
@@ -58,12 +59,12 @@ class PlayerViewModel(): ViewModel() {
 
     fun uploadComment(){
         val comment = Comment("", createdAt = LocalDate.now().toString(),
-            content = commentContent.value!!, user = user,
+            content =  commentContent.get()!!, user = user,
             modifiedAt = "", hearts = listOf<UUID>()
         );
         try{
             ReactionRepository.instance!!.uploadComment(comment);
-            commentContent.value = "";
+            commentContent.set("")
         }catch(err: Exception){
             Log.e("COMMENT",err.toString());
         }

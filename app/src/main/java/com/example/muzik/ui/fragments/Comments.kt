@@ -63,6 +63,10 @@ class Comments : Fragment() {
                 binding.edtInput.layoutParams = params
             }
         }
+
+        binding.closeComments.setOnClickListener(View.OnClickListener {
+            viewModel.getNavController().navigateUp()
+        })
         return binding.root
     }
 
