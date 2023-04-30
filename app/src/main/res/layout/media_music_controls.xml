@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical"
 
@@ -12,41 +11,14 @@
     android:padding="8dp">
     <LinearLayout
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content">
-<!--        <ImageButton-->
-<!--            android:id="@+id/exo_play_random"-->
-<!--            style="@style/ExoMediaButton"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_height="24dp"-->
-<!--            android:scaleType="fitCenter"-->
-<!--            android:src="@drawable/ic_play_random" />-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/exo_shuffle"-->
-<!--            style="@style/ExoMediaButton"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_height="24dp"-->
-<!--            android:scaleType="fitCenter"-->
-<!--            android:src="@drawable/ic_play_random"-->
-<!--            />-->
         <ImageButton
-            android:id="@+id/shuffle_on_btn"
+            android:id="@+id/shuffle_mode"
             style="@style/ExoMediaButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="24dp"
-            android:visibility="gone"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_play_random"
-            />
-        <ImageButton
-            android:id="@+id/shuffle_off_btn"
-            style="@style/ExoMediaButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="24dp"
+            android:visibility="visible"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_play_random_off"
             />
@@ -90,33 +62,13 @@
             android:src="@drawable/ic_play_next" />
         
         <ImageButton
-            android:id="@+id/exo_repeat_mode_off"
+            android:id="@+id/exo_repeat_mode"
             style="@style/ExoMediaButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="24dp"
             android:src="@drawable/exo_styled_controls_repeat_off"
             android:visibility="visible"
-            android:scaleType="fitCenter"
-            />
-        <ImageButton
-            android:id="@+id/exo_repeat_mode_one"
-            style="@style/ExoMediaButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="24dp"
-            android:src="@drawable/exo_styled_controls_repeat_one"
-            android:visibility="gone"
-            android:scaleType="fitCenter"
-            />
-        <ImageButton
-            android:id="@+id/exo_repeat_mode_all"
-            style="@style/ExoMediaButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="24dp"
-            android:src="@drawable/exo_styled_controls_repeat_all"
-            android:visibility="gone"
             android:scaleType="fitCenter"
             />
     </LinearLayout>

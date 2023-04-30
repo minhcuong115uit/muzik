@@ -1,29 +1,44 @@
 package com.example.muzik.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.example.muzik.R
+import com.example.muzik.databinding.FragmentBottomActionsBarBinding
+import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [BottomActionsBar.newInstance] factory method to
- * create an instance of this fragment.
- */
 class BottomActionsBar : Fragment() {
+    private lateinit var binding: FragmentBottomActionsBarBinding
+    private val viewModel: PlayerViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bottom_actions_bar, container, false)
-    }
+        binding = FragmentBottomActionsBarBinding.inflate(inflater,container,false);
+        binding.viewmodel = viewModel;
+        setObservations();
+        //open Comments Modal
 
+        binding.actionBarComment.setOnClickListener(View.OnClickListener {
+            viewModel.handleToggleShowComments();
+            viewModel.getNavController().navigate(R.id.action_bottomActionsBar_to_comments)
+        })
+        return binding.root;
+    }
+    private fun setObservations(){
+        viewModel.isFavourite.observe(viewLifecycleOwner) { isFavourite ->
+            if (isFavourite) {
+                binding.actionBarHeart.setImageResource(R.drawable.ic_heart);
+            } else {
+                binding.actionBarHeart.setImageResource(R.drawable.ic_empty_heart);
+
+            }
+        }
+    }
 }

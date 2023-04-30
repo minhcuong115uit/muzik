@@ -55,7 +55,6 @@ class MusicDisc : Fragment() {
         if(::objectAnimator.isInitialized){
             objectAnimator.pause();
         }
-
     }
     fun resumeAnimation(){
         if(::objectAnimator.isInitialized){

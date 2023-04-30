@@ -37,6 +37,7 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
         add("Refer not to say");
     }
 
+    
     fun setNavController(controller: NavController) {
         navController = controller
     }
