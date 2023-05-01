@@ -24,6 +24,7 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     private lateinit var authListener: AuthListener;
     //user data
     var email: MutableLiveData<String> = MutableLiveData();
+    var avatarUrl: MutableLiveData<String> = MutableLiveData();
     var password : MutableLiveData<String> = MutableLiveData();
     var firstName: MutableLiveData<String> = MutableLiveData();
     var lastName : MutableLiveData<String> = MutableLiveData();
@@ -41,12 +42,9 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
         navController = controller
     }
     fun handleSignUp (){
-       //check data
-        //        ....
-        age.value = "18";
         val user = User("",
             firstName.value!!,lastName.value!!, displayName.value!!,
-            selectedGender.value!!,age.value!!, false, avatarUrl = "")
+            selectedGender.value!!,age.value!!, false,avatarUrl.value?: "")
         // đoann này nên sửa thành truyền repo vô viewmodel
         AuthFirebaseRepository.instance!!.
             signUpWithEmail(email.value!!, password.value!!, user ,this.authListener);
