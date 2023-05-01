@@ -24,6 +24,7 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     private lateinit var authListener: AuthListener;
     //user data
     var email: MutableLiveData<String> = MutableLiveData();
+    var avatarUrl: MutableLiveData<String> = MutableLiveData();
     var password : MutableLiveData<String> = MutableLiveData();
     var firstName: MutableLiveData<String> = MutableLiveData();
     var lastName : MutableLiveData<String> = MutableLiveData();
@@ -37,17 +38,14 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
         add("Refer not to say");
     }
 
-    
     fun setNavController(controller: NavController) {
         navController = controller
     }
     fun handleSignUp (){
-       //check data
-        //        ....
-        age.value = "18";
         val user = User("",
             firstName.value!!,lastName.value!!, displayName.value!!,
-            selectedGender.value!!,age.value!!, false)
+            selectedGender.value!!,age.value!!, false,avatarUrl.value?: "")
+        // đoann này nên sửa thành truyền repo vô viewmodel
         AuthFirebaseRepository.instance!!.
             signUpWithEmail(email.value!!, password.value!!, user ,this.authListener);
     }
@@ -55,14 +53,9 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     fun setAuthListener(authListener: AuthListener) {
         this.authListener = authListener
     }
-
-    fun handleNavigateToSignUpPhase2(){
-        navController.navigate(R.id.action_signUpPhase1_to_signUpPhase2);
+    fun getNavController(): NavController {
+        return navController
     }
-    fun handleNavigateToSignUpPhase3(){
-        navController.navigate(R.id.action_signUpPhase2_to_signUpPhase3);
-    }
-
     fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         // Xử lý sự kiện onItemSelected ở đây
     }

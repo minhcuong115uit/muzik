@@ -13,6 +13,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
+//chưa sử dụng Dependency Injection
  class SignInViewModel: ViewModel() {
      var email: MutableLiveData<String> = MutableLiveData();
      var password : MutableLiveData<String> = MutableLiveData();
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser
             Log.d("AUTHENTICATION", "email or password is invalid")
             return;
         }
+        // đoann này nên sửa thành truyền repo vô viewmodel
         AuthFirebaseRepository.instance?.signInWithEmail(email,password,this.authListener!!)
     }
     fun onLoginButtonClicked () {

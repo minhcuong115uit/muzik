@@ -13,6 +13,7 @@ import com.example.muzik.R
 import com.example.muzik.databinding.FragmentSignUpPhase1Binding
 import com.example.muzik.databinding.FragmentSignUpPhase2Binding
 import com.example.muzik.ui.adapters.SpinnerGenderAdapter
+import com.example.muzik.utils.Validator
 import com.example.muzik.viewmodels.authentication.SignUpViewModel
 import kotlin.math.sign
 
@@ -30,11 +31,12 @@ class SignUpPhase2 : Fragment() {
 
     private val signUpViewModel: SignUpViewModel by activityViewModels()
     private lateinit var spinnerGenderAdapter: SpinnerGenderAdapter;
+    private lateinit var binding: FragmentSignUpPhase2Binding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentSignUpPhase2Binding =
+        binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_sign_up_phase2, container, false)
         binding.viewmodel = signUpViewModel
         spinnerGenderAdapter = SpinnerGenderAdapter(requireContext(),signUpViewModel.genderList);
@@ -57,6 +59,18 @@ class SignUpPhase2 : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+        binding.btnContinue.setOnClickListener(View.OnClickListener {
+            if(isValidForm())
+            {
+                signUpViewModel.getNavController().navigate(R.id.action_signUpPhase2_to_signUpPhase3);
+            }
+        })
         return binding.root
+    }
+    private fun isValidForm(): Boolean{
+        binding.edtAge.error = Validator.validateAge(binding.edtAge.text.toString());
+        binding.edtFirstName.error = Validator.validateName(binding.edtFirstName.text.toString());
+        binding.edtLastName.error = Validator.validateName(binding.edtLastName.text.toString());
+        return binding.edtAge.error == null && binding.edtFirstName.error == null && binding.edtFirstName.error == null
     }
 }

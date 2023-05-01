@@ -33,7 +33,7 @@ class AuthFirebaseRepository private constructor() {
 
 //                    val user: FirebaseUser? = firebaseAuth.getCurrentUser();
 //
-//                    authListener.onSuccess()
+                    authListener.onSuccess()
 //                    user?.getIdToken(true)?.addOnSuccessListener { result ->
 //                        val accessToken = result.token
 //                        TokenManager.getInstance()?.saveAccessToken(accessToken!!)
