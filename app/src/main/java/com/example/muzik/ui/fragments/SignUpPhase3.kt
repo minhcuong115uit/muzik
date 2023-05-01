@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.muzik.R
 import com.example.muzik.databinding.FragmentSignUpPhase1Binding
 import com.example.muzik.databinding.FragmentSignUpPhase3Binding
+import com.example.muzik.utils.Validator
 import com.example.muzik.viewmodels.authentication.SignUpViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,15 +26,25 @@ private const val ARG_PARAM2 = "param2"
 class SignUpPhase3 : Fragment() {
 
     private val signUpViewModel: SignUpViewModel by activityViewModels()
+    private lateinit var binding: FragmentSignUpPhase3Binding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentSignUpPhase3Binding =
+         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_sign_up_phase3, container, false)
         binding.viewmodel = signUpViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
+        binding.btnContinue.setOnClickListener {
+            if(isValidForm()){
+                signUpViewModel.handleSignUp();
+            }
+        }
         return binding.root
     }
-
+    private fun isValidForm(): Boolean{
+        binding.edtDisplayName.error = Validator.validateName(binding.edtDisplayName.text.toString());
+        return binding.edtDisplayName.error == null
+    }
 }

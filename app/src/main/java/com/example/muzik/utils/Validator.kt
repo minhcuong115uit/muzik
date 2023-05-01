@@ -32,7 +32,15 @@ class Validator {
                 null
             }
         }
-
+        fun validateAge(age: String): String? {
+            return when {
+                age.isBlank() -> "Tuổi không được để trống"
+                age.toIntOrNull() == null -> "Tuổi không hợp lệ"
+                age.toInt() < 0 -> "Tuổi không hợp lệ"
+                age.toInt() < 14 -> "Bạn chưa đủ 14 tuổi"
+                else -> null
+            }
+        }
         fun validateIsEmpty(editText: EditText, errorMessage: String): String? {
             return if (TextUtils.isEmpty(editText.text.toString().trim())) {
                 errorMessage
@@ -44,9 +52,11 @@ class Validator {
         fun validateName(name: String): String? {
             return if (!name.matches(Regex("^[a-zA-Z0-9 ]+$"))) {
                 "Tên không được chứa ký tự đặc biệt"
-            } else {
-                null
+            } else if (name.isEmpty()){
+                "Tên không được để trống"
             }
+            else
+                null
         }
     }
 }
