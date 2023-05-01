@@ -21,7 +21,6 @@ import com.example.muzik.viewmodels.authentication.SignUpViewModel
  */
 class SignUpPhase1 () : Fragment() {
     private val signUpViewModel: SignUpViewModel by activityViewModels()
-    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +30,9 @@ class SignUpPhase1 () : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_sign_up_phase1, container, false)
         binding.viewmodel = signUpViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.btnContinue.setOnClickListener(View.OnClickListener {
+            signUpViewModel.getNavController().navigate(R.id.action_signUpPhase1_to_signUpPhase2);
+        })
         return binding.root
     }
 }

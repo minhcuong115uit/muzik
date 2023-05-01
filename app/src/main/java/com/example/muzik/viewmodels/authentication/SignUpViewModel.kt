@@ -19,6 +19,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
+
 class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     private lateinit var navController: NavController
     private lateinit var authListener: AuthListener;
@@ -36,7 +37,6 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
         add("Custom");
         add("Refer not to say");
     }
-
     fun setNavController(controller: NavController) {
         navController = controller
     }
@@ -46,7 +46,8 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
         age.value = "18";
         val user = User("",
             firstName.value!!,lastName.value!!, displayName.value!!,
-            selectedGender.value!!,age.value!!, false)
+            selectedGender.value!!,age.value!!, false, avatarUrl = "")
+        // đoann này nên sửa thành truyền repo vô viewmodel
         AuthFirebaseRepository.instance!!.
             signUpWithEmail(email.value!!, password.value!!, user ,this.authListener);
     }
@@ -54,14 +55,9 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     fun setAuthListener(authListener: AuthListener) {
         this.authListener = authListener
     }
-
-    fun handleNavigateToSignUpPhase2(){
-        navController.navigate(R.id.action_signUpPhase1_to_signUpPhase2);
+    fun getNavController(): NavController {
+        return navController
     }
-    fun handleNavigateToSignUpPhase3(){
-        navController.navigate(R.id.action_signUpPhase2_to_signUpPhase3);
-    }
-
     fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         // Xử lý sự kiện onItemSelected ở đây
     }

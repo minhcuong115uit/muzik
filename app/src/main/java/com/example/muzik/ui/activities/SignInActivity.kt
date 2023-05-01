@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
 import com.example.muzik.databinding.ActivitySignInBinding
 import com.example.muzik.listeners.AuthListener
+import com.example.muzik.ui.activities.MusicPlayerActivity
+import com.example.muzik.utils.Validator
 import com.example.muzik.utils.ViewUtils
 import com.example.muzik.viewmodels.authentication.SignInViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -50,8 +52,18 @@ class SignInActivity : AppCompatActivity() , AuthListener  {
         binding.btnSignInGoogle.setOnClickListener(View.OnClickListener {
             signInWithGoogle();
         })
+        binding.btnContinue.setOnClickListener(View.OnClickListener {
+            if(isValidForm()){
+                signInViewModel.onLoginButtonClicked()
+            }
+        })
         setContentView(binding.root)
 
+    }
+    private fun isValidForm(): Boolean{
+        binding.edtEmail.error = Validator.validateEmail(binding.edtEmail.text.toString());
+        binding.edtPassword.error = Validator.validatePassword(binding.edtPassword.text.toString());
+        return binding.edtEmail.error == null && binding.edtPassword.error == null
     }
     private fun signInWithGoogle(){
         var intent = gsc.signInIntent;
@@ -73,6 +85,7 @@ class SignInActivity : AppCompatActivity() , AuthListener  {
                         if (task.isSuccessful) {
                             Log.i("LOGIN WITH EMAIL",FirebaseAuth.getInstance().currentUser!!.uid);
                             Toast.makeText(this,"Succeeded",Toast.LENGTH_LONG).show();
+                            navigateToMainActivity()
                         } else {
                             Toast.makeText(this,"Error",Toast.LENGTH_LONG).show();
                         }
@@ -90,9 +103,14 @@ class SignInActivity : AppCompatActivity() , AuthListener  {
 
     override fun onSuccess() {
         ViewUtils.showToast(this, "Sign in succeeded");
+        navigateToMainActivity();
     }
 
     override fun onFailure(message: String?) {
         ViewUtils.showToast(this, message);
+    }
+    private fun navigateToMainActivity(){
+        val intent = Intent(this, MusicPlayerActivity::class.java)
+        startActivity(intent)
     }
 }

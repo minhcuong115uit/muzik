@@ -57,6 +57,9 @@ class SignUpPhase2 : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+        binding.btnContinue.setOnClickListener(View.OnClickListener {
+            signUpViewModel.getNavController().navigate(R.id.action_signUpPhase2_to_signUpPhase3);
+        })
         return binding.root
     }
 }

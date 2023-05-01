@@ -63,12 +63,12 @@
 
         <ImageButton
             android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="32dp"
             android:scaleType="centerInside"
             android:background="@drawable/round_image_button"
-            android:src="@drawable/default_avatar"
+            android:src="@drawable/background_image_girl_listen"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv2" />

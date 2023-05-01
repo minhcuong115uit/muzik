@@ -24,10 +24,10 @@ class UserRepository private constructor(){
         db.collection("users")
             .add(user)
             .addOnSuccessListener { documentReference ->
-                Log.d("CREATE USER", "DocumentSnapshot written with ID: ${documentReference.id}")
+                Log.d("USER", "DocumentSnapshot written with ID: ${documentReference.id}")
             }
             .addOnFailureListener { e ->
-                Log.w("CREATE USER", "Error adding document", e)
+                Log.w("USER", "Error adding document", e)
             }
     }
 }
