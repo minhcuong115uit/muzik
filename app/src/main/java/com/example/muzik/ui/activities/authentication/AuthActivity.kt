@@ -1,4 +1,4 @@
-package com.example.muzik.ui.activities
+package com.example.muzik.ui.activities.authentication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

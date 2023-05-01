@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/reaction_nav_graph"
+    app:startDestination="@id/bottomActionsBar">
+
+    <fragment
+        android:id="@+id/bottomActionsBar"
+        android:name="com.example.muzik.ui.fragments.BottomActionsBar"
+        android:label="BottomActionsBar" >
+        <action
+            android:id="@+id/action_bottomActionsBar_to_comments"
+            app:destination="@id/comments"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+    </fragment>
+    <fragment
+        android:id="@+id/comments"
+        android:name="com.example.muzik.ui.fragments.Comments"
+        android:label="Comments" />
+</navigation>

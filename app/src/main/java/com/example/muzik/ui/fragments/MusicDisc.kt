@@ -48,6 +48,17 @@ class MusicDisc : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
+
         objectAnimator.cancel();
+    }
+    fun stopAnimation(){
+        if(::objectAnimator.isInitialized){
+            objectAnimator.pause();
+        }
+    }
+    fun resumeAnimation(){
+        if(::objectAnimator.isInitialized){
+            objectAnimator.resume();
+        }
     }
 }

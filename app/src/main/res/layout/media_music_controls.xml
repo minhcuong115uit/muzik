@@ -3,57 +3,73 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:orientation="horizontal"
-    android:layout_centerInParent="true"
+    android:orientation="vertical"
+
     android:layout_gravity="bottom"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
     android:padding="8dp">
-    <ImageButton
-        android:id="@+id/exo_play_random"
-        style="@style/ExoMediaButton"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="24dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_play_random" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/shuffle_mode"
+            style="@style/ExoMediaButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="24dp"
+            android:visibility="visible"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play_random_off"
+            />
+        <ImageButton
+            android:id="@id/exo_prev"
+            style="@style/ExoMediaButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="24dp"
+            android:background="@drawable/circle_background_selector"
 
-    <ImageButton
-        android:id="@+id/exo_prev"
-        style="@style/ExoMediaButton"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@drawable/circle_background_selector"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play_previous" />
+        <ImageButton
+            android:id="@id/exo_play"
+            style="@style/ExoMediaButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="24dp"
 
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_play_previous" />
-    <ImageButton
-        android:id="@+id/exo_play"
-        style="@style/ExoMediaButton"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginRight="24dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play" />
+        <ImageButton
+            android:id="@id/exo_pause"
+            style="@style/ExoMediaButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="24dp"
 
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_play" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_pause" />
 
-    <ImageButton
-        android:id="@+id/exo_next"
-        style="@style/ExoMediaButton"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        <ImageButton
+            android:id="@+id/play_next_btn"
+            style="@style/ExoMediaButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
 
-        android:layout_marginRight="24dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_play_next" />
-
-    <ImageButton
-        android:id="@+id/exo_rew"
-        style="@style/ExoMediaButton"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="24dp"
-
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_rewind" />
-
+            android:layout_marginRight="24dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play_next" />
+        
+        <ImageButton
+            android:id="@+id/exo_repeat_mode"
+            style="@style/ExoMediaButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="24dp"
+            android:src="@drawable/exo_styled_controls_repeat_off"
+            android:visibility="visible"
+            android:scaleType="fitCenter"
+            />
+    </LinearLayout>
 </LinearLayout>

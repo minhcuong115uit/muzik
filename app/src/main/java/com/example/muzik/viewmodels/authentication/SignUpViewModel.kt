@@ -19,7 +19,6 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-
 class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
     private lateinit var navController: NavController
     private lateinit var authListener: AuthListener;
@@ -37,6 +36,7 @@ class SignUpViewModel (savedStateHandle: SavedStateHandle): ViewModel() {
         add("Custom");
         add("Refer not to say");
     }
+
     fun setNavController(controller: NavController) {
         navController = controller
     }

@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.MusicDisc">
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageviewcircle"
-        android:src="@drawable/girl_listening_to_music"
-        android:layout_centerInParent="true"
         android:layout_width="300dp"
-        android:layout_height="300dp"/>
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/girl_listening_to_music" />
 </RelativeLayout >

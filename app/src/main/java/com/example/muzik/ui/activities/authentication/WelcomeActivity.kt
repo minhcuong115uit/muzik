@@ -1,12 +1,9 @@
-package com.example.muzik.ui.activities
+package com.example.muzik.ui.activities.authentication
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import com.example.muzik.R
 import com.example.muzik.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity()  {

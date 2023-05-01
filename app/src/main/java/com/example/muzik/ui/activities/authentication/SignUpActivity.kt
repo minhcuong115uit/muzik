@@ -1,10 +1,6 @@
-package com.example.muzik.ui.activities
+package com.example.muzik.ui.activities.authentication
 
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
