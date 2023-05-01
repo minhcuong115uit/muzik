@@ -30,14 +30,22 @@ class Comments : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-        adapter = CommentsAdapter(requireActivity().applicationContext,viewModel.comments)
+        adapter = CommentsAdapter(requireActivity().applicationContext,viewModel.comments.value!!)
         binding = FragmentCommentsBinding.inflate(inflater, container,false);
-        if(viewModel.comments.isNotEmpty()){
-            binding.tvEmpty.visibility = View.GONE
-        }
+        viewModel.loadComments("3Wj9MsZv9nLwsmj75A7w");
         binding.viewmodel = viewModel;
         binding.recCommentList.adapter = adapter;
+        viewModel.comments.observe(viewLifecycleOwner) { cmts: List<Comment> ->
+            if (cmts.isNotEmpty()) {
+                binding.tvEmpty.visibility = View.GONE
+            }
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.tvEmpty.visibility = if (viewModel.comments.value?.size == 0) View.VISIBLE else View.GONE
+
+        }
         binding.edtInput.doOnTextChanged { text, start, before, count ->
             if (text.isNullOrEmpty()) {
                 binding.sendBtn.visibility = View.INVISIBLE;
