@@ -51,9 +51,9 @@ class Validator {
 
         fun validateName(name: String): String? {
             return if ( name.isEmpty()) {
-                "Tên không được chứa ký tự đặc biệt"
-            } else if (!name.matches(Regex("^[a-zA-Z0-9 ]+$"))){
                 "Tên không được để trống"
+            } else if (!name.matches(Regex("^[a-zA-Z0-9 ]+$"))){
+                "Tên không được chứa kí tự đặc biệt"
             }
             else
                 null
