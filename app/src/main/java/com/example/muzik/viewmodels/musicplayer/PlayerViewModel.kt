@@ -1,5 +1,6 @@
 package com.example.muzik.viewmodels.musicplayer
 
+import android.content.Context
 import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -9,6 +10,9 @@ import androidx.navigation.NavController
 import com.example.muzik.data.models.Comment
 import com.example.muzik.data.models.User
 import com.example.muzik.data.repositories.ReactionRepository
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -19,16 +23,63 @@ import java.util.UUID
 //class PlayerViewModel(private val repo :ReactionRepository): ViewModel() {
 class PlayerViewModel(): ViewModel() {
     private lateinit var navController: NavController
+    private var _repeatState = MutableLiveData<Int>(2);
+    private var _shuffleMode = MutableLiveData<Boolean>(false);
+    val repeatState:LiveData<Int>
+        get() {
+            return _repeatState
+        }
+    val shuffleMode:LiveData<Boolean>
+        get() {
+            return _shuffleMode
+        }
+    fun setRepeatState(value:Int){
+        _repeatState.value = value;
+        _player.value?.repeatMode = value
+    }
+    fun setShuffleMode(value:Boolean){
+        _shuffleMode.value = value;
+        _player.value?.shuffleModeEnabled = value
+    }
+    private val _player = MutableLiveData<ExoPlayer>()
+    val player: LiveData<ExoPlayer>
+        get() = _player
+
+    private val _currentMediaItem = MutableLiveData<MediaItem>()
+    val currentMediaItem: LiveData<MediaItem>
+        get() = _currentMediaItem
+
+    fun initPlayer(context: Context) {
+        _player.value = ExoPlayer.Builder(context).build()
+        val firstItem = MediaItem.fromUri("https://p.scdn.co/mp3-preview/0496b1c18c7653d9124a2f39e148ec3babcae737?cid=cfe923b2d660439caf2b557b21f31221")
+        val secItem = MediaItem.fromUri(" https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3")
+        _player.value?.addMediaItem(firstItem)
+        _player.value?.addMediaItem(secItem)
+        _player.value?.prepare()
+        _player.value?.play()
+        _currentMediaItem.value = firstItem
+        _player.value?.repeatMode = _repeatState.value!!;
+        _player.value?.shuffleModeEnabled = _shuffleMode.value!!;
+
+    }
+    fun getCurrentPosition(): Long {
+        return _player.value?.currentPosition ?: 0
+    }
+
+    fun setCurrentMediaItem(mediaItem: MediaItem) {
+        _currentMediaItem.value = mediaItem
+        _player.value?.setMediaItem(mediaItem)
+        _player.value?.prepare()
+        _player.value?.play()
+    }
+    override fun onCleared() {
+        _player.value?.release()
+        super.onCleared()
+    }
+
     var commentContent = ObservableField<String>();
-    val user =  User("1212","first","last", "displayName","male","18",official = false, avatarUrl = "")
-    val comment = Comment(
-        songId = "3Wj9MsZv9nLwsmj75A7w", // ID của bài hát liên quan đến comment
-        createdAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()), // thời gian tạo comment
-        modifiedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()), // thời gian chỉnh sửa comment
-        content = "This is a comment", // nội dung của comment
-        user = user,
-        hearts = listOf<UUID>()
-    )
+    private val user =  User("1212","first","last", "displayName","male","18",official = false, avatarUrl = "")
+
     private val _comments = MutableLiveData<MutableList<Comment>>(mutableListOf())
 
     val comments: LiveData<MutableList<Comment>>
@@ -46,9 +97,8 @@ class PlayerViewModel(): ViewModel() {
         get(){
             return _isShowComments
         }
-
-    fun setNavController(controller: NavController) {
-        navController = controller
+    fun setNavController(navController: NavController) {
+        this.navController = navController
     }
     fun getNavController(): NavController {
         return navController
@@ -59,7 +109,6 @@ class PlayerViewModel(): ViewModel() {
     fun handleToggleShowComments(){
         _isShowComments.value = !_isShowComments.value!!
     }
-
     fun uploadComment(){
         _isLoading.value = true;
 
