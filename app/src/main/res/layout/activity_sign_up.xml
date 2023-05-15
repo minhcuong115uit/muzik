@@ -35,6 +35,7 @@
             android:layout_marginStart="24dp"
             android:textStyle="bold"
             android:fontWeight="@integer/font_weight_bold"
+            android:textColor="@color/white"
             android:textSize="@dimen/font_size_heading_3"
             android:text="@string/create_account"
             app:layout_constraintBottom_toBottomOf="@+id/btn_navigate_back"

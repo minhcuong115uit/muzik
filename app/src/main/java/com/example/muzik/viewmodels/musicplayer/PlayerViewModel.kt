@@ -56,7 +56,6 @@ class PlayerViewModel(): ViewModel() {
         _player.value?.addMediaItem(firstItem)
         _player.value?.addMediaItem(secItem)
         _player.value?.prepare()
-        _player.value?.play()
         _currentMediaItem.value = firstItem
         _player.value?.repeatMode = _repeatState.value!!;
         _player.value?.shuffleModeEnabled = _shuffleMode.value!!;
