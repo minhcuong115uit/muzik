@@ -37,7 +37,7 @@ class MusicPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         viewModel =  ViewModelProvider(this)[PlayerViewModel::class.java]
-        viewModel.initPlayer(this);
+//        viewModel.initPlayer(this);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_music_player);
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.actions_bottom_bar) as NavHostFragment
         navController = navHostFragment.navController
