@@ -3,6 +3,7 @@ package com.example.muzik.ui.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.muzik.R
+import com.example.muzik.ui.fragments.MusicPlayerBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -37,8 +38,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         navView = findViewById(R.id.bottom_nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        val musicPlayerBarFragment = MusicPlayerBar()
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_music_player, musicPlayerBarFragment).commit()
     }
 }
