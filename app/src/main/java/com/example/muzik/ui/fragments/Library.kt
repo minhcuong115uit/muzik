@@ -34,7 +34,7 @@ class Library : Fragment() {
         // Inflate the layout for this fragment
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_library, container,false);
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
-        adapter = MusicItemAdapter(requireActivity(),viewModel.getListSong());
+        adapter = MusicItemAdapter(requireActivity(),viewModel.getLocalListSong());
         binding.recViewHistory.adapter = adapter;
         return binding.root
     }

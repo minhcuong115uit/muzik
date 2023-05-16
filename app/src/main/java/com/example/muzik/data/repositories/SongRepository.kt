@@ -2,6 +2,8 @@ package com.example.muzik.data.repositories
 
 import android.content.Context
 import android.provider.MediaStore
+import android.util.Log
+import com.example.muzik.data.models.Song
 
 interface ISongRepository {
 
@@ -18,34 +20,28 @@ class SongRepository {
             private set
     }
 
-    fun getDeviceMp3Files(appContext: Context) {
-        val selection = "${MediaStore.Files.FileColumns.MEDIA_TYPE}=${MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO} AND ${MediaStore.Files.FileColumns.DISPLAY_NAME} LIKE ?"
-        val selectionArgs = arrayOf("%mp3")
+    fun getDeviceMp3Files(appContext: Context) : List<Song>{
+        val listMp3Uri = arrayListOf<Song>()
+        val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.DISPLAY_NAME)
+        val selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0"
+        val sortOrder = MediaStore.Audio.Media.DISPLAY_NAME + " ASC"
 
-        val projection = arrayOf(
-            MediaStore.Files.FileColumns._ID,
-            MediaStore.Files.FileColumns.DATA,
-            MediaStore.Files.FileColumns.DISPLAY_NAME,
-            MediaStore.Files.FileColumns.SIZE
-        )
+        val cursor = appContext.contentResolver.query(uri, projection, selection, null, sortOrder)
 
-        val sortOrder = "${MediaStore.Files.FileColumns.DISPLAY_NAME} ASC"
+        cursor?.use {
+            val dataColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+            val nameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
 
-        appContext.contentResolver.query(
-            MediaStore.Files.getContentUri("external"),
-            projection,
-            selection,
-            selectionArgs,
-            sortOrder
-        )?.use { cursor ->
-            while (cursor.moveToNext()) {
-
-//                val name = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME))
-//                val path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
-//                val size = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE))
-            
+            while (it.moveToNext()) {
+                val filePath = it.getString(dataColumn)
+                val fileName = it.getString(nameColumn)
+                listMp3Uri.add(Song("","",filePath,fileName,"",""));
+                Log.e("LocalAudioFile", filePath);
+                // Do something with the file path or name (e.g., display it, store it in a list, etc.)
             }
         }
-
+        return listMp3Uri
     }
+
 }

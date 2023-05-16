@@ -1,21 +1,23 @@
 package com.example.muzik.ui.activities
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.session.MediaSession
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -31,6 +33,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.zip.Inflater
 
 class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListener {
+    private val REQUEST_PERMISSION_CODE = 1
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var navView: BottomNavigationView
     private lateinit var musicService: MusicService
@@ -65,11 +68,11 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
     override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
         binding =  DataBindingUtil.setContentView(this,R.layout.activity_main);
+
         navView = findViewById(R.id.bottom_nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         viewModel =  ViewModelProvider(this)[PlayerViewModel::class.java]
         viewModel.initPlayer(this);
-
 
         val intent = Intent(this,MusicService::class.java);
         mediaSession = MediaSessionCompat(this,"PlayerAudio");
@@ -80,6 +83,8 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
         musicPlayerBarFragment = MusicPlayerBar()
         supportFragmentManager.beginTransaction().replace(R.id.fragment_music_player, musicPlayerBarFragment).commit()
         showNotification(R.drawable.ic_play);
+
+        requestPermission();
     }
 
 
@@ -153,4 +158,30 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
     override fun onServiceDisconnected(name: ComponentName?) {
         Log.e("ServiceDisconnected", musicService.toString());
     }
+    fun requestPermission(){
+// Check if the permission is granted
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_PERMISSION_CODE)
+        } else {
+            // Permission is already granted, proceed to read the files
+            viewModel.getLocalMp3Files(applicationContext);
+        }
+
+    }
+    // Handle the permission request result
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed to read the files
+                viewModel.getLocalMp3Files(applicationContext);
+            } else {
+                // Permission denied, handle accordingly (e.g., show an error message)
+            }
+        }
+    }
+
 }
