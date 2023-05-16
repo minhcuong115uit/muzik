@@ -11,6 +11,7 @@ import com.example.muzik.data.models.Comment
 import com.example.muzik.data.models.Song
 import com.example.muzik.data.models.User
 import com.example.muzik.data.repositories.ReactionRepository
+import com.example.muzik.data.repositories.SongRepository
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -36,8 +37,13 @@ class PlayerViewModel(): ViewModel() {
         this.add(Song("","","Dù cho mai về sau","Bùi Trường Linh"))
         this.add(Song("","","Missing you","Phương Ly"))
     }
+    private val _localListSong = mutableListOf<Song>()
+
     fun getListSong(): List<Song>{
         return _listSong;
+    }
+    fun getLocalListSong(): List<Song>{
+        return _localListSong;
     }
     val repeatState:LiveData<Int>
         get() {
@@ -63,12 +69,12 @@ class PlayerViewModel(): ViewModel() {
 
     fun initPlayer(context: Context) {
         _player.value = ExoPlayer.Builder(context).build()
-        val firstItem = MediaItem.fromUri("https://p.scdn.co/mp3-preview/0496b1c18c7653d9124a2f39e148ec3babcae737?cid=cfe923b2d660439caf2b557b21f31221")
-        val secItem = MediaItem.fromUri(" https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3")
-        _player.value?.addMediaItem(firstItem)
-        _player.value?.addMediaItem(secItem)
-        _player.value?.prepare()
-        _currentMediaItem.value = firstItem
+//        val firstItem = MediaItem.fromUri("https://p.scdn.co/mp3-preview/0496b1c18c7653d9124a2f39e148ec3babcae737?cid=cfe923b2d660439caf2b557b21f31221")
+//        val secItem = MediaItem.fromUri(" https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3")
+//        _player.value?.addMediaItem(firstItem)
+//        _player.value?.addMediaItem(secItem)
+//        _player.value?.prepare()
+//        _currentMediaItem.value = firstItem
         _player.value?.repeatMode = _repeatState.value!!;
         _player.value?.shuffleModeEnabled = _shuffleMode.value!!;
 
@@ -150,7 +156,14 @@ class PlayerViewModel(): ViewModel() {
             _isLoading.value = false;
         }
     }
-    fun getLocalMp3Files () {
+    fun getLocalMp3Files (context: Context) {
+        val songList = SongRepository.instance?.getDeviceMp3Files(context);
+        songList?.forEach {
+            val mediaItem = MediaItem.fromUri(it.songUri)
+            _player.value?.addMediaItem(mediaItem);
+            _localListSong.add(it);
+        }
 
     }
+
 }
