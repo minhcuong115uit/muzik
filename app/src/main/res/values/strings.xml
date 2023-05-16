@@ -26,6 +26,17 @@
     <string name="age">Age</string>
     <string name="gender">Gender</string>
 
+    <!--    menu navigation bar-->
+
+    <string name="library">Library</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="upload">Upload</string>
+
+    <string name="listening_history">Listening history</string>
+    <string name="see_all">See all</string>
+
+
     <string name="google_server_client_id">"312435550720–5d5ueist0pnnon2gsqnqco8pbduth0sq.apps.googleusercontent.com"</string>
 
     <!-- TODO: Remove or change this placeholder text -->
