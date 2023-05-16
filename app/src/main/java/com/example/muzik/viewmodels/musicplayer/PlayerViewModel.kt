@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.muzik.data.models.Comment
+import com.example.muzik.data.models.Song
 import com.example.muzik.data.models.User
 import com.example.muzik.data.repositories.ReactionRepository
 import com.google.android.exoplayer2.ExoPlayer
@@ -25,6 +26,19 @@ class PlayerViewModel(): ViewModel() {
     private lateinit var navController: NavController
     private var _repeatState = MutableLiveData<Int>(2);
     private var _shuffleMode = MutableLiveData<Boolean>(false);
+    private val _currentMediaItem = MutableLiveData<MediaItem>()
+    private val _player = MutableLiveData<ExoPlayer>()
+    private val _isFavorite = MutableLiveData(false)
+    private val _isShowComments = MutableLiveData(false)
+    private val _isLoading = MutableLiveData<Boolean>()
+    private val _listSong = mutableListOf<Song>().apply {
+        this.add(Song("","","Đã lỡ yêu em nhiều","Justatee"))
+        this.add(Song("","","Dù cho mai về sau","Bùi Trường Linh"))
+        this.add(Song("","","Missing you","Phương Ly"))
+    }
+    fun getListSong(): List<Song>{
+        return _listSong;
+    }
     val repeatState:LiveData<Int>
         get() {
             return _repeatState
@@ -41,11 +55,9 @@ class PlayerViewModel(): ViewModel() {
         _shuffleMode.value = value;
         _player.value?.shuffleModeEnabled = value
     }
-    private val _player = MutableLiveData<ExoPlayer>()
     val player: LiveData<ExoPlayer>
         get() = _player
 
-    private val _currentMediaItem = MutableLiveData<MediaItem>()
     val currentMediaItem: LiveData<MediaItem>
         get() = _currentMediaItem
 
@@ -78,18 +90,14 @@ class PlayerViewModel(): ViewModel() {
 
     var commentContent = ObservableField<String>();
     private val user =  User("1212","first","last", "displayName","male","18",official = false, avatarUrl = "")
-
     private val _comments = MutableLiveData<MutableList<Comment>>(mutableListOf())
 
     val comments: LiveData<MutableList<Comment>>
         get() = _comments
-    private val _isFavorite = MutableLiveData(false)
     val isFavourite: LiveData<Boolean>
         get(){
             return _isFavorite
         }
-    private val _isShowComments = MutableLiveData(false)
-    private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
         get() = _isLoading
     val isShowComments: LiveData<Boolean>
@@ -141,5 +149,8 @@ class PlayerViewModel(): ViewModel() {
             Log.e("COMMENT", "Error getting comments", e)
             _isLoading.value = false;
         }
+    }
+    fun getLocalMp3Files () {
+
     }
 }

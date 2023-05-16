@@ -31,19 +31,16 @@ class SignInActivity : AppCompatActivity() , AuthListener  {
     lateinit var gso: GoogleSignInOptions;
     lateinit var gsc: GoogleSignInClient;
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         signInViewModel =  ViewModelProvider(this)[SignInViewModel::class.java];
         binding = DataBindingUtil.setContentView(this,R.layout.activity_sign_in);
         signInViewModel.setAuthListener(this);
         binding.viewmodel = signInViewModel;
-
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                     .build();
         gsc = GoogleSignIn.getClient(this,gso);
-
         binding.btnSignInGoogle.setOnClickListener(View.OnClickListener {
             signInWithGoogle();
         })
@@ -53,7 +50,6 @@ class SignInActivity : AppCompatActivity() , AuthListener  {
             }
         })
         setContentView(binding.root)
-
     }
     private fun isValidForm(): Boolean{
         binding.edtEmail.error = Validator.validateEmail(binding.edtEmail.text.toString());
@@ -63,10 +59,8 @@ class SignInActivity : AppCompatActivity() , AuthListener  {
     private fun signInWithGoogle(){
         var intent = gsc.signInIntent;
         startActivityForResult(intent,100);
-
     }
-
-    protected override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 100){
             val task  = GoogleSignIn.getSignedInAccountFromIntent(data);
