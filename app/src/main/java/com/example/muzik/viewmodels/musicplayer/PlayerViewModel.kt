@@ -163,7 +163,5 @@ class PlayerViewModel(): ViewModel() {
             _player.value?.addMediaItem(mediaItem);
             _localListSong.add(it);
         }
-
     }
-
 }
