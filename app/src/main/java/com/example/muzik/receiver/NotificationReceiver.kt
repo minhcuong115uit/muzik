@@ -10,7 +10,6 @@ import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
 //notification player
 class NotificationReceiver(): BroadcastReceiver() {
-
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action;
         val intent1 = Intent(context,MusicService::class.java);

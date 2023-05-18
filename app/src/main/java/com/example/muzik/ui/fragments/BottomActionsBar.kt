@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.NavHostFragment
 import com.example.muzik.R
 import com.example.muzik.databinding.FragmentBottomActionsBarBinding
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
@@ -24,7 +25,6 @@ class BottomActionsBar : Fragment() {
         binding.viewmodel = viewModel;
         setObservations();
         //open Comments Modal
-
         binding.actionBarComment.setOnClickListener(View.OnClickListener {
             viewModel.handleToggleShowComments();
             viewModel.getNavController().navigate(R.id.action_bottomActionsBar_to_comments)

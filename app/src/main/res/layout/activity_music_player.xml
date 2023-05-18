@@ -152,17 +152,17 @@
                 app:show_timeout="0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/actions_bottom_bar"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:elevation="100dp"
-            app:defaultNavHost="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:navGraph="@navigation/reaction_nav_graph"
-            tools:layout="@layout/fragment_bottom_actions_bar" />
+<!--&lt;!&ndash;        <androidx.fragment.app.FragmentContainerView&ndash;&gt;-->
+<!--            android:id="@+id/actions_bottom_bar"-->
+<!--            android:name="androidx.navigation.fragment.NavHostFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="500dp"-->
+<!--            android:elevation="100dp"-->
+<!--            app:defaultNavHost="true"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:navGraph="@navigation/reaction_nav_graph"-->
+<!--            tools:layout="@layout/fragment_bottom_actions_bar" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

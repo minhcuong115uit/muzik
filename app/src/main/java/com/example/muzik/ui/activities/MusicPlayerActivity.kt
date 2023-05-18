@@ -35,13 +35,13 @@ class MusicPlayerActivity : AppCompatActivity() {
     private lateinit var navController: NavController;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        intent.getStringExtra("SongId")?.let {
+            Log.e("SongID",it);
+        }
         viewModel =  ViewModelProvider(this)[PlayerViewModel::class.java]
 //        viewModel.initPlayer(this);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_music_player);
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.actions_bottom_bar) as NavHostFragment
-        navController = navHostFragment.navController
-        viewModel.setNavController(navController);
+//
 
         binding.viewmodel = viewModel;
         shuffleBtn = findViewById(R.id.shuffle_mode)

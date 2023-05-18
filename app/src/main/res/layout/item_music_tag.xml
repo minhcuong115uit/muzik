@@ -18,7 +18,9 @@
             android:layout_width="wrap_content"
             android:id="@+id/music_item_song_name"
             android:textStyle="bold"
-            android:textSize="@dimen/font_size_medium"
+            android:textSize="16sp"
+
+            android:maxLines="1"
             android:text="Missing you"
             android:textColor="@color/primary_text"
             android:layout_marginBottom="4dp"
@@ -34,6 +36,7 @@
         android:layout_width="wrap_content"
         style="@style/ExoMediaButton"
         android:src="@drawable/ic_more"
+        android:id="@+id/music_item_more"
         android:padding="8dp"
         android:layout_height="wrap_content"/>
 </LinearLayout>

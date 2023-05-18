@@ -1,5 +1,6 @@
 package com.example.muzik.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
 import com.example.muzik.databinding.FragmentLibraryBinding
+import com.example.muzik.ui.activities.MusicPlayerActivity
 import com.example.muzik.ui.adapters.MusicItemAdapter
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
@@ -24,6 +26,9 @@ private const val ARG_PARAM2 = "param2"
  */
 class Library : Fragment() {
     private lateinit var adapter: MusicItemAdapter;
+//    private val viewModel: PlayerViewModel by lazy {
+//        ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
+//    }
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentLibraryBinding;
 
@@ -34,7 +39,7 @@ class Library : Fragment() {
         // Inflate the layout for this fragment
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_library, container,false);
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
-        adapter = MusicItemAdapter(requireActivity(),viewModel.getLocalListSong());
+        adapter = MusicItemAdapter(requireActivity(),viewModel);
         binding.recViewHistory.adapter = adapter;
         return binding.root
     }

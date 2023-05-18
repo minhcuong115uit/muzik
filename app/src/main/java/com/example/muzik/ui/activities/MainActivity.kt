@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
 
         //bottom player bar
         musicPlayerBarFragment = MusicPlayerBar()
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_music_player, musicPlayerBarFragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_music_player_bar, musicPlayerBarFragment).commit()
         showNotification(R.drawable.ic_play);
 
         requestPermission();
