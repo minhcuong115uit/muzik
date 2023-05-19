@@ -114,7 +114,6 @@ class PlayerViewModel(): ViewModel() {
     }
     fun uploadComment(){
         _isLoading.value = true;
-
         val comment = Comment("3Wj9MsZv9nLwsmj75A7w", createdAt = LocalDate.now().toString(),
             content =  commentContent.get()!!, user = user,
             modifiedAt = "", hearts = listOf<UUID>()

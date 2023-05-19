@@ -1,25 +1,29 @@
 package com.example.muzik.ui.fragments
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
-import android.widget.TextView
+import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import com.example.muzik.R
 import com.example.muzik.databinding.FragmentMusicPlayerBinding
-import com.example.muzik.ui.activities.MainActivity
 import com.example.muzik.utils.Formater
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.TimeBar
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -162,21 +166,29 @@ class MusicPlayer : Fragment() {
     }
     private fun setObservations(){
         viewModel.isShowComments.observe(viewLifecycleOwner) { isShowComments ->
+            val alphaFrom: Float
+            val alphaTo: Float
             if (isShowComments) {
-                binding.playerBody.alpha = 0.2F
+                alphaFrom = 1f
+                alphaTo = 0.5f
             } else {
-                binding.playerBody.alpha = 1F
+                alphaFrom = 0.5f
+                alphaTo = 1f
             }
+
+            val animation = AlphaAnimation(alphaFrom, alphaTo)
+            animation.duration = 1000
+            animation.fillAfter = true
+            binding.playerBody.startAnimation(animation)
+            binding.playerBody.alpha = alphaTo
         }
         viewModel.repeatState.observe(viewLifecycleOwner){
             when(it){
                 0->{
                     repeatBtn.setImageResource(R.drawable.exo_styled_controls_repeat_off);
-
                 }
                 1->{
                     repeatBtn.setImageResource(R.drawable.exo_styled_controls_repeat_one);
-
                 }
                 2->{
                     repeatBtn.setImageResource(R.drawable.exo_styled_controls_repeat_all);
