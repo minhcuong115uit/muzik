@@ -31,13 +31,16 @@ class SongRepository {
 
         cursor?.use {
             val dataColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+            var id = 0
             val nameColumn = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
 
             while (it.moveToNext()) {
                 val filePath = it.getString(dataColumn)
                 val fileName = it.getString(nameColumn)
-                listMp3Uri.add(Song("","",filePath,fileName,"",""));
+
+                listMp3Uri.add(Song("DeviceSong${id}","",filePath,fileName,"",""));
                 Log.e("LocalAudioFile", filePath);
+                id++;
                 // Do something with the file path or name (e.g., display it, store it in a list, etc.)
             }
         }

@@ -16,6 +16,7 @@ import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 class BottomActionsBar : Fragment() {
     private lateinit var binding: FragmentBottomActionsBarBinding
     private val viewModel: PlayerViewModel by activityViewModels()
+    private lateinit var comments: Comments
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -23,11 +24,14 @@ class BottomActionsBar : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentBottomActionsBarBinding.inflate(inflater,container,false);
         binding.viewmodel = viewModel;
+        comments = Comments()
         setObservations();
         //open Comments Modal
         binding.actionBarComment.setOnClickListener(View.OnClickListener {
-            viewModel.handleToggleShowComments();
-            viewModel.getNavController().navigate(R.id.action_bottomActionsBar_to_comments)
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
+                .addToBackStack("Comments")
+                .replace(R.id.actions_bar, comments).commit()
         })
         return binding.root;
     }

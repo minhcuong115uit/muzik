@@ -73,7 +73,8 @@ class Comments : Fragment() {
         }
 
         binding.closeComments.setOnClickListener(View.OnClickListener {
-            viewModel.getNavController().navigateUp()
+             parentFragmentManager.popBackStack()
+
         })
         return binding.root
     }

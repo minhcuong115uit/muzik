@@ -1,26 +1,17 @@
 package com.example.muzik.ui.adapters
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.muzik.R
 import com.example.muzik.data.models.Song
-import com.example.muzik.generated.callback.OnClickListener
 import com.example.muzik.ui.activities.MainActivity
-import com.example.muzik.ui.activities.MusicPlayerActivity
-import com.example.muzik.ui.activities.authentication.SignInActivity
 import com.example.muzik.ui.fragments.MusicPlayer
-import com.example.muzik.ui.fragments.MusicPlayerBar
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
 class MusicItemAdapter(private val context: Context, private val playerViewModel: PlayerViewModel):
@@ -44,7 +35,7 @@ class MusicItemAdapter(private val context: Context, private val playerViewModel
             fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
                 .addToBackStack("Player")
             .replace(R.id.music_player_fragment, musicPlayerFragment).commit()
-
+            playerViewModel.playSong(song);
         }
         holder.bind(song);
     }

@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
 import com.example.muzik.databinding.ActivitySignInBinding
 import com.example.muzik.listeners.AuthListener
-import com.example.muzik.ui.activities.MusicPlayerActivity
 import com.example.muzik.utils.Validator
 import com.example.muzik.utils.ViewUtils
 import com.example.muzik.viewmodels.authentication.SignInViewModel

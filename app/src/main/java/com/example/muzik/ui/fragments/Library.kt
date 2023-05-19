@@ -1,6 +1,5 @@
 package com.example.muzik.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
 import com.example.muzik.databinding.FragmentLibraryBinding
-import com.example.muzik.ui.activities.MusicPlayerActivity
 import com.example.muzik.ui.adapters.MusicItemAdapter
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
@@ -37,10 +35,14 @@ class Library : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_library, container,false);
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
+        //set local song playlist
+        viewModel.setPlayList(viewModel.getLocalListSong().map { it.convertToMediaItem() })
+
         adapter = MusicItemAdapter(requireActivity(),viewModel);
-        binding.recViewHistory.adapter = adapter;
+        binding.recDeviceSongs.adapter = adapter;
         return binding.root
     }
 

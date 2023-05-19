@@ -1,6 +1,7 @@
 package com.example.muzik.viewmodels.musicplayer
 
 import android.content.Context
+import android.provider.MediaStore.Audio.Media
 import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -27,7 +28,6 @@ class PlayerViewModel(): ViewModel() {
     private lateinit var navController: NavController
     private var _repeatState = MutableLiveData<Int>(2);
     private var _shuffleMode = MutableLiveData<Boolean>(false);
-    private val _currentMediaItem = MutableLiveData<MediaItem>()
     private val _player = MutableLiveData<ExoPlayer>()
     private val _isFavorite = MutableLiveData(false)
     private val _isShowComments = MutableLiveData(false)
@@ -38,6 +38,7 @@ class PlayerViewModel(): ViewModel() {
         this.add(Song("","","Missing you","Phương Ly"))
     }
     private val _localListSong = mutableListOf<Song>()
+    private val _currentSong = MutableLiveData<Song>();
 
     fun getListSong(): List<Song>{
         return _listSong;
@@ -45,6 +46,10 @@ class PlayerViewModel(): ViewModel() {
     fun getLocalListSong(): List<Song>{
         return _localListSong;
     }
+    val currentSong: LiveData<Song>
+        get(){
+            return _currentSong
+        }
     val repeatState:LiveData<Int>
         get() {
             return _repeatState
@@ -64,9 +69,6 @@ class PlayerViewModel(): ViewModel() {
     val player: LiveData<ExoPlayer>
         get() = _player
 
-    val currentMediaItem: LiveData<MediaItem>
-        get() = _currentMediaItem
-
     fun initPlayer(context: Context) {
         _player.value = ExoPlayer.Builder(context).build()
 //        val firstItem = MediaItem.fromUri("https://p.scdn.co/mp3-preview/0496b1c18c7653d9124a2f39e148ec3babcae737?cid=cfe923b2d660439caf2b557b21f31221")
@@ -83,12 +85,6 @@ class PlayerViewModel(): ViewModel() {
         return _player.value?.currentPosition ?: 0
     }
 
-    fun setCurrentMediaItem(mediaItem: MediaItem) {
-        _currentMediaItem.value = mediaItem
-        _player.value?.setMediaItem(mediaItem)
-        _player.value?.prepare()
-        _player.value?.play()
-    }
     override fun onCleared() {
         _player.value?.release()
         super.onCleared()
@@ -110,12 +106,6 @@ class PlayerViewModel(): ViewModel() {
         get(){
             return _isShowComments
         }
-    fun setNavController(navController: NavController) {
-        this.navController = navController
-    }
-    fun getNavController(): NavController {
-        return navController
-    }
     fun handleToggleHeart() {
         _isFavorite.value = !_isFavorite.value!!;
     }
@@ -157,11 +147,24 @@ class PlayerViewModel(): ViewModel() {
         }
     }
     fun getLocalMp3Files (context: Context) {
+        _localListSong.clear()
         val songList = SongRepository.instance?.getDeviceMp3Files(context);
         songList?.forEach {
             val mediaItem = MediaItem.fromUri(it.songUri)
             _player.value?.addMediaItem(mediaItem);
             _localListSong.add(it);
         }
+    }
+
+    fun playSong(song: Song){
+        _currentSong.value = song;
+        val mediaItem = MediaItem.fromUri(song.songUri);
+        _player.value?.setMediaItem(mediaItem);
+        _player.value?.prepare();
+        _player.value?.play();
+    }
+    fun setPlayList(list: List<MediaItem>){
+        _player.value?.clearMediaItems();
+        _player.value?.setMediaItems(list);
     }
 }
