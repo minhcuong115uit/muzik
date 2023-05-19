@@ -32,6 +32,7 @@ class BottomActionsBar : Fragment() {
             fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
                 .addToBackStack("Comments")
                 .replace(R.id.actions_bar, comments).commit()
+            viewModel.handleToggleShowComments();
         })
         return binding.root;
     }
