@@ -2,6 +2,11 @@
 <layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+        <data>
+            <variable
+                name="viewmodel"
+                type="com.example.muzik.viewmodels.musicplayer.PlayerViewModel" />
+        </data>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -56,17 +61,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/header_layout">
 
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/fragment_container_music_disc"
-                    android:name="com.example.muzik.ui.fragments.MusicDisc"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="450dp"
-
+                    android:id="@+id/music_disc"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/player_body"
-                    tools:layout="@layout/fragment_music_disc" />
-
+                    android:layout_height="450dp"/>
                 <LinearLayout
                     android:id="@+id/song_title"
                     android:layout_width="match_parent"
@@ -77,7 +78,7 @@
 
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/fragment_container_music_disc">
+                    app:layout_constraintTop_toBottomOf="@+id/music_disc">
 
                     <TextView
                         android:id="@+id/title_textview"
@@ -146,17 +147,12 @@
                     app:show_timeout="0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/actions_bar"
-                android:name="androidx.navigation.fragment.NavHostFragment"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:elevation="100dp"
-                app:defaultNavHost="true"
+                android:id="@+id/actions_bar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:navGraph="@navigation/reaction_nav_graph"
-                tools:layout="@layout/fragment_bottom_actions_bar" />
+                android:layout_height="500dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
