@@ -34,18 +34,47 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Title -->
-                <TextView
-                    android:id="@+id/title_text"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-
-                    android:layout_marginStart="12dp"
-                    android:text="Title"
-                    android:textSize="@dimen/font_size_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/player_more_btn"
                     app:layout_constraintLeft_toRightOf="@id/back_button"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/back_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Now playing"
+
+                        android:textSize="@dimen/font_size_small"
+                        />
+                    <TextView
+                        android:id="@+id/title_song"
+                        android:layout_width="wrap_content"
+                        android:width="200dp"
+                        android:lines="1"
+                        android:ellipsize="marquee"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewmodel.currentSong.name}"
+                        android:textSize="@dimen/font_size_medium"
+                        />
+                </LinearLayout>
+
+
+                <ImageButton
+                    android:id="@+id/player_more_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_more"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -81,19 +110,26 @@
                     app:layout_constraintTop_toBottomOf="@+id/music_disc">
 
                     <TextView
-                        android:id="@+id/title_textview"
+                        android:id="@+id/song_name"
                         android:layout_width="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:lines="2"
+                        android:ellipsize="marquee"
+                        android:width="260dp"
                         android:layout_height="wrap_content"
-                        android:text="Title"
-                        android:textSize="24sp" />
-
+                        android:text="@{viewmodel.currentSong.name}"
+                        android:textSize="@dimen/font_size_large" />
                     <!-- TextView ArtistName-->
                     <TextView
+                        android:lines="1"
+                        android:ellipsize="marquee"
+                        android:width="240dp"
                         android:id="@+id/artistname_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Artist Name"
-                        android:textSize="18sp" />
+                        android:text="@{viewmodel.currentSong.artistName}"
+                        android:gravity="center_horizontal"
+                        android:textSize="@dimen/font_size_medium" />
                 </LinearLayout>
 
                 <LinearLayout

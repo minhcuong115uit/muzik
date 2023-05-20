@@ -34,32 +34,27 @@ private const val ARG_PARAM1 = "param1"
  * create an instance of this fragment.
  */
 class MusicPlayer : Fragment() {
-    private var songId: String? = null
     lateinit var binding: FragmentMusicPlayerBinding
     private lateinit var viewModel: PlayerViewModel
     private lateinit var fragmentActionBar: BottomActionsBar
     lateinit var shuffleBtn: ImageButton;
     lateinit var repeatBtn: ImageButton;
     lateinit var playNext: ImageButton;
+    lateinit var playPrev: ImageButton;
     lateinit var disFragment: MusicDisc;
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            songId = it.getString(ARG_PARAM1)
-        }
-    }
-
 
     //prevent activity response to onClick
-    //Đoạn code này dùng để ngăn không cho click event trong Activtiy hoạt động
+    //Đoạn code này dùng để ngăn không cho click event trong Activtiy nằm dưới hoạt động
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view!!.setOnTouchListener { view, motionEvent -> return@setOnTouchListener true }
-        playNext = getView()?.findViewById<ImageButton>(R.id.play_next_btn)!!
+        view.setOnTouchListener { view, motionEvent -> return@setOnTouchListener true }
+        playNext = getView()?.findViewById(R.id.play_next_btn)!!
         shuffleBtn = getView()?.findViewById(R.id.shuffle_mode)!!
         repeatBtn = getView()?.findViewById(R.id.exo_repeat_mode)!!
+        playPrev = getView()?.findViewById(R.id.play_prev_btn)!!
         setUpMusicPlayer();
+        setBtnClickListener();
         setObservations();
         disFragment = MusicDisc()
         parentFragmentManager.beginTransaction().replace(R.id.music_disc,disFragment).commit()
@@ -74,86 +69,73 @@ class MusicPlayer : Fragment() {
         fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
             .replace(R.id.actions_bar, fragmentActionBar).commit()
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_music_player,container,false);
-
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
-        binding.backButton.setOnClickListener {
-            parentFragmentManager.popBackStack();
-        }
+        binding.viewmodel= viewModel;
 
         return binding.root
     }
-    companion object {
-        @JvmStatic
-        fun newInstance(songId: String) =
-            MusicPlayer().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, songId)
-                }
-            }
-    }
-    private fun setUpMusicPlayer(){
-        playNext.setOnClickListener {
-            viewModel.player.value?.seekToNext();
-        }
-        shuffleBtn.setOnClickListener(View.OnClickListener {
-            viewModel.setShuffleMode(!viewModel.shuffleMode.value!!);
-        })
-        repeatBtn.setOnClickListener(View.OnClickListener {
-            var newRepeatMode = if(viewModel.repeatState.value == 2) 0 else viewModel.repeatState.value!!.plus(
-                1
-            );
-            viewModel.setRepeatState(newRepeatMode);
-        })
-        binding.playerControlView.player = viewModel.player.value;
+    private fun setUpMusicPlayer() {
 
+        // Thiết lập playerControlView với player từ ViewModel
+        binding.playerControlView.player = viewModel.player
 
+        // Đăng ký nghe sự kiện cho player
         binding.playerControlView.player?.addListener(object : Player.Listener {
             val durationText = binding.durationTxt
 
+            // Xử lý sự kiện khi chuyển media item trong player
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 super.onMediaItemTransition(mediaItem, reason)
-                viewModel.player.value?.duration?.let { binding.timeBar.setDuration(it) }
-                durationText.text =
-                    viewModel.player.value?.duration?.let { Formater.formatDuration(it) };
+                val currentIndex = viewModel.player.currentMediaItemIndex
+                viewModel.currentSong.value = viewModel.getListSong()[currentIndex]
             }
+
+            // Xử lý sự kiện khi trạng thái isPlaying thay đổi
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 if (isPlaying) {
-                    viewModel.player.value?.duration?.let { binding.timeBar.setDuration(it) }
-                    durationText.text =
-                        viewModel.player.value?.duration?.let { Formater.formatDuration(it) };
+                    viewModel.player.duration.let {
+                        durationText.text =  Formater.formatDuration(it)
+                        binding.timeBar.setDuration(it)
+                    }
+                } else {
+                    disFragment.stopAnimation()
                 }
-                else{
-                    disFragment?.stopAnimation()
-                }
+                viewModel.getActionPlayerListener()?.playCLicked()
             }
+
+            // Xử lý sự kiện khi repeatMode thay đổi
             override fun onRepeatModeChanged(repeatMode: Int) {
                 super.onRepeatModeChanged(repeatMode)
                 Log.i("RepeatModeChanged", repeatMode.toString())
             }
+
+            // Xử lý sự kiện khi trạng thái playWhenReady thay đổi
             override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
                 super.onPlayWhenReadyChanged(playWhenReady, reason)
                 if (playWhenReady) {
-                    disFragment?.resumeAnimation()
-                    viewModel.player.value?.play();
+                    disFragment.resumeAnimation()
+                    viewModel.player.play()
                 } else {
-                    disFragment?.stopAnimation()
+                    disFragment.stopAnimation()
                 }
             }
         })
 
-        //handle user click on timeBar
+        // Xử lý sự kiện khi người dùng chạm vào timeBar
         binding.timeBar.addListener(object : TimeBar.OnScrubListener {
             override fun onScrubMove(timeBar: TimeBar, position: Long) {
+                // Xử lý khi người dùng di chuyển thanh tua
             }
 
             override fun onScrubStart(timeBar: TimeBar, position: Long) {
-                // Tạm dừng Player khi người dùng bắt đầu tua
-                viewModel.player.value?.playWhenReady = false
+                // Tạm dừng player khi người dùng bắt đầu tua
+                viewModel.player.playWhenReady = false
             }
+
             override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
                 // Bắt đầu lại Player khi người dùng kết thúc tua
-                viewModel.player.value?.seekTo(position)
-                viewModel.player.value?.playWhenReady = true
+                viewModel.player.seekTo(position)
+                viewModel.player.playWhenReady = true
             }
         })
         //set timebar value keep updated
@@ -165,6 +147,11 @@ class MusicPlayer : Fragment() {
         }
     }
     private fun setObservations(){
+        viewModel.currentSong.observe(viewLifecycleOwner){
+            binding.artistnameTextview.text = it?.artistName
+            binding.songName.text = it?.name
+            binding.titleSong.text = it?.name
+        }
         viewModel.isShowComments.observe(viewLifecycleOwner) { isShowComments ->
             val alphaFrom: Float
             val alphaTo: Float
@@ -177,10 +164,9 @@ class MusicPlayer : Fragment() {
             }
 
             val animation = AlphaAnimation(alphaFrom, alphaTo)
-            animation.duration = 1000
+            animation.duration = 800
             animation.fillAfter = true
             binding.playerBody.startAnimation(animation)
-            binding.playerBody.alpha = alphaTo
         }
         viewModel.repeatState.observe(viewLifecycleOwner){
             when(it){
@@ -203,6 +189,30 @@ class MusicPlayer : Fragment() {
             else{
                 shuffleBtn.setImageResource(R.drawable.ic_play_random_off)
             }
+        }
+
+    }
+    private fun setBtnClickListener(){
+        // Thiết lập sự kiện cho nút playNext
+        playNext.setOnClickListener {
+            viewModel.playNext()
+        }
+        playPrev.setOnClickListener {
+            viewModel.playPrev()
+        }
+        // Thiết lập sự kiện cho nút shuffleBtn
+        shuffleBtn.setOnClickListener(View.OnClickListener {
+            viewModel.setShuffleMode(!viewModel.shuffleMode.value!!)
+        })
+
+        // Thiết lập sự kiện cho nút repeatBtn
+        repeatBtn.setOnClickListener(View.OnClickListener {
+            // Xác định chế độ repeat mới dựa trên giá trị hiện tại của repeatState
+            val newRepeatMode = if (viewModel.repeatState.value == 2) 0 else viewModel.repeatState.value!!.plus(1)
+            viewModel.setRepeatState(newRepeatMode)
+        })
+        binding.backButton.setOnClickListener {
+            parentFragmentManager.popBackStack();
         }
     }
 }

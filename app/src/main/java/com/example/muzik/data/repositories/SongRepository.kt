@@ -38,7 +38,7 @@ class SongRepository {
                 val filePath = it.getString(dataColumn)
                 val fileName = it.getString(nameColumn)
 
-                listMp3Uri.add(Song("DeviceSong${id}","",filePath,fileName,"",""));
+                listMp3Uri.add(Song("DeviceSong${id}","",filePath, name = fileName,"",""));
                 Log.e("LocalAudioFile", filePath);
                 id++;
                 // Do something with the file path or name (e.g., display it, store it in a list, etc.)

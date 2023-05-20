@@ -1,6 +1,7 @@
 package com.example.muzik.ui.adapters
 
 import android.content.Context
+import android.media.Image
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,6 @@ class MusicItemAdapter(private val context: Context, private val playerViewModel
 
 
     private var list: List<Song> = playerViewModel.getLocalListSong()
-    var onItemClick: ((Song) -> Unit?)? = null;
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
        val view = LayoutInflater.from(context).inflate(R.layout.item_music_tag,parent,false);
@@ -29,13 +29,13 @@ class MusicItemAdapter(private val context: Context, private val playerViewModel
         val song = list[position];
         holder.itemView.setOnClickListener{
             Log.e("ClickListener","Item Clicked")
-            val musicPlayerFragment = MusicPlayer.newInstance(songId = song.songId);
+            val musicPlayerFragment = MusicPlayer();
             val fragmentManager = (context as MainActivity).supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
                 .addToBackStack("Player")
             .replace(R.id.music_player_fragment, musicPlayerFragment).commit()
-            playerViewModel.playSong(song);
+            playerViewModel.playSong(position);
         }
         holder.bind(song);
     }
@@ -48,10 +48,11 @@ class MusicItemAdapter(private val context: Context, private val playerViewModel
 
         private var songName:TextView;
         private var songArtist:TextView;
+        private var moreBtn:ImageView
         init {
              songName = itemView.findViewById(R.id.music_item_song_name);
              songArtist = itemView.findViewById(R.id.music_item_artist);
-            val moreBtn = itemView.findViewById<ImageView>(R.id.music_item_more);
+            moreBtn = itemView.findViewById<ImageView>(R.id.music_item_more);
                 moreBtn.setOnClickListener {
                  Log.e("ClickListener","txt Artist Clicked")
              }

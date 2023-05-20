@@ -23,7 +23,7 @@
             android:src="@drawable/ic_play_random_off"
             />
         <ImageButton
-            android:id="@id/exo_prev"
+            android:id="@+id/play_prev_btn"
             style="@style/ExoMediaButton"
             android:layout_width="24dp"
             android:layout_height="24dp"

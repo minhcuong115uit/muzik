@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.muzik.viewmodels.musicplayer.PlayerViewModel" />
+    </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -13,6 +18,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="72dp"
             android:layout_height="72dp"
+            android:id="@+id/player_bar_image"
             android:src="@drawable/girl_listening_to_music" />
         <LinearLayout
             android:layout_width="0dp"
@@ -27,14 +33,24 @@
                 android:textStyle="bold"
                 android:textSize="@dimen/font_size_medium"
                 android:textColor="@color/white"
-                android:text="Thằng điên"
+                android:singleLine="true"
+                android:ellipsize="@{viewmodel.getEllipsizeType}"
+
+                android:marqueeRepeatLimit="marquee_forever"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:scrollHorizontally="true"
+                android:text="@{viewmodel.currentSong.name}"
+                android:id="@+id/player_bar_song_name"
+
                 android:layout_height="wrap_content"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:lines="1"
                 android:textColor="@color/white"
                 android:layout_marginTop="4dp"
-                android:text="Justatee"
+                android:id="@+id/player_bar_artist"
+                android:text="@{viewmodel.currentSong.artistName}"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
@@ -46,7 +62,8 @@
                 style="@style/ExoMediaButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="18dp"
                 android:background="@drawable/circle_background_selector"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_play_previous" />
@@ -56,7 +73,7 @@
                 style="@style/ExoMediaButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginRight="18dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_play" />
             <!--            <ImageButton-->
@@ -74,7 +91,7 @@
                 style="@style/ExoMediaButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginRight="12dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_play_next" />
         </LinearLayout>
