@@ -39,7 +39,7 @@ class Library : Fragment() {
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_library, container,false);
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
         //set local song playlist
-        viewModel.setPlayList(viewModel.getLocalListSong().map { it.convertToMediaItem() })
+        viewModel.setPlayList(viewModel.getLocalListSong())
 
         adapter = MusicItemAdapter(requireActivity(),viewModel);
         binding.recDeviceSongs.adapter = adapter;

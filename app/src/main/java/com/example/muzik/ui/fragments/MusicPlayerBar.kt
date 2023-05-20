@@ -2,6 +2,7 @@ package com.example.muzik.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,8 +16,7 @@ import com.example.muzik.listeners.ActionPlayerListener
 import com.example.muzik.ui.activities.MainActivity
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
-val ARG_PARAM = "param1";
-class MusicPlayerBar : Fragment() {
+class MusicPlayerBar : Fragment(), ActionPlayerListener {
     lateinit var binding:FragmentMusicPlayerBarBinding;
     lateinit var viewModel: PlayerViewModel
     lateinit var mainActivity: MainActivity
@@ -31,31 +31,64 @@ class MusicPlayerBar : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_music_player_bar, container, false)
-//        viewModel.initPlayer(requireActivity());
-        binding.nextBtnBottomBar.setOnClickListener {
-            viewModel.player.value?.seekToNext();
-            mainActivity.showNotification(R.drawable.ic_pause)
+        setBtnClickListener();
+        binding.viewmodel = viewModel
+        binding.playerBarSongName.requestFocus();
+        viewModel.setActionPlayerListener(this);
+        return binding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.setOnClickListener {
+            val musicPlayerFragment = MusicPlayer();
+            val fragmentManager = (context as MainActivity).supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
+                .addToBackStack("Player")
+                .replace(R.id.music_player_fragment, musicPlayerFragment).commit()
+        }
+    }
+    private fun setBtnClickListener(){
 
+        binding.nextBtnBottomBar.setOnClickListener {
+            viewModel.player.seekToNext();
+            mainActivity.showNotification(R.drawable.ic_pause)
         }
         binding.prevBtnBottomBar.setOnClickListener {
-            viewModel.player.value?.seekToPrevious();
+            viewModel.player.seekToPrevious();
             mainActivity.showNotification(R.drawable.ic_pause)
-
         }
         binding.playBtnBottomBar.setOnClickListener {
-            if(viewModel.player.value?.isPlaying == true){
-                viewModel.player.value?.stop();
+            if(viewModel.player.isPlaying){
+                viewModel.player.stop();
                 mainActivity.showNotification(R.drawable.ic_play)
                 (it as ImageButton).setImageResource(R.drawable.ic_play);
+                viewModel.ellipsizeType.set(TextUtils.TruncateAt.END)
             }
             else{
                 mainActivity.showNotification(R.drawable.ic_pause)
-                viewModel.player.value?.playWhenReady = true;
-                viewModel.player.value?.prepare();
-                viewModel.player.value?.play();
+                viewModel.player.playWhenReady = true;
+                viewModel.player.prepare();
+                viewModel.player.play();
                 (it as ImageButton).setImageResource(R.drawable.ic_pause);
+                viewModel.ellipsizeType.set(TextUtils.TruncateAt.MARQUEE)
             }
         }
-        return binding.root
+    }
+    override fun nextClicked() {
+
+    }
+
+    override fun playCLicked() {
+        if(viewModel.player.isPlaying){
+            binding.playBtnBottomBar.setImageResource(R.drawable.ic_pause)
+        }
+        else{
+            binding.playBtnBottomBar.setImageResource(R.drawable.ic_play)
+        }
+    }
+
+    override fun prevClicked() {
+
     }
 }

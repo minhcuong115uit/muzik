@@ -30,7 +30,6 @@ import com.example.muzik.ui.fragments.Library
 import com.example.muzik.ui.fragments.MusicPlayerBar
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.zip.Inflater
 
 class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListener {
     private val REQUEST_PERMISSION_CODE = 1
@@ -68,26 +67,29 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
     override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
         binding =  DataBindingUtil.setContentView(this,R.layout.activity_main);
-
         navView = findViewById(R.id.bottom_nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         viewModel =  ViewModelProvider(this)[PlayerViewModel::class.java]
         viewModel.initPlayer(this);
-
         val intent = Intent(this,MusicService::class.java);
         mediaSession = MediaSessionCompat(this,"PlayerAudio");
         bindService(intent,this, BIND_AUTO_CREATE);
 
-
-        //bottom player bar
-        musicPlayerBarFragment = MusicPlayerBar()
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_music_player_bar, musicPlayerBarFragment).commit()
-        showNotification(R.drawable.ic_play);
+        setObservation();
 
         requestPermission();
     }
 
-
+    private fun setObservation(){
+        viewModel.currentSong.observe(this){
+            if(viewModel.currentSong.value != null)
+            {
+                musicPlayerBarFragment = MusicPlayerBar()
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_music_player_bar, musicPlayerBarFragment).commit()
+                showNotification(R.drawable.ic_play);
+            }
+        }
+    }
     fun showNotification( playPauseBtn:Int){
         val intent = Intent(this,MainActivity::class.java);
         val contentIntent:PendingIntent = PendingIntent.getActivity(
@@ -130,7 +132,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
 
     }
     override fun playCLicked() {
-        if(viewModel.player.value?.isPlaying == true){
+        if(viewModel.player.isPlaying){
             showNotification(R.drawable.ic_pause);
             musicPlayerBarFragment.binding.playBtnBottomBar.setImageResource(R.drawable.ic_pause);
         }
@@ -140,21 +142,21 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
 
         }
     }
-
     override fun prevClicked() {
         showNotification(R.drawable.ic_pause)
     }
-    override fun onPause() {
-        super.onPause()
+
+    override fun onDestroy() {
+        super.onDestroy()
         unbindService(this);
     }
+
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder: MusicService.MusicBinder = service as MusicService.MusicBinder;
         musicService = binder.getService()
-        musicService.setMusicPlayer(viewModel.player.value,this);
+        musicService.setMusicPlayer(viewModel.player,this);
         Log.e("ServiceConnected", musicService.toString());
     }
-
     override fun onServiceDisconnected(name: ComponentName?) {
         Log.e("ServiceDisconnected", musicService.toString());
     }
