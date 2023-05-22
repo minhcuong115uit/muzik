@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="8dp"
@@ -22,6 +21,7 @@
         android:layout_height="wrap_content">
         <ImageView
             android:layout_width="70dp"
+            android:id="@+id/playlist_image"
             android:src="@drawable/girl_listening_to_music"
             android:layout_height="70dp"/>
         <LinearLayout
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
-                android:id="@+id/music_item_song_name"
+                android:id="@+id/playlist_name"
                 android:textStyle="bold"
                 android:textSize="16sp"
 
@@ -42,16 +42,48 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:layout_width="wrap_content"
-                android:id="@+id/music_item_artist"
+                android:id="@+id/playlist_owner"
+                android:textStyle="bold"
                 android:text="Phương ly"
                 android:textColor="@color/sub_text"
                 android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Playlist"
+                    android:textColor="@color/sub_text"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/playlist_song_count"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text=" 0 "
+                    android:textColor="@color/sub_text"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                android:layout_width="wrap_content"
+                android:text="Songs"
+                android:textColor="@color/sub_text"
+                android:layout_height="wrap_content"/>
+                <ImageView
+                    android:layout_marginLeft="12dp"
+                    android:layout_width="12dp"
+                    android:background="@drawable/round_button"
+                    android:id="@+id/is_private_playlist_icon"
+                    android:src="@drawable/lock"
+                    android:textColor="@color/sub_text"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
         </LinearLayout>
         <ImageView
             android:layout_width="wrap_content"
             style="@style/ExoMediaButton"
             android:src="@drawable/ic_more"
-            android:id="@+id/music_item_more"
+            android:id="@+id/playlist_item_more"
             android:padding="8dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>

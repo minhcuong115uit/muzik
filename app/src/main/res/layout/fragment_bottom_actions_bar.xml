@@ -19,10 +19,12 @@
             android:id="@+id/action_bar_heart"
             style="@style/ExoMediaButton"
             android:layout_width="0dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
             android:layout_weight="1"
-            android:layout_height="24dp"
+            android:layout_height="48dp"
             android:contentDescription="@string/exo_controls_next_description"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:onClick="@{() -> viewmodel.handleToggleHeart()}"
             android:src="@drawable/ic_empty_heart" />
         <ImageButton
@@ -30,19 +32,24 @@
             style="@style/ExoMediaButton"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="24dp"
+            android:layout_height="48dp"
 
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
             android:contentDescription="@string/exo_controls_next_description"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/ic_chat" />
         <ImageButton
             android:id="@+id/action_bar_share"
             style="@style/ExoMediaButton"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="24dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_height="48dp"
+
             android:contentDescription="@string/exo_controls_next_description"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/ic_share" />
     </LinearLayout>
 </layout>

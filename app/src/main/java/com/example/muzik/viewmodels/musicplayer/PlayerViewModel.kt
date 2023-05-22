@@ -3,19 +3,28 @@ package com.example.muzik.viewmodels.musicplayer
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.CheckBox
+import androidx.compose.ui.window.Dialog
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.muzik.R
 import com.example.muzik.data.models.Comment
+import com.example.muzik.data.models.Playlist
 import com.example.muzik.data.models.Song
 import com.example.muzik.data.models.User
 import com.example.muzik.data.repositories.ReactionRepository
 import com.example.muzik.data.repositories.SongRepository
 import com.example.muzik.listeners.ActionPlayerListener
+import com.example.muzik.ui.activities.MainActivity
+import com.example.muzik.ui.fragments.CreatePlaylist
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.LocalDate
 import java.util.UUID
 
@@ -23,6 +32,7 @@ import java.util.UUID
 class PlayerViewModel(): ViewModel() {
     private lateinit var navController: NavController
     //to observe pause or start state
+    private var createPlaylistFragment = CreatePlaylist();
     private var actionPlayerListener: ActionPlayerListener? = null
     private var _repeatState = MutableLiveData<Int>(2);
     private var _shuffleMode = MutableLiveData<Boolean>(false);
@@ -31,15 +41,19 @@ class PlayerViewModel(): ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     private var _listSong = mutableListOf<Song>()
     private val _localListSong = mutableListOf<Song>()
+    private val _playlist = MutableLiveData<MutableList<Playlist>>(mutableListOf())
+    var createdPlaylist = ObservableField<Playlist>();
     lateinit var player:ExoPlayer;
+//    var playlistName = ObservableField<String>("");
+    var playlistName = ObservableField<String>("");
+    var isPrivatedPlaylist =ObservableField<Boolean>(false) ;
     var ellipsizeType  =  ObservableField<TextUtils.TruncateAt>(TextUtils.TruncateAt.MARQUEE)
     var currentSong = MutableLiveData<Song?>(null);
+    var notifyChange = MutableLiveData(false);
 
-    val isPlaying: LiveData<Boolean>
-        get() {
-            return MutableLiveData<Boolean>(player.isPlaying?:false)
-        }
-
+    fun getPlaylist(): LiveData<MutableList<Playlist>> {
+        return _playlist
+    }
     fun getListSong(): List<Song>{
         return _listSong;
     }
@@ -62,17 +76,11 @@ class PlayerViewModel(): ViewModel() {
         _shuffleMode.value = value;
         player.shuffleModeEnabled = value
     }
-//    val player: LiveData<ExoPlayer>
-//        get() = _player
-
     fun initPlayer(context: Context) {
         player = ExoPlayer.Builder(context).build()
         player.repeatMode = _repeatState.value!!;
         player.shuffleModeEnabled = _shuffleMode.value!!;
 
-    }
-    fun getCurrentPosition(): Long {
-        return player.currentPosition ?: 0
     }
     override fun onCleared() {
         player.release()
@@ -104,7 +112,7 @@ class PlayerViewModel(): ViewModel() {
         _isLoading.value = true;
         val comment = Comment("3Wj9MsZv9nLwsmj75A7w", createdAt = LocalDate.now().toString(),
             content =  commentContent.get()!!, user = user,
-            modifiedAt = "", hearts = listOf<UUID>()
+            modifiedAt = ""
         );
         try{
             ReactionRepository.instance!!.uploadComment(comment);
@@ -178,5 +186,22 @@ class PlayerViewModel(): ViewModel() {
         player.seekToPrevious();
         val index = player.currentMediaItemIndex
         currentSong.value = _listSong[index]
+    }
+    fun showDialog(context: Context) {
+        createPlaylistFragment.show((context as MainActivity).supportFragmentManager, "CreatePlaylist");
+    }
+    fun createPlaylist(){
+        Log.d("PlaylistName",playlistName.get().toString())
+        val newPlaylist = Playlist("","",playlistName.get().toString(),isPrivatedPlaylist.get()?: false,
+            mutableListOf(),""
+        )
+        _playlist.value?.add(newPlaylist);
+        notifyChange.value = !notifyChange.value!!;
+        refreshCreatePlaylistForm();
+        createPlaylistFragment.dismiss()
+    }
+    private fun refreshCreatePlaylistForm(){
+        playlistName.set("")
+        isPrivatedPlaylist.set(false);
     }
 }
