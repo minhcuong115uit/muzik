@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.muzik.viewmodels.musicplayer.PlayerViewModel" />
+    </data>
+    <LinearLayout
+        android:orientation="vertical"
+        tools:context=".ui.fragments.CreatePlaylist"
+        android:background="@drawable/dialog_bg"
+        android:layout_width="match_parent"
+        android:paddingBottom="24dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/dash"
+            android:layout_height="20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/round_background"
+                android:foreground="?attr/selectableItemBackground"
+                android:scaleType="centerInside"
+                android:src="@drawable/close" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="24dp"
+                android:textStyle="bold"
+                android:textSize="@dimen/font_size_medium"
+                android:text="@string/create_play_list"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:text="Save"
+                android:id="@+id/create_playlist_btn"
+                android:onClick="@{()->viewmodel.createPlaylist()}"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:text="@string/playlist_title"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:hint="@string/playlist_title"
+            android:text="@={viewmodel.playlistName}"
+            android:layout_height="wrap_content"/>
+        <CheckBox
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layoutDirection="rtl"
+            android:text="Make public"
+            android:checked="@={viewmodel.privatedPlaylist}"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>

@@ -11,15 +11,19 @@
     android:padding="8dp">
     <LinearLayout
         android:layout_width="match_parent"
+        android:gravity="center_vertical"
         android:layout_height="wrap_content">
         <ImageButton
             android:id="@+id/shuffle_mode"
             style="@style/ExoMediaButton"
+            android:foreground="?attr/selectableItemBackground"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="24dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:visibility="visible"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/ic_play_random_off"
             />
         <ImageButton
@@ -66,10 +70,10 @@
             style="@style/ExoMediaButton"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="24dp"
+            android:layout_height="50dp"
             android:src="@drawable/exo_styled_controls_repeat_off"
             android:visibility="visible"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             />
     </LinearLayout>
 </LinearLayout>

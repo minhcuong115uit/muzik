@@ -33,6 +33,9 @@ private const val ARG_PARAM1 = "param1"
  * Use the [MusicPlayer.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+private const val SONG_INDEX = "SONG_INDEX"
+
 class MusicPlayer : Fragment() {
     lateinit var binding: FragmentMusicPlayerBinding
     private lateinit var viewModel: PlayerViewModel
@@ -43,7 +46,7 @@ class MusicPlayer : Fragment() {
     lateinit var playPrev: ImageButton;
     lateinit var disFragment: MusicDisc;
 
-    //prevent activity response to onClick
+    //prevent activity response to onClick from fragment
     //Đoạn code này dùng để ngăn không cho click event trong Activtiy nằm dưới hoạt động
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,7 +74,7 @@ class MusicPlayer : Fragment() {
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_music_player,container,false);
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
         binding.viewmodel= viewModel;
-
+        binding.durationTxt.text = Formater.formatDuration(viewModel.player.duration)
         return binding.root
     }
     private fun setUpMusicPlayer() {
@@ -88,6 +91,7 @@ class MusicPlayer : Fragment() {
                 super.onMediaItemTransition(mediaItem, reason)
                 val currentIndex = viewModel.player.currentMediaItemIndex
                 viewModel.currentSong.value = viewModel.getListSong()[currentIndex]
+                durationText.text = Formater.formatDuration(viewModel.player.duration)
             }
 
             // Xử lý sự kiện khi trạng thái isPlaying thay đổi
@@ -124,26 +128,21 @@ class MusicPlayer : Fragment() {
         // Xử lý sự kiện khi người dùng chạm vào timeBar
         binding.timeBar.addListener(object : TimeBar.OnScrubListener {
             override fun onScrubMove(timeBar: TimeBar, position: Long) {
-                // Xử lý khi người dùng di chuyển thanh tua
             }
-
             override fun onScrubStart(timeBar: TimeBar, position: Long) {
-                // Tạm dừng player khi người dùng bắt đầu tua
-                viewModel.player.playWhenReady = false
             }
-
             override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
                 // Bắt đầu lại Player khi người dùng kết thúc tua
                 viewModel.player.seekTo(position)
-                viewModel.player.playWhenReady = true
             }
         })
         //set timebar value keep updated
         binding.playerControlView.setProgressUpdateListener { position, bufferedPosition ->
-            binding.timeBar.setPosition(position)
-            binding.timeBar.setBufferedPosition(bufferedPosition)
-            binding.currentPositionTxt.text = Formater.formatDuration(position);
-
+            if(viewModel.player.isPlaying){
+                binding.timeBar.setPosition(position)
+                binding.timeBar.setBufferedPosition(bufferedPosition)
+                binding.currentPositionTxt.text = Formater.formatDuration(position);
+            }
         }
     }
     private fun setObservations(){
