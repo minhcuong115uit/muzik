@@ -1,7 +1,5 @@
 package com.example.muzik.ui.fragments
 
-import android.animation.ArgbEvaluator
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -9,17 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
-import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
 import com.example.muzik.databinding.FragmentMusicPlayerBinding
 import com.example.muzik.utils.Formater
+import com.example.muzik.viewmodels.musicplayer.ActionBarViewModel
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.TimeBar
@@ -39,6 +37,8 @@ private const val SONG_INDEX = "SONG_INDEX"
 class MusicPlayer : Fragment() {
     lateinit var binding: FragmentMusicPlayerBinding
     private lateinit var viewModel: PlayerViewModel
+    private val actionBarViewModel: ActionBarViewModel by activityViewModels()
+
     private lateinit var fragmentActionBar: BottomActionsBar
     lateinit var shuffleBtn: ImageButton;
     lateinit var repeatBtn: ImageButton;
@@ -51,16 +51,17 @@ class MusicPlayer : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.setOnTouchListener { view, motionEvent -> return@setOnTouchListener true }
+        view.setOnTouchListener { view, _ -> return@setOnTouchListener true }
         playNext = getView()?.findViewById(R.id.play_next_btn)!!
         shuffleBtn = getView()?.findViewById(R.id.shuffle_mode)!!
         repeatBtn = getView()?.findViewById(R.id.exo_repeat_mode)!!
         playPrev = getView()?.findViewById(R.id.play_prev_btn)!!
         setUpMusicPlayer();
         setBtnClickListener();
-        setObservations();
+        setObservation();
         disFragment = MusicDisc()
         parentFragmentManager.beginTransaction().replace(R.id.music_disc,disFragment).commit()
+        Log.i("PlayerEvents DURATION", "DURATION  ${viewModel.player.duration.toString()}")
     }
 
     override fun onCreateView(
@@ -74,33 +75,33 @@ class MusicPlayer : Fragment() {
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_music_player,container,false);
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
         binding.viewmodel= viewModel;
-        binding.durationTxt.text = Formater.formatDuration(viewModel.player.duration)
+        Log.i("PlayerEvents DURATION", "DURATION onCreateView ${viewModel.player.duration.toString()}")
+
+//        Không nên dùng viewModel.player.duration để set vì nó có thể chưa load xong
+//        binding.durationTxt.text = Formater.formatDuration(viewModel.player.duration)
+        binding.timeBar.setDuration(viewModel.currentSong.value?.duration ?: 0)
+        binding.durationTxt.text = Formater.formatDuration(viewModel.currentSong.value?.duration
+                    ?: 0)
+        binding.timeBar.setPosition(viewModel.player.currentPosition);
         return binding.root
     }
     private fun setUpMusicPlayer() {
-
         // Thiết lập playerControlView với player từ ViewModel
         binding.playerControlView.player = viewModel.player
 
-        // Đăng ký nghe sự kiện cho player
         binding.playerControlView.player?.addListener(object : Player.Listener {
-            val durationText = binding.durationTxt
-
             // Xử lý sự kiện khi chuyển media item trong player
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                Log.i("PlayerEvents", "onMediaItemTransition ${reason.toString()}")
                 super.onMediaItemTransition(mediaItem, reason)
-                val currentIndex = viewModel.player.currentMediaItemIndex
-                viewModel.currentSong.value = viewModel.getListSong()[currentIndex]
-                durationText.text = Formater.formatDuration(viewModel.player.duration)
+                binding.durationTxt.text = Formater.formatDuration(viewModel.player.duration)
             }
-
             // Xử lý sự kiện khi trạng thái isPlaying thay đổi
             override fun onIsPlayingChanged(isPlaying: Boolean) {
+                Log.i("PlayerEvents", "OnIsPlaying ${isPlaying.toString()}")
+
                 if (isPlaying) {
-                    viewModel.player.duration.let {
-                        durationText.text =  Formater.formatDuration(it)
-                        binding.timeBar.setDuration(it)
-                    }
+                    disFragment.resumeAnimation();
                 } else {
                     disFragment.stopAnimation()
                 }
@@ -110,11 +111,12 @@ class MusicPlayer : Fragment() {
             // Xử lý sự kiện khi repeatMode thay đổi
             override fun onRepeatModeChanged(repeatMode: Int) {
                 super.onRepeatModeChanged(repeatMode)
-                Log.i("RepeatModeChanged", repeatMode.toString())
             }
 
             // Xử lý sự kiện khi trạng thái playWhenReady thay đổi
             override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                Log.i("PlayerEvents", "onPlayWhenReadyChanged ${playWhenReady.toString()}")
+
                 super.onPlayWhenReadyChanged(playWhenReady, reason)
                 if (playWhenReady) {
                     disFragment.resumeAnimation()
@@ -132,8 +134,9 @@ class MusicPlayer : Fragment() {
             override fun onScrubStart(timeBar: TimeBar, position: Long) {
             }
             override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
-                // Bắt đầu lại Player khi người dùng kết thúc tua
                 viewModel.player.seekTo(position)
+                binding.timeBar.setPosition(position);
+                binding.currentPositionTxt.text = Formater.formatDuration(position);
             }
         })
         //set timebar value keep updated
@@ -145,13 +148,13 @@ class MusicPlayer : Fragment() {
             }
         }
     }
-    private fun setObservations(){
+    private fun setObservation(){
         viewModel.currentSong.observe(viewLifecycleOwner){
             binding.artistnameTextview.text = it?.artistName
             binding.songName.text = it?.name
             binding.titleSong.text = it?.name
         }
-        viewModel.isShowComments.observe(viewLifecycleOwner) { isShowComments ->
+        actionBarViewModel.isShowComments.observe(viewLifecycleOwner) { isShowComments ->
             val alphaFrom: Float
             val alphaTo: Float
             if (isShowComments) {

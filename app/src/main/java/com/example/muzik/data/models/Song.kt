@@ -9,7 +9,7 @@ class Song (
     val songUri: String ="",
     val name: String = "",
     val artistName: String = "",
-    val duration: String = "",
+    val duration: Long = 0,
 )
  {
      fun convertToMediaItem(): MediaItem {

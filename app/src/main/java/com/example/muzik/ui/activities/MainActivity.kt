@@ -24,15 +24,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
 import com.example.muzik.databinding.ActivityMainBinding
 import com.example.muzik.listeners.ActionPlayerListener
+import com.example.muzik.listeners.PlaySongListener
 import com.example.muzik.receiver.NotificationReceiver
 import com.example.muzik.services.MusicService
 import com.example.muzik.ui.fragments.Library
+import com.example.muzik.ui.fragments.MusicPlayer
 import com.example.muzik.ui.fragments.MusicPlayerBar
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListener {
-    private val REQUEST_PERMISSION_CODE = 1
+class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListener,
+    PlaySongListener {
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var navView: BottomNavigationView
     private lateinit var musicService: MusicService
@@ -63,7 +65,6 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
         }
     false
     }
-
     override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
         binding =  DataBindingUtil.setContentView(this,R.layout.activity_main);
@@ -71,25 +72,15 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         viewModel =  ViewModelProvider(this)[PlayerViewModel::class.java]
         viewModel.initPlayer(this);
+        viewModel.setPlaySongListener(this);
+        //service
         val intent = Intent(this,MusicService::class.java);
         mediaSession = MediaSessionCompat(this,"PlayerAudio");
         bindService(intent,this, BIND_AUTO_CREATE);
 
         setObservation();
-
-        requestPermission();
     }
 
-    private fun setObservation(){
-        viewModel.currentSong.observe(this){
-            if(viewModel.currentSong.value != null)
-            {
-                musicPlayerBarFragment = MusicPlayerBar()
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_music_player_bar, musicPlayerBarFragment).commit()
-                showNotification(R.drawable.ic_play);
-            }
-        }
-    }
     fun showNotification( playPauseBtn:Int){
         val intent = Intent(this,MainActivity::class.java);
         val contentIntent:PendingIntent = PendingIntent.getActivity(
@@ -111,8 +102,8 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
         val notification: Notification = NotificationCompat.Builder(this,"CHANNEL_2")
             .setSmallIcon(R.drawable.girl_listening_to_music)
             .setLargeIcon(picture)
-            .setContentTitle("Missing you")
-            .setContentText("Phương Ly")
+            .setContentTitle(viewModel.currentSong.value?.name)
+            .setContentText(viewModel.currentSong.value?.artistName)
             .addAction(R.drawable.ic_play_previous,"Previous",prePendingIntent)
             .addAction(playPauseBtn,"Play",playPendingIntent)
             .addAction(R.drawable.ic_play_next,"Next",nextPendingIntent)
@@ -125,11 +116,9 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
             .build()
         val notificationManger = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManger.notify(0,notification);
-
     }
     override fun nextClicked() {
         showNotification(R.drawable.ic_pause)
-
     }
     override fun playCLicked() {
         if(viewModel.player.isPlaying){
@@ -138,19 +127,16 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
         }
         else{
             showNotification(R.drawable.ic_play);
-            musicPlayerBarFragment.binding.playBtnBottomBar.setImageResource(R.drawable.ic_play);
-
+            musicPlayerBarFragment.binding.playBtnBottomBar.setImageResource(R.drawable.ic_pause);
         }
     }
     override fun prevClicked() {
         showNotification(R.drawable.ic_pause)
     }
-
     override fun onDestroy() {
         super.onDestroy()
         unbindService(this);
     }
-
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder: MusicService.MusicBinder = service as MusicService.MusicBinder;
         musicService = binder.getService()
@@ -160,30 +146,31 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
     override fun onServiceDisconnected(name: ComponentName?) {
         Log.e("ServiceDisconnected", musicService.toString());
     }
-    fun requestPermission(){
-// Check if the permission is granted
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted, request it
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_CODE)
-        } else {
-            // Permission is already granted, proceed to read the files
-            viewModel.getLocalMp3Files(applicationContext);
+    override fun playSong(songId: Int) {
+        //Nếu đúng thì phát bài hát mới nếu không thì tiếp tục phát bài hát cũ
+        if(songId != viewModel.currentSongIndex){
+            viewModel.playSong(songId);
         }
-
+        val musicPlayerFragment = MusicPlayer()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.setCustomAnimations(
+            R.anim.slide_up,
+            R.anim.slide_down,
+            R.anim.slide_up, R.anim.slide_down)
+            .addToBackStack("Player")
+            .add(R.id.main_bottom_fragment, musicPlayerFragment).commit()
     }
-    // Handle the permission request result
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == REQUEST_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, proceed to read the files
-                viewModel.getLocalMp3Files(applicationContext);
-            } else {
-                // Permission denied, handle accordingly (e.g., show an error message)
+    private fun setObservation(){
+        //kiểm tra nếu có bài hát thì sẽ hiển thị notification bar và music player bar
+        viewModel.currentSong.observe(this){
+            if(viewModel.currentSong.value != null)
+            {
+                musicPlayerBarFragment = MusicPlayerBar.newInstance(viewModel.currentSongIndex)
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_music_player_bar, musicPlayerBarFragment)
+                    .commit()
+                showNotification(R.drawable.ic_play);
             }
         }
     }
-
 }

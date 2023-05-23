@@ -11,7 +11,8 @@
     <color name="primary_blue_300">#7EA2FF</color>
     <color name="sub_blue_200">#BECAF2</color>
     <color name="light_gray">#e0e0e0</color>
-    <color name="primary_text">#1c191c</color>
+<!--    <color name="primary_text">#1c191c</color>-->
+    <color name="primary_text">#FFFFFFFF</color>
     <color name="sub_text">#979797</color>
 
 </resources>

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.muzik.viewmodels.musicplayer.PlayerViewModel" />
+            type="com.example.muzik.viewmodels.musicplayer.ActionBarViewModel" />
     </data>
 
     <LinearLayout

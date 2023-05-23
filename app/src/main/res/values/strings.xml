@@ -35,9 +35,10 @@
 
     <string name="listening_history">Listening history</string>
     <string name="device_songs">Device songs</string>
-    <string name="play_list">Play List</string>
+    <string name="play_list">Playlist</string>
     <string name="create_play_list">Create playlist </string>
     <string name="playlist_title">Playlist title </string>
+    <string name="song_playlist">Song Playlist</string>
     <string name="see_all">See all</string>
 
 

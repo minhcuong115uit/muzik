@@ -16,8 +16,8 @@
         tools:context=".ui.fragments.MusicPlayerBar">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:id="@+id/player_bar_image"
             android:src="@drawable/girl_listening_to_music" />
         <LinearLayout
