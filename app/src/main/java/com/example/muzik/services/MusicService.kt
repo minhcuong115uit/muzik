@@ -31,6 +31,7 @@ class MusicService : Service() {
                         player?.prepare();
                         player?.play();
                     }
+
                 }
                 "PREVIOUS" ->{
                     player?.seekToPrevious();

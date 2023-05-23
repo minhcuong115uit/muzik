@@ -122,11 +122,11 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
     }
     override fun playCLicked() {
         if(viewModel.player.isPlaying){
-            showNotification(R.drawable.ic_pause);
-            musicPlayerBarFragment.binding.playBtnBottomBar.setImageResource(R.drawable.ic_pause);
+            showNotification(R.drawable.ic_play);
+            musicPlayerBarFragment.binding.playBtnBottomBar.setImageResource(R.drawable.ic_play);
         }
         else{
-            showNotification(R.drawable.ic_play);
+            showNotification(R.drawable.ic_pause);
             musicPlayerBarFragment.binding.playBtnBottomBar.setImageResource(R.drawable.ic_pause);
         }
     }
