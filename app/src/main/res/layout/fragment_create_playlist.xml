@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.muzik.viewmodels.musicplayer.PlayerViewModel" />
+            type="com.example.muzik.viewmodels.musicplayer.LibraryViewModel" />
     </data>
     <LinearLayout
         android:orientation="vertical"

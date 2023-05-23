@@ -1,57 +1,95 @@
 package com.example.muzik.ui.fragments
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
+import com.example.muzik.data.models.Song
 import com.example.muzik.databinding.FragmentLibraryBinding
 import com.example.muzik.ui.activities.MainActivity
 import com.example.muzik.ui.adapters.MusicItemAdapter
 import com.example.muzik.ui.adapters.PlaylistItemAdapter
+import com.example.muzik.viewmodels.musicplayer.LibraryViewModel
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
+private const val REQUEST_PERMISSION_CODE = 1
 class Library : Fragment() {
     private lateinit var musicListAdapter: MusicItemAdapter;
     private lateinit var playlistAdapter: PlaylistItemAdapter;
-//    private val viewModel: PlayerViewModel by lazy {
+//    private val libraryViewmodel: PlayerViewModel by lazy {
 //        ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
 //    }
-    private lateinit var viewModel: PlayerViewModel
+    private lateinit var libraryViewmodel: LibraryViewModel
+    private val playerViewModel: PlayerViewModel by activityViewModels()
     private lateinit var binding: FragmentLibraryBinding;
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        //get permission to device storage
+        libraryViewmodel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
+        requestPermission()
 
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_library, container,false);
-        viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
+        //tạm thời set detail playlist = local list song
+        libraryViewmodel.setPlaylistItems(libraryViewmodel.getLocalListSong())
+        libraryViewmodel.setPlaySongListener(requireActivity() as MainActivity)
         //set local song playlist
-        viewModel.setPlayList(viewModel.getLocalListSong())
-        playlistAdapter = PlaylistItemAdapter(requireActivity(),viewModel);
-        musicListAdapter = MusicItemAdapter(requireActivity(),viewModel);
-        binding.viewmodel = viewModel;
+        playerViewModel.setMediaPlaylist(libraryViewmodel.getLocalListSong())
+
+        playlistAdapter = PlaylistItemAdapter(requireActivity(),libraryViewmodel);
+        musicListAdapter = MusicItemAdapter(requireActivity(),libraryViewmodel);
+
+        binding.viewmodel = libraryViewmodel;
         binding.context = requireActivity() as MainActivity?
+
         binding.recDeviceSongs.adapter = musicListAdapter;
         binding.recPlayList.adapter = playlistAdapter;
 
 
-        viewModel.notifyChange.observe(viewLifecycleOwner){
+        libraryViewmodel.notifyChange.observe(viewLifecycleOwner){
             playlistAdapter.notifyDataSetChanged()
         }
-//        viewModel.getPlaylist().observe(viewLifecycleOwner){
+//        libraryViewmodel.getPlaylist().observe(viewLifecycleOwner){
 //            playlistAdapter.notifyDataSetChanged()
 //        }
         return binding.root
+    }
+    fun requestPermission(){
+// Check if the permission is granted
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_PERMISSION_CODE)
+        } else {
+            // Permission is already granted, proceed to read the files
+            activity?.let { libraryViewmodel.getLocalMp3Files(it.applicationContext) };
+        }
+
+    }
+    // Handle the permission request result
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed to read the files
+                activity?.let { libraryViewmodel.getLocalMp3Files(it.applicationContext) }
+            } else {
+                // Permission denied, handle accordingly (e.g., show an error message)
+            }
+        }
     }
 
 }

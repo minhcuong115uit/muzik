@@ -12,10 +12,12 @@ import com.example.muzik.R
 import com.example.muzik.data.models.Playlist
 import com.example.muzik.data.models.Song
 import com.example.muzik.ui.activities.MainActivity
+import com.example.muzik.ui.fragments.DetailPlaylist
 import com.example.muzik.ui.fragments.MusicPlayer
+import com.example.muzik.viewmodels.musicplayer.LibraryViewModel
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
-class PlaylistItemAdapter(private val context: Context, private val viewModel:PlayerViewModel): RecyclerView.Adapter<PlaylistItemAdapter.ViewHolder>() {
+class PlaylistItemAdapter(private val context: Context, private val viewModel:LibraryViewModel): RecyclerView.Adapter<PlaylistItemAdapter.ViewHolder>() {
 
     private var list: MutableList<Playlist>? = viewModel.getPlaylist().value
 
@@ -27,7 +29,13 @@ class PlaylistItemAdapter(private val context: Context, private val viewModel:Pl
     override fun onBindViewHolder(holder: PlaylistItemAdapter.ViewHolder, position: Int) {
         val playlist = list?.get(position);
         holder.itemView.setOnClickListener{
-
+            val detailPlaylistFragment = DetailPlaylist()
+            val fragmentManager = (context as MainActivity).supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
+                .addToBackStack("DetailFragment")
+                .add(R.id.main_bottom_fragment, detailPlaylistFragment)
+                .commit()
         }
         holder.bind(playlist);
     }

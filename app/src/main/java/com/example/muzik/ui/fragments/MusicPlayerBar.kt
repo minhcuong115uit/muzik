@@ -16,15 +16,33 @@ import com.example.muzik.listeners.ActionPlayerListener
 import com.example.muzik.ui.activities.MainActivity
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
+const val SONG_ID = "SongId"
 class MusicPlayerBar : Fragment(), ActionPlayerListener {
     lateinit var binding:FragmentMusicPlayerBarBinding;
     lateinit var viewModel: PlayerViewModel
+    private var songId: Int? = -1
     lateinit var mainActivity: MainActivity
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
         mainActivity = requireActivity() as MainActivity;
     }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            songId = it.getInt(SONG_ID)
+        }
+    }
+    companion object {
+        @JvmStatic
+        fun newInstance(songId: Int) =
+            MusicPlayerBar().apply {
+                arguments = Bundle().apply {
+                    putInt(SONG_ID, songId)
+                }
+            }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,12 +58,7 @@ class MusicPlayerBar : Fragment(), ActionPlayerListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.setOnClickListener {
-            val musicPlayerFragment = MusicPlayer();
-            val fragmentManager = (context as MainActivity).supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
-                .addToBackStack("Player")
-                .replace(R.id.music_player_fragment, musicPlayerFragment).commit()
+            songId?.let { it1 -> viewModel.getPlaySongListener()?.playSong(it1) }
         }
     }
     private fun setBtnClickListener(){

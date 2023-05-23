@@ -23,15 +23,15 @@ class MusicService : Service() {
         if(action!= null){
             when (action){
                 "PLAY" ->{
+                    actionListener?.playCLicked();
                     if(player?.isPlaying == true){
                         player?.stop();
-
                     }
                     else{
                         player?.prepare();
                         player?.play();
                     }
-                    actionListener?.playCLicked();
+
                 }
                 "PREVIOUS" ->{
                     player?.seekToPrevious();
