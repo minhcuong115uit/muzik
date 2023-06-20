@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.muzik.R
 import com.example.muzik.data.models.Comment
 import com.example.muzik.ui.custom_components.CommentItemComponent
+import com.example.muzik.utils.TimeConverter
 import com.example.muzik.viewmodels.musicplayer.ActionBarViewModel
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
@@ -46,7 +47,7 @@ class CommentsAdapter(private val context: Context,private  val viewModel:Action
         private val edtText: EditText = itemView.findViewById(R.id.edt_input);
         private val childRec: RecyclerView = itemView.findViewById(R.id.rec_reply_comment);
         fun bind(comment: Comment) {
-            tvCreatedAt.text = comment.createdAt
+            tvCreatedAt.text = comment.createdAt?.let { TimeConverter.convertTimestampToString(it) }
             tvUsername.text = comment.userName
             tvContent.text = comment.content
             childRec.layoutManager = LinearLayoutManager(itemView.context);
@@ -54,7 +55,6 @@ class CommentsAdapter(private val context: Context,private  val viewModel:Action
             viewModel.getReplyComments(comment.commentId ){
                 (itemView as CommentItemComponent).setReplyComments(it as MutableList<Comment>)
             }
-            tvHeartNumber.text = if (comment.hearts.isEmpty()) "" else comment.hearts.size.toString()
             if (!comment.userAvatar.isNullOrEmpty()) {
                 Picasso.get().load(comment.userAvatar).into(avt)
             }
@@ -66,6 +66,7 @@ class CommentsAdapter(private val context: Context,private  val viewModel:Action
                 viewModel.uploadReplyComment(replyComment){
                     (itemView as CommentItemComponent).addReplyComments(it);
                 }
+                edtText.setText("");
             }
         }
     }

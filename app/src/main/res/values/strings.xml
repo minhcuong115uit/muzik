@@ -37,7 +37,7 @@
     <string name="device_songs">Device songs</string>
     <string name="play_list">Playlist</string>
     <string name="create_play_list">Create playlist </string>
-    <string name="playlist_title">Playlist title </string>
+    <string name="playlist_title">Playlist name </string>
     <string name="song_playlist">Song Playlist</string>
     <string name="see_all">See all</string>
 
@@ -58,4 +58,5 @@
     <string name="reply">Trả lời</string>
     <string name="empty_list_comment">This track doesn\'t have any comments. Be the first!</string>
     <string name="create_comment">Viết bình luận...</string>
+    <string name="comment">Bình luận</string>
 </resources>

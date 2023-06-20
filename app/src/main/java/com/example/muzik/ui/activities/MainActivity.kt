@@ -34,9 +34,11 @@ import com.example.muzik.ui.fragments.Home
 import com.example.muzik.ui.fragments.Library
 import com.example.muzik.ui.fragments.MusicPlayer
 import com.example.muzik.ui.fragments.MusicPlayerBar
+import com.example.muzik.utils.ImageHelper
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.runBlocking
 import java.util.Formatter
 
 class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListener,
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
     private lateinit var binding: ActivityMainBinding;
     private lateinit var libFragment: Fragment
     private lateinit var homeFragment: Fragment
+    private var notificationVisibility = NotificationCompat.VISIBILITY_PUBLIC
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
         when (item.itemId) {
@@ -124,8 +127,9 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
             }
         }
     }
-    fun showNotification( playPauseBtn:Int){
+    fun showNotification( playPauseBtn:Int, imageUrl: String? = null){
         val intent = Intent(this,MainActivity::class.java);
+        Log.d("Notification Visibility",notificationVisibility.toString());
         val contentIntent:PendingIntent = PendingIntent.getActivity(
             this,
             0,
@@ -141,10 +145,17 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
         val playIntent = Intent(this,NotificationReceiver::class.java).setAction("PLAY")
         val playPendingIntent:PendingIntent =
             PendingIntent.getBroadcast(this,0,playIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val picture: Bitmap = BitmapFactory.decodeResource(resources,R.drawable.girl_listening_to_music);
+        var picture:Bitmap? = if(!imageUrl.isNullOrEmpty()){
+            runBlocking {
+               ImageHelper.getBitmapFromURL(imageUrl)
+            }
+        } else{
+            BitmapFactory.decodeResource(resources,R.drawable.girl_listening_to_music);
+        }
         val notification: Notification = NotificationCompat.Builder(this,"CHANNEL_2")
             .setSmallIcon(R.drawable.girl_listening_to_music)
             .setLargeIcon(picture)
+            .setVisibility(notificationVisibility)
             .setContentTitle(viewModel.currentSong.value?.name)
             .setContentText(com.example.muzik.utils.Formatter.convertArrArtistToString(viewModel.currentSong.value?.artist!!))
             .addAction(R.drawable.ic_play_previous,"Previous",prePendingIntent)
@@ -160,21 +171,42 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
         val notificationManger = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManger.notify(0,notification);
     }
-    override fun nextClicked() {
-        showNotification(R.drawable.ic_pause)
+    override fun nextClicked( ) {
+        showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
     }
+
+    override fun onPause() {
+        super.onPause()
+        if(viewModel.currentSong.value != null){
+            notificationVisibility = NotificationCompat.VISIBILITY_PUBLIC
+            Log.d("PlayerIsPlaying" , viewModel.player.isPlaying.toString())
+            showNotification(if( viewModel.player.isPlaying) R.drawable.ic_pause else R.drawable.ic_play, viewModel.currentSong.value?.imageUri)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+//        if(viewModel.currentSong.value != null){
+//            notificationVisibility = NotificationCompat.VISIBILITY_SECRET
+//            Log.d("PlayerIsPlaying" , viewModel.player.isPlaying.toString())
+//            showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
+//        }
+        val notificationManger = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManger.cancel(0)
+    }
+
     override fun playCLicked() {
         if(viewModel.player.isPlaying){
-            showNotification(R.drawable.ic_play);
+            showNotification(R.drawable.ic_play,viewModel.currentSong.value?.imageUri);
             musicPlayerBarFragment.binding.playBtnBottomBar.setImageResource(R.drawable.ic_play);
         }
         else{
-            showNotification(R.drawable.ic_pause);
+            showNotification(R.drawable.ic_pause,viewModel.currentSong.value?.imageUri);
             musicPlayerBarFragment.binding.playBtnBottomBar.setImageResource(R.drawable.ic_pause);
         }
     }
     override fun prevClicked() {
-        showNotification(R.drawable.ic_pause)
+        showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
     }
     override fun onDestroy() {
         super.onDestroy()
@@ -225,7 +257,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_music_player_bar, musicPlayerBarFragment)
                     .commit()
-                showNotification(R.drawable.ic_play);
+//                showNotification(R.drawable.ic_play, viewModel.currentSong.value!!.imageUri);
             }
         }
     }

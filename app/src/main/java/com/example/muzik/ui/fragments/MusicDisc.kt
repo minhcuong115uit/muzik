@@ -64,10 +64,8 @@ class MusicDisc : Fragment() {
         objectAnimator.interpolator = LinearInterpolator()
         objectAnimator.start()
     }
-    private fun Play(image: String?) {
-        Picasso.get().load(image).into(circleImageView)
-    }
     fun setImage(imageUri:String){
+        if(imageUri.isNotEmpty())
         Picasso.get().load(imageUri).into(circleImageView)
     }
     override fun onDestroyView() {

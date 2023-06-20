@@ -67,13 +67,15 @@ class MusicPlayer : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentActionBar = BottomActionsBar();
-        val fragmentTransaction = parentFragmentManager.beginTransaction()
-        fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
-            .replace(R.id.actions_bar, fragmentActionBar).commit()
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_music_player,container,false);
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
         binding.viewmodel= viewModel;
+        viewModel.currentSong.value?.songId
+        fragmentActionBar = BottomActionsBar.newInstance(viewModel.currentSong.value?.songId ?: "");
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
+            .replace(R.id.actions_bar, fragmentActionBar).commit()
+
         if(isLocalSong){
             binding.actionsBar.visibility = View.INVISIBLE
         }
@@ -199,6 +201,7 @@ class MusicPlayer : Fragment() {
         // Thiết lập sự kiện cho nút playNext
         playNext.setOnClickListener {
             viewModel.playNext()
+
         }
         playPrev.setOnClickListener {
             viewModel.playPrev()

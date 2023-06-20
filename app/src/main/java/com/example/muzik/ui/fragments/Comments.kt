@@ -24,13 +24,30 @@ import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
 
 class Comments : Fragment() {
-
     lateinit var binding: FragmentCommentsBinding
     lateinit var adapter: CommentsAdapter
-//    private val viewModel: ActionBarViewModel by viewModels(ownerProducer =
-//    { requireParentFragment()
-//    })
+    private lateinit var songId:String
     private val viewModel: ActionBarViewModel by activityViewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            songId = it.getString(BottomActionsBar.SONG_ID).toString()
+
+        }
+    }
+    companion object {
+        const val SONG_ID = "SongId"
+        @JvmStatic
+        fun newInstance(songId: String): Comments {
+            val fragment = Comments()
+            val args = Bundle().apply {
+                putString(SONG_ID, songId)
+            }
+            fragment.arguments = args
+            return fragment
+        }
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,7 +56,6 @@ class Comments : Fragment() {
 
         adapter = CommentsAdapter(requireActivity(),viewModel)
         binding = FragmentCommentsBinding.inflate(inflater, container,false);
-        viewModel.loadComments("3Wj9MsZv9nLwsmj75A7w");
         binding.viewmodel = viewModel;
         binding.recCommentList.adapter = adapter;
         viewModel.comments.observe(viewLifecycleOwner) { cmts: List<Comment> ->

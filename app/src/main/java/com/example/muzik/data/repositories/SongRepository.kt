@@ -61,6 +61,7 @@ class SongRepository {
                 val songs = mutableListOf<Song>()
                 for (document in result) {
                     val song = document.toObject<Song>()
+                    song.songId = document.id
                     songs.add(song)
                 }
                 onSuccess(songs)

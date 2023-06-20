@@ -27,5 +27,4 @@ class CreatePlaylist : BottomSheetDialogFragment() {
         binding.viewmodel = viewmodel
         return binding.root
     }
-
 }

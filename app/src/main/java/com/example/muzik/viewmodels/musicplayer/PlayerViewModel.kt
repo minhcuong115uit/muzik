@@ -134,6 +134,7 @@ class PlayerViewModel(): ViewModel() {
         currentSong.value = song;
         val mediaItem = MediaItem.fromUri(song.uri);
         player.setMediaItem(mediaItem);
+        actionPlayerListener?.playCLicked()
         player.prepare();
         player.play();
     }
@@ -163,12 +164,13 @@ class PlayerViewModel(): ViewModel() {
     fun playNext(){
         player.seekToNext()
         val index = player.currentMediaItemIndex
-        currentSong.value = _listSong[index]
+        currentSong.value = _currentPlaylistSong[index]
+        actionPlayerListener?.nextClicked()
     }
     fun playPrev(){
         player.seekToPrevious();
         val index = player.currentMediaItemIndex
-        currentSong.value = _listSong[index]
+        currentSong.value = _currentPlaylistSong[index]
+        actionPlayerListener?.prevClicked()
     }
-
 }

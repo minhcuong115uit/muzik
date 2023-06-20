@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.muzik.R
 import com.example.muzik.data.models.Comment
+import com.example.muzik.utils.TimeConverter
 import com.example.muzik.viewmodels.musicplayer.ActionBarViewModel
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -22,7 +23,7 @@ class ReplyCommentAdapter(private val context: Context,private val list:List<Com
         // Bind data to the views in the ViewHolder
         val item = list[position]
         holder.tvUsername.text = item.userName
-        holder.tvCreatedAt.text = item.createdAt
+        holder.tvCreatedAt.text = item.createdAt?.let { TimeConverter.convertTimestampToString(it) }
         holder.tvContent.text = item.content
         // Set click listener or any other logic here
     }

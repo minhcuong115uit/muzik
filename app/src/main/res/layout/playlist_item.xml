@@ -30,22 +30,25 @@
             android:orientation="vertical"
             android:layout_height="wrap_content">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:id="@+id/playlist_name"
                 android:textStyle="bold"
                 android:textSize="16sp"
-
                 android:maxLines="1"
                 android:text="Missing you"
                 android:textColor="@color/primary_text"
                 android:layout_marginBottom="4dp"
                 android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:id="@+id/playlist_owner"
+            <EditText
+                android:layout_width="match_parent"
+                android:id="@+id/playlist_name_edt"
                 android:textStyle="bold"
-                android:text="Phương ly"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:visibility="gone"
+                android:text="Missing you"
                 android:textColor="@color/primary_text"
+                android:layout_marginBottom="4dp"
                 android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -82,9 +85,27 @@
         <ImageView
             android:layout_width="wrap_content"
             style="@style/ExoMediaButton"
-            android:src="@drawable/ic_more"
+            android:src="@drawable/pencil"
+            android:id="@+id/playlist_item_ic_pencil"
+            android:padding="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            style="@style/ExoMediaButton"
+            android:src="@drawable/check"
+            android:id="@+id/playlist_item_ic_check"
+            android:visibility="gone"
+            android:padding="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            style="@style/ExoMediaButton"
+            android:src="@drawable/trash_can"
             android:id="@+id/playlist_item_more"
             android:padding="8dp"
+            android:layout_marginEnd="12dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

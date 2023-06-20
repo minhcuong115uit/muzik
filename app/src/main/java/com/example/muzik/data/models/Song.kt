@@ -9,7 +9,7 @@ import com.google.type.DateTime
 
 
 class Song (
-    val songId: String = "",
+    var songId: String = "",
     val imageUri:String ="",
     val uri: String ="",
     val name: String = "",

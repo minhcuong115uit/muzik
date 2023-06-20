@@ -81,22 +81,23 @@ class MusicPlayerBar : Fragment(), ActionPlayerListener {
     }
     private fun setBtnClickListener(){
         binding.nextBtnBottomBar.setOnClickListener {
-            viewModel.player.seekToNext();
-            mainActivity.showNotification(R.drawable.ic_pause)
+            viewModel.playNext()
+//            mainActivity.showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
         }
         binding.prevBtnBottomBar.setOnClickListener {
-            viewModel.player.seekToPrevious();
-            mainActivity.showNotification(R.drawable.ic_pause)
+//            viewModel.player.seekToPrevious();
+            viewModel.playPrev()
+//            mainActivity.showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
         }
         binding.playBtnBottomBar.setOnClickListener {
             if(viewModel.player.isPlaying){
                 viewModel.player.stop();
-                mainActivity.showNotification(R.drawable.ic_play)
+//                mainActivity.showNotification(R.drawable.ic_play , viewModel.currentSong.value?.imageUri)
                 (it as ImageButton).setImageResource(R.drawable.ic_play);
                 viewModel.ellipsizeType.set(TextUtils.TruncateAt.END)
             }
             else{
-                mainActivity.showNotification(R.drawable.ic_pause)
+//                mainActivity.showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
                 viewModel.player.playWhenReady = true;
                 viewModel.player.prepare();
                 viewModel.player.play();
