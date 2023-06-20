@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
 class AuthViewModel : ViewModel() {
-    companion object{
+    companion object {
         var isAuthenticated = MutableLiveData(false)
         private var user: User? = null
         fun checkUserLoggedIn() {
@@ -34,11 +34,13 @@ class AuthViewModel : ViewModel() {
         }
 
         suspend fun getUserFromDB(userId: String) {
-            UserRepository.instance?.getUserFromDb(userId){u->
+            UserRepository.instance?.getUserFromDb(userId) { u ->
                 user = u
             }
         }
-        fun getUser(): User?{
+
+        fun getUser(): User? {
             return user
         }
     }
+}
