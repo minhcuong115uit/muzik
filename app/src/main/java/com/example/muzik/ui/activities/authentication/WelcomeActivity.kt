@@ -3,6 +3,7 @@ package com.example.muzik.ui.activities.authentication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.databinding.ActivityWelcomeBinding
@@ -18,6 +19,17 @@ class WelcomeActivity : AppCompatActivity()  {
 
         binding = ActivityWelcomeBinding.inflate(layoutInflater);
         setContentView(binding.root);
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java];
+        viewModel.checkSignedIn();
+        viewModel.isAuthenticated.observe(this){
+            if(it == true){
+                val intent = Intent(this, MainActivity::class.java);
+                startActivity(intent);
+            }
+            else{
+                Log.e("AUTHENTICATION", "Is not authenticated")
+            }
+        }
 
         val createAccountBtn = binding.btnCreateAccount;
         val haveAnAccountBtn = binding.btnAlreadyHaveAccount
@@ -29,7 +41,7 @@ class WelcomeActivity : AppCompatActivity()  {
             startActivity(intent);
         })
         haveAnAccountBtn.setOnClickListener(View.OnClickListener {
-            val intent = Intent(this, SignInActivity::class.java);
+            val intent = Intent(this, MainActivity::class.java);
             startActivity(intent);
         })
         AuthViewModel.checkUserLoggedIn()
