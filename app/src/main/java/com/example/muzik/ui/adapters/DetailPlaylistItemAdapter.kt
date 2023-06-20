@@ -10,11 +10,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.muzik.R
 import com.example.muzik.data.models.Song
-import com.example.muzik.ui.activities.MainActivity
-import com.example.muzik.ui.fragments.MusicPlayer
-import com.example.muzik.viewmodels.musicplayer.LibraryViewModel
+import com.example.muzik.utils.Formatter
+import com.example.muzik.viewmodels.LibraryViewModel
 
-class DetailPlaylistItemAdapter(private val context: Context, private val viewmodel:LibraryViewModel):
+class DetailPlaylistItemAdapter(private val context: Context, private val viewmodel: LibraryViewModel):
     RecyclerView.Adapter<DetailPlaylistItemAdapter.ViewHolder>() {
 
 
@@ -26,7 +25,10 @@ class DetailPlaylistItemAdapter(private val context: Context, private val viewmo
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val song = list?.get(position);
         holder.itemView.setOnClickListener{
-            viewmodel.getPlaySongListener()?.playSong(position);
+
+            if (song != null) {
+                viewmodel.getPlaySongListener()?.playSong(position,song)
+            };
         }
         song?.let{holder.bind(it)
         }
@@ -51,7 +53,7 @@ class DetailPlaylistItemAdapter(private val context: Context, private val viewmo
 
         fun bind(song: Song){
             songName.text = song.name;
-            songArtist.text = song.artistName;
+            songArtist.text = Formatter.convertArrArtistToString(song.artist);
         }
     }
 }

@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.muzik.viewmodels.musicplayer.LibraryViewModel" />
+            type="com.example.muzik.viewmodels.LibraryViewModel" />
     </data>
     <LinearLayout
         android:orientation="vertical"
@@ -45,23 +45,24 @@
                 android:onClick="@{()->viewmodel.createPlaylist()}"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-
         <TextView
             android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:text="@string/playlist_title"
+            android:layout_height="wrap_content"/>
+        <CheckBox
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layoutDirection="rtl"
+            android:text="Make private"
+            android:checked="@={viewmodel.privatedPlaylist}"
             android:layout_height="wrap_content"/>
         <EditText
             android:layout_width="match_parent"
             android:hint="@string/playlist_title"
             android:text="@={viewmodel.playlistName}"
             android:layout_height="wrap_content"/>
-        <CheckBox
-            android:layout_marginTop="12dp"
-            android:layout_width="match_parent"
-            android:layoutDirection="rtl"
-            android:text="Make public"
-            android:checked="@={viewmodel.privatedPlaylist}"
-            android:layout_height="wrap_content"/>
+
     </LinearLayout>
+
 </layout>

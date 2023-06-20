@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.muzik.R
 import com.example.muzik.databinding.FragmentDetailPlaylistBinding
 import com.example.muzik.ui.adapters.DetailPlaylistItemAdapter
-import com.example.muzik.viewmodels.musicplayer.LibraryViewModel
+import com.example.muzik.viewmodels.LibraryViewModel
 
 
 class DetailPlaylist : Fragment() {

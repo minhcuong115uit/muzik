@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.runBlocking
 
 //chưa sử dụng Dependency Injection
  class SignInViewModel: ViewModel() {
@@ -26,7 +27,11 @@ import com.google.firebase.auth.FirebaseUser
             return;
         }
         // đoann này nên sửa thành truyền repo vô viewmodel
-        AuthFirebaseRepository.instance?.signInWithEmail(email,password,this.authListener!!)
+        runBlocking {
+            AuthFirebaseRepository.instance?.signInWithEmail(email,password,authListener!!)
+            FirebaseAuth.getInstance().currentUser?.uid?.let { AuthViewModel.getUserFromDB(it) };
+        }
+
     }
     fun onLoginButtonClicked () {
         handleSignIn(email.value,password.value);

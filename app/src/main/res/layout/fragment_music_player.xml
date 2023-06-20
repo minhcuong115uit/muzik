@@ -56,6 +56,7 @@
                         android:layout_width="wrap_content"
                         android:width="200dp"
                         android:lines="1"
+                        android:textAlignment="center"
                         android:ellipsize="marquee"
                         android:layout_height="wrap_content"
                         android:text="@{viewmodel.currentSong.name}"
@@ -127,7 +128,7 @@
                         android:id="@+id/artistname_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{viewmodel.currentSong.artistName}"
+                        android:text="@{viewmodel.getCurrentArtistName()}"
                         android:gravity="center_horizontal"
                         android:textSize="@dimen/font_size_medium" />
                 </LinearLayout>

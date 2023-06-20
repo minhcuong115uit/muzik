@@ -19,7 +19,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:id="@+id/player_bar_image"
-            android:src="@drawable/girl_listening_to_music" />
+            android:src="@drawable/music_disc" />
         <LinearLayout
             android:layout_width="0dp"
             android:orientation="vertical"
@@ -50,7 +50,7 @@
                 android:textColor="@color/white"
                 android:layout_marginTop="4dp"
                 android:id="@+id/player_bar_artist"
-                android:text="@{viewmodel.currentSong.artistName}"
+                android:text="@{viewmodel.getCurrentArtistName()}"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
@@ -69,7 +69,6 @@
                 android:src="@drawable/ic_play_previous" />
             <ImageButton
                 android:id="@+id/play_btn_bottom_bar"
-
                 style="@style/ExoMediaButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"

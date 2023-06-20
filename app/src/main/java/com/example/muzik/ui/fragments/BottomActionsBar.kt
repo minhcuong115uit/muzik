@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.muzik.R
+import com.example.muzik.data.models.Song
 import com.example.muzik.databinding.FragmentBottomActionsBarBinding
 import com.example.muzik.viewmodels.authentication.SignInViewModel
 import com.example.muzik.viewmodels.musicplayer.ActionBarViewModel
@@ -21,6 +22,7 @@ class BottomActionsBar : Fragment() {
 //    private val viewModel: PlayerViewModel by activityViewModels()
     private lateinit var comments: Comments
     private lateinit var viewModel: ActionBarViewModel
+    private lateinit var songId:String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,6 +31,7 @@ class BottomActionsBar : Fragment() {
         binding = FragmentBottomActionsBarBinding.inflate(inflater,container,false);
         viewModel =  ViewModelProvider(requireActivity())[ActionBarViewModel::class.java];
         binding.viewmodel = viewModel;
+        viewModel.setCurrentSongId(songId)
         comments = Comments()
         setObservations();
         return binding.root;
@@ -52,5 +55,25 @@ class BottomActionsBar : Fragment() {
             else {
             }
         }
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            songId = it.getString(SONG_ID).toString()
+
+        }
+    }
+    companion object {
+        const val SONG_ID = "SongId"
+        @JvmStatic
+        fun newInstance(songId: String): BottomActionsBar {
+            val fragment = BottomActionsBar()
+            val args = Bundle().apply {
+                putString(SONG_ID, songId)
+            }
+            fragment.arguments = args
+            return fragment
+        }
+
     }
 }

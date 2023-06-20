@@ -14,10 +14,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
 import com.example.muzik.databinding.FragmentMusicPlayerBinding
-import com.example.muzik.utils.Formater
+import com.example.muzik.utils.Formatter
 import com.example.muzik.viewmodels.musicplayer.ActionBarViewModel
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
-import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.TimeBar
@@ -32,14 +31,14 @@ private const val ARG_PARAM1 = "param1"
  * create an instance of this fragment.
  */
 
-private const val SONG_INDEX = "SONG_INDEX"
+private const val IS_LOCAL_SONG = "IS_LOCAL_SONG"
 
 class MusicPlayer : Fragment() {
     lateinit var binding: FragmentMusicPlayerBinding
     private lateinit var viewModel: PlayerViewModel
     private val actionBarViewModel: ActionBarViewModel by activityViewModels()
-
     private lateinit var fragmentActionBar: BottomActionsBar
+    private var isLocalSong = false;
     lateinit var shuffleBtn: ImageButton;
     lateinit var repeatBtn: ImageButton;
     lateinit var playNext: ImageButton;
@@ -59,7 +58,7 @@ class MusicPlayer : Fragment() {
         setUpMusicPlayer();
         setBtnClickListener();
         setObservation();
-        disFragment = MusicDisc()
+        disFragment = MusicDisc.newInstance(viewModel.currentSong.value!!.imageUri);
         parentFragmentManager.beginTransaction().replace(R.id.music_disc,disFragment).commit()
         Log.i("PlayerEvents DURATION", "DURATION  ${viewModel.player.duration.toString()}")
     }
@@ -68,21 +67,25 @@ class MusicPlayer : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentActionBar = BottomActionsBar();
-        val fragmentTransaction = parentFragmentManager.beginTransaction()
-        fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
-            .replace(R.id.actions_bar, fragmentActionBar).commit()
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_music_player,container,false);
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
         binding.viewmodel= viewModel;
-        Log.i("PlayerEvents DURATION", "DURATION onCreateView ${viewModel.player.duration.toString()}")
+        viewModel.currentSong.value?.songId
+        fragmentActionBar = BottomActionsBar.newInstance(viewModel.currentSong.value?.songId ?: "");
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
+            .replace(R.id.actions_bar, fragmentActionBar).commit()
 
+        if(isLocalSong){
+            binding.actionsBar.visibility = View.INVISIBLE
+        }
 //        Không nên dùng viewModel.player.duration để set vì nó có thể chưa load xong
 //        binding.durationTxt.text = Formater.formatDuration(viewModel.player.duration)
         binding.timeBar.setDuration(viewModel.currentSong.value?.duration ?: 0)
-        binding.durationTxt.text = Formater.formatDuration(viewModel.currentSong.value?.duration
+        binding.durationTxt.text = Formatter.formatDuration(viewModel.currentSong.value?.duration
                     ?: 0)
         binding.timeBar.setPosition(viewModel.player.currentPosition);
+
         return binding.root
     }
     private fun setUpMusicPlayer() {
@@ -92,14 +95,14 @@ class MusicPlayer : Fragment() {
         binding.playerControlView.player?.addListener(object : Player.Listener {
             // Xử lý sự kiện khi chuyển media item trong player
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                Log.i("PlayerEvents", "onMediaItemTransition ${reason.toString()}")
+                Log.i("PlayerEvents", "onMediaItemTransition Song Duration ${viewModel.player.duration}")
                 super.onMediaItemTransition(mediaItem, reason)
-                binding.durationTxt.text = Formater.formatDuration(viewModel.player.duration)
+                binding.durationTxt.text = Formatter.formatDuration(viewModel.currentSong.value?.duration ?: 0)
+                viewModel.currentSong.value?.let { disFragment.setImage(it.imageUri) };
             }
             // Xử lý sự kiện khi trạng thái isPlaying thay đổi
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 Log.i("PlayerEvents", "OnIsPlaying ${isPlaying.toString()}")
-
                 if (isPlaying) {
                     disFragment.resumeAnimation();
                 } else {
@@ -136,7 +139,7 @@ class MusicPlayer : Fragment() {
             override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
                 viewModel.player.seekTo(position)
                 binding.timeBar.setPosition(position);
-                binding.currentPositionTxt.text = Formater.formatDuration(position);
+                binding.currentPositionTxt.text = Formatter.formatDuration(position);
             }
         })
         //set timebar value keep updated
@@ -144,13 +147,13 @@ class MusicPlayer : Fragment() {
             if(viewModel.player.isPlaying){
                 binding.timeBar.setPosition(position)
                 binding.timeBar.setBufferedPosition(bufferedPosition)
-                binding.currentPositionTxt.text = Formater.formatDuration(position);
+                binding.currentPositionTxt.text = Formatter.formatDuration(position);
             }
         }
     }
     private fun setObservation(){
         viewModel.currentSong.observe(viewLifecycleOwner){
-            binding.artistnameTextview.text = it?.artistName
+            binding.artistnameTextview.text = Formatter.convertArrArtistToString(it?.artist!!)
             binding.songName.text = it?.name
             binding.titleSong.text = it?.name
         }
@@ -198,6 +201,7 @@ class MusicPlayer : Fragment() {
         // Thiết lập sự kiện cho nút playNext
         playNext.setOnClickListener {
             viewModel.playNext()
+
         }
         playPrev.setOnClickListener {
             viewModel.playPrev()
@@ -216,5 +220,20 @@ class MusicPlayer : Fragment() {
         binding.backButton.setOnClickListener {
             parentFragmentManager.popBackStack();
         }
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            isLocalSong = it.getBoolean(IS_LOCAL_SONG)
+        }
+    }
+    companion object {
+        @JvmStatic
+        fun newInstance(isLocalSong: Boolean) =
+            MusicPlayer().apply {
+                arguments = Bundle().apply {
+                    putBoolean(IS_LOCAL_SONG, isLocalSong)
+                }
+            }
     }
 }

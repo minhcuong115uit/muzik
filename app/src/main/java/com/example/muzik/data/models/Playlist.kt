@@ -1,13 +1,16 @@
 package com.example.muzik.data.models
 
+import com.google.firebase.Timestamp
 import java.util.UUID
 
 data class Playlist (
-    //    val commentId = String = ""
-    val playListId: String = "",
+    var playlistId: String = "",
     val playListImageUri: String = "",
     val name: String = "",
     val isPrivate: Boolean = false,
-    val listId: MutableList<UUID> = mutableListOf(),
-    val ownerName:String = ""
+    val songIds: MutableList<String> = mutableListOf(),
+    val userId: String = "",
+    var deletedAt: Timestamp? = null,
+    var createdAt: Timestamp? = null,
+
 )

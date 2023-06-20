@@ -13,17 +13,28 @@
         android:supportsRtl="true"
         android:name=".utils.ApplicationClass"
         android:theme="@style/Theme.Muzik"
+        android:windowSoftInputMode="adjustResize"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.activities.MusicPlayerActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/title_activity_music_player"
-            android:theme="@style/Theme.Muzik.NoActionBar">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/girl_listening_to_music" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/light_gray" />
+
+<!--        <activity-->
+<!--            android:name=".ui.activities.MusicPlayerActivity"-->
+<!--            android:exported="true"-->
+<!--            android:windowSoftInputMode="adjustPan"-->
+<!--            android:label="@string/title_activity_music_player"-->
+<!--            android:theme="@style/Theme.Muzik.NoActionBar">-->
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="" />-->
+<!--        </activity>-->
         <activity
             android:name=".ui.activities.authentication.AuthActivity"
             android:exported="true">
@@ -65,6 +76,14 @@
         <service
             android:name=".services.MusicService"
             android:enabled="true" />
+        <service
+            android:name=".services.MyFirebaseMessaging"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <receiver android:name=".receiver.NotificationReceiver" android:enabled="true"
             android:exported="true">
             <intent-filter>

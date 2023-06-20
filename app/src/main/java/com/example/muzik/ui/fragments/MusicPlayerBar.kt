@@ -11,16 +11,20 @@ import android.widget.ImageButton
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
+import com.example.muzik.data.models.Song
 import com.example.muzik.databinding.FragmentMusicPlayerBarBinding
 import com.example.muzik.listeners.ActionPlayerListener
 import com.example.muzik.ui.activities.MainActivity
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
+import com.squareup.picasso.Picasso
+import java.io.Serializable
 
-const val SONG_ID = "SongId"
+
 class MusicPlayerBar : Fragment(), ActionPlayerListener {
     lateinit var binding:FragmentMusicPlayerBarBinding;
     lateinit var viewModel: PlayerViewModel
-    private var songId: Int? = -1
+    private var SongIndex: Int? = -1
+    private var song: Song? = null;
     lateinit var mainActivity: MainActivity
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -30,17 +34,24 @@ class MusicPlayerBar : Fragment(), ActionPlayerListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            songId = it.getInt(SONG_ID)
+            SongIndex = it.getInt(SONG_INDEX)
+            song = it.getParcelable<Song>(SONG_KEY);
         }
     }
     companion object {
+        const val SONG_INDEX = "SongIndex"
+        const val SONG_KEY = "SongKey"
         @JvmStatic
-        fun newInstance(songId: Int) =
-            MusicPlayerBar().apply {
-                arguments = Bundle().apply {
-                    putInt(SONG_ID, songId)
-                }
+        fun newInstance(songId: Int, song: Song): MusicPlayerBar {
+            val fragment = MusicPlayerBar()
+            val args = Bundle().apply {
+                putInt(SONG_INDEX, songId)
+                putParcelable(SONG_KEY, song)
             }
+            fragment.arguments = args
+            return fragment
+        }
+
     }
 
     override fun onCreateView(
@@ -52,34 +63,41 @@ class MusicPlayerBar : Fragment(), ActionPlayerListener {
         setBtnClickListener();
         binding.viewmodel = viewModel
         binding.playerBarSongName.requestFocus();
+        if(song?.imageUri?.isNotEmpty() == true){
+            Picasso.get().load(song?.imageUri).into(binding.playerBarImage)
+        }
         viewModel.setActionPlayerListener(this);
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.setOnClickListener {
-            songId?.let { it1 -> viewModel.getPlaySongListener()?.playSong(it1) }
+            SongIndex?.let { it1 -> song?.let { it2 ->
+                viewModel.getPlaySongListener()?.playSong(it1,
+                    it2
+                )
+            } }
         }
     }
     private fun setBtnClickListener(){
-
         binding.nextBtnBottomBar.setOnClickListener {
-            viewModel.player.seekToNext();
-            mainActivity.showNotification(R.drawable.ic_pause)
+            viewModel.playNext()
+//            mainActivity.showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
         }
         binding.prevBtnBottomBar.setOnClickListener {
-            viewModel.player.seekToPrevious();
-            mainActivity.showNotification(R.drawable.ic_pause)
+//            viewModel.player.seekToPrevious();
+            viewModel.playPrev()
+//            mainActivity.showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
         }
         binding.playBtnBottomBar.setOnClickListener {
             if(viewModel.player.isPlaying){
                 viewModel.player.stop();
-                mainActivity.showNotification(R.drawable.ic_play)
+//                mainActivity.showNotification(R.drawable.ic_play , viewModel.currentSong.value?.imageUri)
                 (it as ImageButton).setImageResource(R.drawable.ic_play);
                 viewModel.ellipsizeType.set(TextUtils.TruncateAt.END)
             }
             else{
-                mainActivity.showNotification(R.drawable.ic_pause)
+//                mainActivity.showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
                 viewModel.player.playWhenReady = true;
                 viewModel.player.prepare();
                 viewModel.player.play();

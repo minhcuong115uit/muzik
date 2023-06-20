@@ -6,14 +6,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.muzik.data.models.Comment
+import com.example.muzik.data.models.Song
 import com.example.muzik.data.models.User
 import com.example.muzik.data.repositories.ReactionRepository
+import com.example.muzik.viewmodels.authentication.AuthViewModel
+import com.google.firebase.Timestamp
 import java.time.LocalDate
 
 class ActionBarViewModel: ViewModel() {
     private val _isShowComments = MutableLiveData(false)
     private val _comments = MutableLiveData<MutableList<Comment>>(mutableListOf())
     private val _isFavorite = MutableLiveData(false)
+    private val user = AuthViewModel.getUser()
+    private var currentSongId: String?  = null
     var isLoading = MutableLiveData<Boolean>(false)
     var commentContent = ObservableField<String>();
     val isFavourite: LiveData<Boolean>
@@ -29,13 +34,20 @@ class ActionBarViewModel: ViewModel() {
     fun handleToggleShowComments(){
         _isShowComments.value = !_isShowComments.value!!
     }
-    private val user =  User("1212","first","last", "displayName","male","18",official = false, avatarUrl = "")
+
+    fun setCurrentSongId (songId: String){
+        this.currentSongId = songId
+        loadComments(currentSongId!!);
+    }
     fun uploadComment(){
+        Log.e("COMMENT CURRENT SONG ID",currentSongId.toString());
+        if(currentSongId?.isEmpty() == true){
+            return
+        }
         isLoading.value = true;
-        val comment = Comment("3Wj9MsZv9nLwsmj75A7w", createdAt = LocalDate.now().toString(),
-            content =  commentContent.get()!!, user = user,
-            modifiedAt = ""
-        );
+        val comment = Comment("",songId = currentSongId!!, createdAt = Timestamp.now(),
+            content =  commentContent.get()!!, userName = user!!.displayName, userId = user.userId, userAvatar = user.avatar
+        )
         try{
             ReactionRepository.instance!!.uploadComment(comment);
             commentContent.set("")
@@ -48,7 +60,14 @@ class ActionBarViewModel: ViewModel() {
 
         }
     }
-    fun loadComments(songId:String) {
+    fun uploadReplyComment(replyComment: Comment, onSuccess: (Comment) -> Unit){
+        replyComment.createdAt = Timestamp.now()
+        replyComment.userName =user!!.displayName
+        replyComment.userId =user.userId
+        replyComment.userAvatar =user.avatar
+        ReactionRepository.instance!!.uploadComment(replyComment, onSuccess);
+    }
+    private fun loadComments(songId:String) {
         isLoading.value = true;
         _comments.value?.clear();
         ReactionRepository.instance!!.getComments (songId,{
@@ -62,6 +81,9 @@ class ActionBarViewModel: ViewModel() {
             Log.e("COMMENT", "Error getting comments", e)
             isLoading.value = false;
         }
+    }
+    fun getReplyComments(commentId:String, onSuccess: (List<Comment>)->Unit) {
+        ReactionRepository.instance!!.getReplyComments (commentId,onSuccess)
     }
     fun handleToggleHeart() {
         _isFavorite.value = !_isFavorite.value!!;

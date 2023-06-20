@@ -1,73 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="12dp"
+    android:orientation="vertical"
     android:layout_height="wrap_content">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="50dp"
-        android:id="@+id/img_comment_user_avt"
-        android:src="@drawable/background_image_girl_listen"
-        android:layout_marginEnd="12dp"
-        android:layout_height="50dp"/>
+
     <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tv_comment_creator"
-                android:layout_width="wrap_content"
-                android:text="Nguyễn Quỳnh Trang"
-                android:textStyle="bold"
-                android:layout_marginEnd="16dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/tv_comment_createAt"
-                android:layout_width="wrap_content"
-                android:text="19 tháng 4"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <TextView
-            android:layout_marginTop="6dp"
-            android:layout_width="wrap_content"
-            android:id="@+id/tv_comment_content"
-            android:text="Giai điệu nhẹ nhàng mà nghe vào trời mưa thì sao nhỉ"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_comment_user_avt"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/background_image_girl_listen" />
 
         <LinearLayout
-            android:layout_marginTop="12dp"
-            android:layout_width="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content">
-            <ImageButton
-                android:id="@+id/icon_comment_heart"
-                android:layout_width="wrap_content"
-                style="@style/ExoMediaButton"
-                android:src="@drawable/small_empty_heart"
-                android:text="Nguyễn Quỳnh Trang"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:id="@+id/tv_comment_heart_number"
-                android:text="1"
-                android:layout_marginLeft="2dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_marginLeft="24dp"
-                android:id="@+id/tv_comment_heart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:text="Trả lời"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_comment_creator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="Nguyễn Quỳnh Trang"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_comment_createAt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="19 tháng 4" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"></View>
+
+                <ImageButton
+                    style="@style/ExoMediaButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_more" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_comment_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Giai điệu nhẹ nhàng mà nghe vào trời mưa thì sao nhỉ" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical">
+
+                <ImageButton
+                    android:id="@+id/icon_comment_heart"
+                    style="@style/ExoMediaButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/small_empty_heart"
+                    android:text="Nguyễn Quỳnh Trang" />
+
+                <TextView
+                    android:id="@+id/tv_comment_heart_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:text="1" />
+
+                <TextView
+                    android:id="@+id/tv_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/reply" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <ImageButton
-        android:layout_width="wrap_content"
-        style="@style/ExoMediaButton"
 
-        android:background="@drawable/ic_more"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rec_reply_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_margin="12dp"
+        android:orientation="horizontal"
+        android:id="@+id/input_bar_container"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/rec_reply_comment"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:transitionGroup="true"
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="40dp"
+            android:id="@+id/reply_cmt_input_avt"
+            android:src="@drawable/background_image_girl_listen"
+            android:layout_marginEnd="12dp"
+            android:layout_height="40dp"/>
+        <EditText
+            android:id="@+id/edt_input"
+            android:layout_width="240dp"
+            android:layout_weight="1"
+            android:hint="@string/create_comment"
+            style="@style/InputText"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/send_btn"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/send_btn"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
