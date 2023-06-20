@@ -1,4 +1,4 @@
-package com.example.muzik.viewmodels.musicplayer
+package com.example.muzik.viewmodels
 
 import android.content.Context
 import android.util.Log
@@ -12,7 +12,6 @@ import com.example.muzik.data.repositories.SongRepository
 import com.example.muzik.listeners.PlaySongListener
 import com.example.muzik.ui.activities.MainActivity
 import com.example.muzik.ui.fragments.CreatePlaylist
-import com.google.android.exoplayer2.MediaItem
 
 class LibraryViewModel: ViewModel() {
     var playlistName = ObservableField<String>("");
@@ -22,11 +21,13 @@ class LibraryViewModel: ViewModel() {
     private val _playlist = MutableLiveData<MutableList<Playlist>>(mutableListOf())
     private val _playlistItems = MutableLiveData<MutableList<Song>>(mutableListOf())
     private val _localListSong = mutableListOf<Song>()
-
     //bottom sheet fragment for creating a new playlist
     private var createPlaylistFragment = CreatePlaylist();
 
-
+    init {
+        val list = getLocalListSong();
+        setPlaylistItems(list)
+    }
     fun getPlaySongListener(): PlaySongListener? {
         return _playSongListener
     }

@@ -8,5 +8,5 @@ data class User(
     var gender: String = "",
     var age: String = "",
     var official: Boolean = false,
-    var avatarUrl: String = ""
+    var avatar: String = ""
 )

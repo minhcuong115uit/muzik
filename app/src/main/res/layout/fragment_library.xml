@@ -8,7 +8,7 @@
             type="com.example.muzik.ui.activities.MainActivity" />
         <variable
             name="viewmodel"
-            type="com.example.muzik.viewmodels.musicplayer.LibraryViewModel" />
+            type="com.example.muzik.viewmodels.LibraryViewModel" />
     </data>
     <ScrollView
         android:layout_width="match_parent"

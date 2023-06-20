@@ -18,7 +18,6 @@ class UserRepository private constructor(){
             }
             private set
     }
-
     fun createUser ( user:User)
     {
         db.collection("users")

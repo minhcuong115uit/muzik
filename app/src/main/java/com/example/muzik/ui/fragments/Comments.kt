@@ -37,7 +37,7 @@ class Comments : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        adapter = CommentsAdapter(requireActivity(),viewModel.comments.value!!)
+        adapter = CommentsAdapter(requireActivity(),viewModel)
         binding = FragmentCommentsBinding.inflate(inflater, container,false);
         viewModel.loadComments("3Wj9MsZv9nLwsmj75A7w");
         binding.viewmodel = viewModel;
@@ -50,26 +50,24 @@ class Comments : Fragment() {
         }
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            binding.tvEmpty.visibility = if (viewModel.comments.value?.size == 0) View.VISIBLE else View.GONE
-
-        }
-
-        // textInput animation when user click to it
-        binding.edtInput.doOnTextChanged { text, start, before, count ->
-            if (text.isNullOrEmpty()) {
-                binding.sendBtn.visibility = View.INVISIBLE;
-            } else {
-                binding.sendBtn.visibility = View.VISIBLE;
+            val commentCount = viewModel.comments.value?.size;
+            if(commentCount != 0 ){
+                binding.tvEmpty.visibility = View.GONE
+                binding.recCommentList.scrollToPosition(commentCount!!.minus(1) );
+            }
+            else {
+                binding.tvEmpty.visibility =  View.VISIBLE
             }
         }
+        // textInput animation when user click to it
         binding.edtInput.setOnFocusChangeListener { _, hasFocus ->
+            val transition = TransitionInflater.from(requireContext())
+                .inflateTransition(R.transition.transition_comment_bar)
+            TransitionManager.beginDelayedTransition(binding.root as ViewGroup, transition)
             if (hasFocus) {
-                val transition = TransitionInflater.from(requireContext())
-                    .inflateTransition(R.transition.transition_comment_bar)
-                TransitionManager.beginDelayedTransition(binding.root as ViewGroup, transition)
                 binding.userCommentAvt.visibility = View.GONE
                 val params = binding.edtInput.layoutParams as LinearLayout.LayoutParams
-                params.width = LinearLayout.LayoutParams.MATCH_PARENT
+                params.width = LinearLayout.LayoutParams.MATCH_PARENT - 40;
                 binding.edtInput.layoutParams = params
             } else {
                 binding.userCommentAvt.visibility = View.VISIBLE
@@ -78,7 +76,6 @@ class Comments : Fragment() {
                 binding.edtInput.layoutParams = params
             }
         }
-
         binding.closeComments.setOnClickListener(View.OnClickListener {
              parentFragmentManager.popBackStack()
 

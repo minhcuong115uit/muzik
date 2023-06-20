@@ -6,7 +6,6 @@ import retrofit2.http.GET
 interface RemoteApi {
     @GET("/songs")
     suspend fun getSongs(){
-
     }
 }
 

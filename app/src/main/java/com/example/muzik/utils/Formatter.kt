@@ -1,6 +1,8 @@
 package com.example.muzik.utils
 
-class Formater {
+import com.example.muzik.data.models.Artist
+
+class Formatter {
     companion object{
         fun formatDuration(durationMs: Long): String {
             val seconds = (durationMs / 1000).toInt()
@@ -11,6 +13,10 @@ class Formater {
             } else {
                 String.format("0:%02d", remainingSeconds)
             }
+        }
+        fun convertArrArtistToString(artists: ArrayList<Artist>): String {
+            val artistNames = artists.map { it.name }
+            return artistNames.joinToString(separator = ",")
         }
 
     }

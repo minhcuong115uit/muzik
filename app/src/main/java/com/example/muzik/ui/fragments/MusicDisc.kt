@@ -19,10 +19,27 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Use the [MusicDisc.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+const val SONG_IMAGE_URL = "URL"
 class MusicDisc : Fragment() {
     private lateinit var circleImageView: CircleImageView
     private lateinit var objectAnimator: ObjectAnimator
-
+    private var imageUri = ""
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            imageUri = it.getString(SONG_IMAGE_URL).toString()
+        }
+    }
+    companion object {
+        @JvmStatic
+        fun newInstance(isLocalSong: String) =
+            MusicDisc().apply {
+                arguments = Bundle().apply {
+                    putString(SONG_IMAGE_URL, isLocalSong)
+                }
+            }
+    }
     @Nullable
     override fun onCreateView(
         @NonNull inflater: LayoutInflater,
@@ -31,6 +48,10 @@ class MusicDisc : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_music_disc, container, false)
         circleImageView = view.findViewById(R.id.imageviewcircle)
+        if(!imageUri.isNullOrEmpty())
+        {
+            Picasso.get().load(imageUri).into(circleImageView)
+        }
         return view
     }
 
@@ -46,9 +67,11 @@ class MusicDisc : Fragment() {
     private fun Play(image: String?) {
         Picasso.get().load(image).into(circleImageView)
     }
+    fun setImage(imageUri:String){
+        Picasso.get().load(imageUri).into(circleImageView)
+    }
     override fun onDestroyView() {
         super.onDestroyView()
-
         objectAnimator.cancel();
     }
     fun stopAnimation(){

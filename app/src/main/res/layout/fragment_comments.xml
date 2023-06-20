@@ -48,13 +48,14 @@
             android:textSize="@dimen/font_size_large"
             android:gravity="center"
             android:id="@+id/tv_empty"
-            android:text="This track doesn't have any comments. Be the first!" />
+            android:text="@string/empty_list_comment" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec_commentList"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="0dp"/>
+        <!--        input_bar-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_margin="12dp"
@@ -70,7 +71,8 @@
                 android:layout_height="40dp"/>
             <EditText
                 android:id="@+id/edt_input"
-                android:layout_width="270dp"
+                android:layout_width="240dp"
+                android:layout_weight="1"
                 android:text="@={viewmodel.commentContent}"
                 android:hint="Viết bình luận..."
                 style="@style/InputText"
@@ -79,9 +81,8 @@
                 android:id="@+id/send_btn"
                 android:onClick="@{()-> viewmodel.uploadComment()}"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="-30dp"
-                android:src="@drawable/right_arrow"
-                android:visibility="invisible"
+                android:layout_marginLeft="12dp"
+                android:src="@drawable/send_btn"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 

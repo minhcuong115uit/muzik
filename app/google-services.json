@@ -1,42 +1,71 @@
 {
   "project_info": {
-    "project_number": "57263066016",
-    "firebase_url": "https://muzik-c5c9a-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "muzik-c5c9a",
-    "storage_bucket": "muzik-c5c9a.appspot.com"
+    "project_number": "374763912130",
+    "firebase_url": "https://soundcloudclone-30184-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "soundcloudclone-30184",
+    "storage_bucket": "soundcloudclone-30184.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:57263066016:android:0c4b756df9f61728a0f2c5",
+        "mobilesdk_app_id": "1:374763912130:android:b86c719ed09b5d5cacf45b",
         "android_client_info": {
           "package_name": "com.example.muzik"
         }
       },
       "oauth_client": [
         {
-          "client_id": "57263066016-0fg3anohqplr91hefptmjr21hi6k3ben.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.muzik",
-            "certificate_hash": "ff44524e8539f43e29e8e01cdf06b6e83494c98b"
-          }
-        },
-        {
-          "client_id": "57263066016-tatb3emn5jaoa1e4er6jaaegdp6qaiuf.apps.googleusercontent.com",
+          "client_id": "374763912130-eufdktpssh6e5al4ghr109bddforoidk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBKLay1hJBXdufyVudtS3AuH6up7MvLZ3I"
+          "current_key": "AIzaSyCYgQlEpLtbYSy3y1bOCvI9Oag7VvJM8oA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "57263066016-j79qfsjki4vhhq3r9gpiptldhip10rmp.apps.googleusercontent.com",
+              "client_id": "374763912130-e0ctdjo06t2epgf5m4r8ed58u4eum873.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374763912130:android:ae87b5b3bec3a7edacf45b",
+        "android_client_info": {
+          "package_name": "com.khanha.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374763912130-m3fh7jabrbd2jru2aiifnde9a10iin16.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.khanha.app",
+            "certificate_hash": "3b363e8e9f9a4208401cf3e5011cfc324a49951d"
+          }
+        },
+        {
+          "client_id": "374763912130-eufdktpssh6e5al4ghr109bddforoidk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYgQlEpLtbYSy3y1bOCvI9Oag7VvJM8oA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374763912130-e0ctdjo06t2epgf5m4r8ed58u4eum873.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

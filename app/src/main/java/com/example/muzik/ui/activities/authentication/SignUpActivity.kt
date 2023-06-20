@@ -12,7 +12,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.muzik.R
 import com.example.muzik.databinding.ActivitySignUpBinding
 import com.example.muzik.listeners.AuthListener
-import com.example.muzik.utils.Formater
 import com.example.muzik.utils.ViewUtils
 import com.example.muzik.viewmodels.authentication.SignUpViewModel
 import com.google.firebase.storage.FirebaseStorage

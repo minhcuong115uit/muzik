@@ -3,33 +3,26 @@ package com.example.muzik.viewmodels.musicplayer
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.CheckBox
-import androidx.compose.ui.window.Dialog
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import com.example.muzik.R
-import com.example.muzik.data.models.Comment
-import com.example.muzik.data.models.Playlist
+import androidx.lifecycle.viewModelScope
 import com.example.muzik.data.models.Song
-import com.example.muzik.data.models.User
-import com.example.muzik.data.repositories.ReactionRepository
 import com.example.muzik.data.repositories.SongRepository
 import com.example.muzik.listeners.ActionPlayerListener
 import com.example.muzik.listeners.PlaySongListener
-import com.example.muzik.ui.activities.MainActivity
-import com.example.muzik.ui.fragments.CreatePlaylist
-import com.example.muzik.utils.Formater
+import com.example.muzik.utils.Formatter
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.time.LocalDate
-import java.util.UUID
+import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 //class PlayerViewModel(private val repo :ReactionRepository): ViewModel() {
 class PlayerViewModel(): ViewModel() {
@@ -37,14 +30,58 @@ class PlayerViewModel(): ViewModel() {
     private var _playSongListener: PlaySongListener? = null;
     private var _repeatState = MutableLiveData<Int>(2);
     private var _shuffleMode = MutableLiveData<Boolean>(false);
-    private var _listSong = mutableListOf<Song>()
-
+    private var _listSong = mutableListOf<Song>()  // local + remote songs
+    private var _currentPlaylistSong = mutableListOf<Song>() // current songs set for player
+    private var _listRemoteSongs = mutableListOf<Song>()
+    private var _listLocalSongs = mutableListOf<Song>()
     lateinit var player:ExoPlayer;
+    var isGettingSongs = MutableLiveData(false);
+
     var currentSongIndex = -1;
-    var ellipsizeType  =  ObservableField<TextUtils.TruncateAt>(TextUtils.TruncateAt.MARQUEE)
+    var ellipsizeType  =  ObservableField(TextUtils.TruncateAt.MARQUEE)
     var currentSong = MutableLiveData<Song?>(null);
 
+    fun initialize(context: Context) {
+        viewModelScope.launch {
+            _listSong.clear() // localsongs + remotesongs
+            _listRemoteSongs.clear()
+            _listLocalSongs.clear();
+            isGettingSongs.value = true
+            //get device songs
+            getDeviceSongs(context)
+            //get remote songs
+            getRemoteSongsFromDb();
+            combineLists()
+        }
+    }
 
+    private fun combineLists() {
+        _listSong.clear()
+        val list = mutableListOf<Song>()
+        list.addAll(_listRemoteSongs)
+        list.addAll(_listLocalSongs)
+        isGettingSongs.value = false
+        _listSong = list
+    }
+    suspend fun getRemoteSongsFromDb() = suspendCoroutine<Unit> { continuation ->
+        SongRepository.instance?.getRemoteSongs(onSuccess = { list ->
+            _listRemoteSongs.clear()
+            _listRemoteSongs.addAll(list)
+            Log.d("SONG", "Get songs successfully ${list.size}")
+            continuation.resume(Unit)
+        }, onFailure = {
+            Log.e("SONG", "Failed to get songs ${it.message}")
+            continuation.resumeWithException(it)
+        })
+    }
+
+    fun getDeviceSongs (context: Context) {
+        _listLocalSongs.clear()
+        val songList = SongRepository.instance?.getDeviceMp3Files(context);
+        songList?.forEach {
+            _listLocalSongs.add(it);
+        }
+    }
     fun getPlaySongListener(): PlaySongListener? {
         return _playSongListener;
     }
@@ -75,13 +112,13 @@ class PlayerViewModel(): ViewModel() {
         player = ExoPlayer.Builder(context).build()
         player.repeatMode = _repeatState.value!!;
         player.shuffleModeEnabled = _shuffleMode.value!!;
+
         player.addListener(object: Player.Listener {
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                Log.i("PlayerEvents", "onMediaItemTransition ${reason.toString()}")
                 super.onMediaItemTransition(mediaItem, reason)
                 val newIndex = player.currentMediaItemIndex
                 currentSongIndex = newIndex
-                currentSong.value = _listSong[currentSongIndex]
+                currentSong.value = _currentPlaylistSong[currentSongIndex]
             }
         })
     }
@@ -89,29 +126,33 @@ class PlayerViewModel(): ViewModel() {
         player.release()
         super.onCleared()
     }
-
+    fun getCurrentArtistName(): String{
+        return Formatter.convertArrArtistToString(currentSong.value!!.artist);
+    }
 
     fun playSong(song: Song){
         currentSong.value = song;
-        val mediaItem = MediaItem.fromUri(song.songUri);
+        val mediaItem = MediaItem.fromUri(song.uri);
         player.setMediaItem(mediaItem);
         player.prepare();
         player.play();
     }
-    fun playSong(songIndex: Int){
-        player.seekTo(songIndex,0);
+    fun playSong(index: Int, song: Song){
+        player.seekTo(index,0);
         player.prepare();
         player.play();
-        currentSong.value = _listSong[songIndex];
-        currentSongIndex = songIndex
+        currentSong.value = song;
+        currentSongIndex = index
     }
     fun setMediaPlaylist(list: List<Song>) {
-        _listSong.clear()
-        _listSong.addAll(list)
-        val listMediaItems = _listSong.map { it.convertToMediaItem() }
+        _currentPlaylistSong.clear()
+        _currentPlaylistSong.addAll(list)
+        Log.d("MediaPlaylist", "New media playlist is set ${list.size}")
+        val listMediaItems = list.map { it.convertToMediaItem() }
         player.clearMediaItems()
         player.setMediaItems(listMediaItems)
-        currentSongIndex = player.currentMediaItemIndex
+//        currentSongIndex = -1
+//        currentSong.value = null
     }
     fun setActionPlayerListener(listener: ActionPlayerListener){
         this.actionPlayerListener = listener

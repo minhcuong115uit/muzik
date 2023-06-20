@@ -4,11 +4,15 @@ import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
 import com.example.muzik.data.models.Song
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 
 interface ISongRepository {
 
 }
 class SongRepository {
+    private val db = FirebaseFirestore.getInstance();
+
     companion object{
         var instance: SongRepository? = null
             get() {
@@ -40,8 +44,8 @@ class SongRepository {
                 val filePath = it.getString(dataColumn)
                 val fileName = it.getString(nameColumn)
                 val duration = it.getLong(durationColumn)
-
-                listMp3Uri.add(Song("DeviceSong${id}","",filePath, name = fileName,"",duration ));
+                listMp3Uri.add(Song("DeviceSong${id}","",filePath, name = fileName,
+                    arrayListOf(), isLocalSong = true, duration= duration , deletedAt = null));
                 Log.e("LocalAudioFile", filePath);
                 id++;
                 // Do something with the file path or name (e.g., display it, store it in a list, etc.)
@@ -49,5 +53,20 @@ class SongRepository {
         }
         return listMp3Uri
     }
-
+    fun getRemoteSongs(onSuccess: (List<Song>) -> Unit, onFailure: (Exception) -> Unit) {
+        db.collection("songs")
+            .whereEqualTo("deletedAt",null)
+            .get()
+            .addOnSuccessListener { result ->
+                val songs = mutableListOf<Song>()
+                for (document in result) {
+                    val song = document.toObject<Song>()
+                    songs.add(song)
+                }
+                onSuccess(songs)
+            }
+            .addOnFailureListener { e ->
+                onFailure(e)
+            }
+    }
 }

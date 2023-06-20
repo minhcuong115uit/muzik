@@ -13,12 +13,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
-import com.example.muzik.data.models.Song
 import com.example.muzik.databinding.FragmentLibraryBinding
 import com.example.muzik.ui.activities.MainActivity
 import com.example.muzik.ui.adapters.MusicItemAdapter
 import com.example.muzik.ui.adapters.PlaylistItemAdapter
-import com.example.muzik.viewmodels.musicplayer.LibraryViewModel
+import com.example.muzik.viewmodels.LibraryViewModel
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 
 
@@ -41,28 +40,25 @@ class Library : Fragment() {
         requestPermission()
 
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_library, container,false);
+
         //tạm thời set detail playlist = local list song
-        libraryViewmodel.setPlaylistItems(libraryViewmodel.getLocalListSong())
+//        libraryViewmodel.setPlaylistItems(libraryViewmodel.getLocalListSong())
+
         libraryViewmodel.setPlaySongListener(requireActivity() as MainActivity)
+
         //set local song playlist
-        playerViewModel.setMediaPlaylist(libraryViewmodel.getLocalListSong())
+        playerViewModel.setMediaPlaylist(playerViewModel.getListSong().filter { song->song.isLocalSong })
 
         playlistAdapter = PlaylistItemAdapter(requireActivity(),libraryViewmodel);
-        musicListAdapter = MusicItemAdapter(requireActivity(),libraryViewmodel);
-
         binding.viewmodel = libraryViewmodel;
         binding.context = requireActivity() as MainActivity?
-
-        binding.recDeviceSongs.adapter = musicListAdapter;
         binding.recPlayList.adapter = playlistAdapter;
-
-
         libraryViewmodel.notifyChange.observe(viewLifecycleOwner){
             playlistAdapter.notifyDataSetChanged()
         }
-//        libraryViewmodel.getPlaylist().observe(viewLifecycleOwner){
-//            playlistAdapter.notifyDataSetChanged()
-//        }
+        musicListAdapter = MusicItemAdapter(requireActivity(), playerViewModel, playerViewModel.getListSong().filter { song -> song.isLocalSong });
+        binding.recDeviceSongs.adapter = musicListAdapter;
+        setObservation();
         return binding.root
     }
     fun requestPermission(){
@@ -91,5 +87,13 @@ class Library : Fragment() {
             }
         }
     }
+    private fun setObservation(){
+        playerViewModel.isGettingSongs.observe(viewLifecycleOwner){isGettingSongs->
+            if(!isGettingSongs){
 
+            }
+            else {
+            }
+        }
+    }
 }

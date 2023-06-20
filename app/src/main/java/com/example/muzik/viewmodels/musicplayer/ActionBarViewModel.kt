@@ -29,11 +29,11 @@ class ActionBarViewModel: ViewModel() {
     fun handleToggleShowComments(){
         _isShowComments.value = !_isShowComments.value!!
     }
-    private val user =  User("1212","first","last", "displayName","male","18",official = false, avatarUrl = "")
+    private val user =  User("1212","first","last", "displayName","male","18",official = false, avatar = "")
     fun uploadComment(){
         isLoading.value = true;
-        val comment = Comment("3Wj9MsZv9nLwsmj75A7w", createdAt = LocalDate.now().toString(),
-            content =  commentContent.get()!!, user = user,
+        val comment = Comment("",songId = "3Wj9MsZv9nLwsmj75A7w", createdAt = LocalDate.now().toString(),
+            content =  commentContent.get()!!, userName = user.displayName, userId = user.userId, userAvatar = user.avatar,
             modifiedAt = ""
         );
         try{
@@ -47,6 +47,13 @@ class ActionBarViewModel: ViewModel() {
             isLoading.value = false;
 
         }
+    }
+    fun uploadReplyComment(replyComment: Comment, onSuccess: (Comment) -> Unit){
+        replyComment.createdAt = LocalDate.now().toString();
+        replyComment.userName =user.displayName
+        replyComment.userId =user.userId
+        replyComment.userAvatar =user.avatar
+        ReactionRepository.instance!!.uploadComment(replyComment, onSuccess);
     }
     fun loadComments(songId:String) {
         isLoading.value = true;
@@ -62,6 +69,9 @@ class ActionBarViewModel: ViewModel() {
             Log.e("COMMENT", "Error getting comments", e)
             isLoading.value = false;
         }
+    }
+    fun getReplyComments(commentId:String, onSuccess: (List<Comment>)->Unit) {
+        ReactionRepository.instance!!.getReplyComments (commentId,onSuccess)
     }
     fun handleToggleHeart() {
         _isFavorite.value = !_isFavorite.value!!;

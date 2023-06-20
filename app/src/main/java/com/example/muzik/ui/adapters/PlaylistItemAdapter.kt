@@ -10,14 +10,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.muzik.R
 import com.example.muzik.data.models.Playlist
-import com.example.muzik.data.models.Song
 import com.example.muzik.ui.activities.MainActivity
 import com.example.muzik.ui.fragments.DetailPlaylist
-import com.example.muzik.ui.fragments.MusicPlayer
-import com.example.muzik.viewmodels.musicplayer.LibraryViewModel
-import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
+import com.example.muzik.viewmodels.LibraryViewModel
 
-class PlaylistItemAdapter(private val context: Context, private val viewModel:LibraryViewModel): RecyclerView.Adapter<PlaylistItemAdapter.ViewHolder>() {
+class PlaylistItemAdapter(private val context: Context, private val viewModel: LibraryViewModel): RecyclerView.Adapter<PlaylistItemAdapter.ViewHolder>() {
 
     private var list: MutableList<Playlist>? = viewModel.getPlaylist().value
 
