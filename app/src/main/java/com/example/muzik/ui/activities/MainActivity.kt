@@ -1,6 +1,7 @@
 package com.example.muzik.ui.activities
 
 import android.Manifest
+import android.app.Dialog
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,39 +11,58 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.example.muzik.R
 import com.example.muzik.data.models.Song
 import com.example.muzik.databinding.ActivityMainBinding
 import com.example.muzik.listeners.ActionPlayerListener
 import com.example.muzik.listeners.PlaySongListener
+import com.example.muzik.listeners.ShowBottomSheetListener
 import com.example.muzik.receiver.NotificationReceiver
 import com.example.muzik.services.MusicService
+import com.example.muzik.ui.adapters.PlaylistItemAdapter
 import com.example.muzik.ui.fragments.Home
 import com.example.muzik.ui.fragments.Library
 import com.example.muzik.ui.fragments.MusicPlayer
 import com.example.muzik.ui.fragments.MusicPlayerBar
+import com.example.muzik.utils.Formatter
 import com.example.muzik.utils.ImageHelper
+import com.example.muzik.viewmodels.LibraryViewModel
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.runBlocking
-import java.util.Formatter
 
-class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListener,
+
+class MainActivity : AppCompatActivity(),
+    ServiceConnection,
+    ActionPlayerListener,
+    ShowBottomSheetListener,
     PlaySongListener {
+
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var navView: BottomNavigationView
     private lateinit var musicService: MusicService
@@ -50,7 +70,10 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
     private lateinit var musicPlayerBarFragment: MusicPlayerBar
     private lateinit var binding: ActivityMainBinding;
     private lateinit var libFragment: Fragment
+    private lateinit var bottomSheetDialog: Dialog;
+    private lateinit var playlistSheetDialog: Dialog;
     private lateinit var homeFragment: Fragment
+    private lateinit var libraryViewmodel: LibraryViewModel
     private var notificationVisibility = NotificationCompat.VISIBILITY_PUBLIC
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
@@ -84,7 +107,9 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
         viewModel =  ViewModelProvider(this)[PlayerViewModel::class.java]
         viewModel.initialize(this);
         viewModel.initPlayer(this);
+        libraryViewmodel = ViewModelProvider(this)[LibraryViewModel::class.java]
         viewModel.setPlaySongListener(this);
+        viewModel.setShowBottomSheetMusic(this);
 
         initFragments();
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
@@ -186,11 +211,6 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
 
     override fun onResume() {
         super.onResume()
-//        if(viewModel.currentSong.value != null){
-//            notificationVisibility = NotificationCompat.VISIBILITY_SECRET
-//            Log.d("PlayerIsPlaying" , viewModel.player.isPlaying.toString())
-//            showNotification(R.drawable.ic_pause, viewModel.currentSong.value?.imageUri)
-//        }
         val notificationManger = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManger.cancel(0)
     }
@@ -246,7 +266,68 @@ class MainActivity : AppCompatActivity(), ServiceConnection, ActionPlayerListene
             .addToBackStack("Player")
             .add(R.id.main_bottom_fragment, musicPlayerFragment).commit()
     }
+    override fun showBottomSheet(song: Song) {
+        bottomSheetDialog = Dialog(this)
+        bottomSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_layout)
 
+        val editLayout = bottomSheetDialog.findViewById<LinearLayout>(R.id.layoutEdit)
+        val songImage = bottomSheetDialog.findViewById<CircleImageView>(R.id.bottom_sheet_img)
+        val name = bottomSheetDialog.findViewById<TextView>(R.id.bottom_sheet_song_name)
+        val artist = bottomSheetDialog.findViewById<TextView>(R.id.bottom_sheet_song_artist)
+        if(song.imageUri.isNotEmpty()){
+            Picasso.get().load(song.imageUri).into(songImage)
+        }
+        name.text = song.name
+        artist.text =Formatter.convertArrArtistToString(song.artist)
+//        val shareLayout = dialog.findViewById<LinearLayout>(R.id.layoutShare)
+//        val uploadLayout = dialog.findViewById<LinearLayout>(R.id.layoutUpload)
+//        val printLayout = dialog.findViewById<LinearLayout>(R.id.layoutPrint)
+
+        editLayout.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                showPlaylistSheet(song)
+//                dialog.dismiss()
+            }
+        })
+
+        bottomSheetDialog.show()
+        bottomSheetDialog.window!!.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        bottomSheetDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        bottomSheetDialog.window!!.attributes.windowAnimations = R.style.BottomSheetAnimation
+        bottomSheetDialog.window!!.setGravity(Gravity.BOTTOM)
+    }
+
+    override fun closePlaylistSheet() {
+        playlistSheetDialog.dismiss()
+        bottomSheetDialog.dismiss()
+    }
+
+    override fun showPlaylistSheet(song : Song) {
+       playlistSheetDialog = Dialog(this)
+        playlistSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        playlistSheetDialog.setContentView(R.layout.playlist_sheet_layout)
+
+
+        val rec: RecyclerView = playlistSheetDialog.findViewById<RecyclerView>(R.id.rec_playlist_sheet)
+//        val shareLayout = dialog.findViewById<LinearLayout>(R.id.layoutShare)
+//        val uploadLayout = dialog.findViewById<LinearLayout>(R.id.layoutUpload)
+//        val printLayout = dialog.findViewById<LinearLayout>(R.id.layoutPrint)
+        val playlistAdapter = PlaylistItemAdapter(this,libraryViewmodel,song,viewModel, true);
+        rec.adapter =playlistAdapter
+
+        playlistSheetDialog.show()
+        playlistSheetDialog.window!!.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        playlistSheetDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        playlistSheetDialog.window!!.attributes.windowAnimations = R.style.BottomSheetAnimation
+        playlistSheetDialog.window!!.setGravity(Gravity.CENTER)
+    }
 
     private fun setObservation(){
         //kiểm tra nếu có bài hát thì sẽ hiển thị notification bar và music player bar

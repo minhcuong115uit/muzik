@@ -9,9 +9,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.muzik.data.models.Song
+import com.example.muzik.data.repositories.ReactionRepository
 import com.example.muzik.data.repositories.SongRepository
 import com.example.muzik.listeners.ActionPlayerListener
 import com.example.muzik.listeners.PlaySongListener
+import com.example.muzik.listeners.ShowBottomSheetListener
 import com.example.muzik.utils.Formatter
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -28,6 +30,7 @@ import kotlin.coroutines.suspendCoroutine
 class PlayerViewModel(): ViewModel() {
     private var actionPlayerListener: ActionPlayerListener? = null
     private var _playSongListener: PlaySongListener? = null;
+    private var _showBottomSheetMusic: ShowBottomSheetListener? = null;
     private var _repeatState = MutableLiveData<Int>(2);
     private var _shuffleMode = MutableLiveData<Boolean>(false);
     private var _listSong = mutableListOf<Song>()  // local + remote songs
@@ -40,7 +43,6 @@ class PlayerViewModel(): ViewModel() {
     var currentSongIndex = -1;
     var ellipsizeType  =  ObservableField(TextUtils.TruncateAt.MARQUEE)
     var currentSong = MutableLiveData<Song?>(null);
-
     fun initialize(context: Context) {
         viewModelScope.launch {
             _listSong.clear() // localsongs + remotesongs
@@ -54,7 +56,6 @@ class PlayerViewModel(): ViewModel() {
             combineLists()
         }
     }
-
     private fun combineLists() {
         _listSong.clear()
         val list = mutableListOf<Song>()
@@ -74,13 +75,15 @@ class PlayerViewModel(): ViewModel() {
             continuation.resumeWithException(it)
         })
     }
-
-    fun getDeviceSongs (context: Context) {
+    private fun getDeviceSongs (context: Context) {
         _listLocalSongs.clear()
         val songList = SongRepository.instance?.getDeviceMp3Files(context);
         songList?.forEach {
             _listLocalSongs.add(it);
         }
+    }
+    fun getListLocalSong(): MutableList<Song> {
+        return _listLocalSongs
     }
     fun getPlaySongListener(): PlaySongListener? {
         return _playSongListener;
@@ -88,6 +91,15 @@ class PlayerViewModel(): ViewModel() {
     fun setPlaySongListener(listener: PlaySongListener){
         this._playSongListener = listener
     }
+    fun getShowBottomSheetMusic(): ShowBottomSheetListener? {
+        return _showBottomSheetMusic;
+    }
+
+
+    fun setShowBottomSheetMusic(listener: ShowBottomSheetListener){
+        this._showBottomSheetMusic = listener
+    }
+
     fun getListSong(): List<Song>{
         return _listSong;
     }
@@ -116,9 +128,14 @@ class PlayerViewModel(): ViewModel() {
         player.addListener(object: Player.Listener {
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 super.onMediaItemTransition(mediaItem, reason)
-                val newIndex = player.currentMediaItemIndex
-                currentSongIndex = newIndex
-                currentSong.value = _currentPlaylistSong[currentSongIndex]
+                try{
+                    val newIndex = player.currentMediaItemIndex
+                    currentSongIndex = newIndex
+                    currentSong.value = _currentPlaylistSong[currentSongIndex]
+                }
+                catch (e:Exception){
+                    Log.e("Exception", "onMediaItemTransition er ${e.message}")
+                }
             }
         })
     }
@@ -154,6 +171,9 @@ class PlayerViewModel(): ViewModel() {
         player.setMediaItems(listMediaItems)
 //        currentSongIndex = -1
 //        currentSong.value = null
+    }
+    fun getSongByIds(listIds :List<String>): List<Song>{
+        return  _listSong.filter { it.songId in listIds }
     }
     fun setActionPlayerListener(listener: ActionPlayerListener){
         this.actionPlayerListener = listener

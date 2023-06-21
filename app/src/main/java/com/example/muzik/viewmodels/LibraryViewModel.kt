@@ -62,15 +62,40 @@ class LibraryViewModel: ViewModel() {
 
     fun addSongToPlaylist(playlistId: String, songId: String) {
         PlaylistRepository.instance?.addSongToPlaylist(playlistId, songId) {
-            // Handle success
+            val updatedPlaylist = _playlist.value?.map {
+                if (it.playlistId == playlistId) {
+                    it.copy(songIds = it.songIds.apply { add(songId) })
+                } else {
+                    it
+                }
+            }
+            if (updatedPlaylist != null) {
+                _playlist.value?.clear()
+                _playlist.value?.addAll(updatedPlaylist)
+            }
+            _playlist.value = updatedPlaylist?.toMutableList()
+            notifyChange.value = !notifyChange.value!!
         }
     }
 
+
     fun removeSongFromPlaylist(playlistId: String, songId: String) {
         PlaylistRepository.instance?.deleteSongFromPlaylist(playlistId, songId) {
-            // Handle success
+            val updatedPlaylist = _playlist.value?.map {
+                if (it.playlistId == playlistId) {
+                    it.copy(songIds = it.songIds.apply { remove(songId) })
+                } else {
+                    it
+                }
+            }
+            if (updatedPlaylist != null) {
+                _playlist.value?.clear()
+                _playlist.value?.addAll(updatedPlaylist)
+            }
+            notifyChange.value = !notifyChange.value!!
         }
     }
+
 
     fun createPlaylist() {
         isLoading.value = true;
@@ -89,6 +114,7 @@ class LibraryViewModel: ViewModel() {
             isLoading.value = false;
         }
     }
+
     fun updatePlaylist(playlistId: String, fieldName: String, value: Any) {
         PlaylistRepository.instance?.updatePlaylist(playlistId, fieldName, value) {
             val updatedPlaylist = _playlist.value?.map {

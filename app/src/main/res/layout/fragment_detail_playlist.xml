@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:text="@string/play_list"
                     android:gravity="center"
-                    android:id="@+id/tv_name_detail_playlist"
+
                     android:textColor="@color/primary_text"
                     android:layout_weight="1"
                     android:textStyle="bold"
@@ -41,6 +41,7 @@
                     android:src="@drawable/ic_more"
                     style="@style/ExoMediaButton"
                     android:padding="12dp"
+                    android:visibility="invisible"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
@@ -78,6 +79,7 @@
                     android:layout_width="wrap_content"
                     android:text="Playlist name"
                     android:layout_weight="1"
+                    android:id="@+id/tv_name_detail_playlist"
                     android:textStyle="bold"
                     android:textColor="@color/primary_text"
                     android:padding="8dp"
@@ -85,14 +87,15 @@
                     android:layout_marginBottom="6dp"
                     android:textSize="@dimen/font_size_large"
                     android:layout_height="0dp"/>
-                <TextView
+                <Button
                     android:layout_width="wrap_content"
-                    android:text="Playlist name"
+                    android:text="PLAY"
                     android:padding="8dp"
+
                     android:id="@+id/tv_owner_detail_playlist"
                     android:textColor="@color/primary_text"
-                    android:layout_weight="1"
-                    android:layout_height="0dp"/>
+                    android:background="#140d36"
+                    android:layout_height="40dp"/>
             </LinearLayout>
         </LinearLayout>
 

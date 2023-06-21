@@ -13,15 +13,13 @@ import com.example.muzik.viewmodels.authentication.SignUpViewModel
 
 class WelcomeActivity : AppCompatActivity()  {
     private lateinit var binding: ActivityWelcomeBinding
-    private lateinit var authViewModel: AuthViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityWelcomeBinding.inflate(layoutInflater);
         setContentView(binding.root);
-        viewModel = ViewModelProvider(this)[AuthViewModel::class.java];
-        viewModel.checkSignedIn();
-        viewModel.isAuthenticated.observe(this){
+        AuthViewModel.checkUserLoggedIn();
+        AuthViewModel.isAuthenticated.observe(this){
             if(it == true){
                 val intent = Intent(this, MainActivity::class.java);
                 startActivity(intent);
@@ -34,8 +32,6 @@ class WelcomeActivity : AppCompatActivity()  {
         val createAccountBtn = binding.btnCreateAccount;
         val haveAnAccountBtn = binding.btnAlreadyHaveAccount
 
-        authViewModel =  ViewModelProvider(this)[AuthViewModel::class.java]
-
         createAccountBtn.setOnClickListener(View.OnClickListener {
             val intent = Intent(this, SignUpActivity::class.java);
             startActivity(intent);
@@ -44,12 +40,6 @@ class WelcomeActivity : AppCompatActivity()  {
             val intent = Intent(this, MainActivity::class.java);
             startActivity(intent);
         })
-        AuthViewModel.checkUserLoggedIn()
-        AuthViewModel.isAuthenticated.observe(this){
-            if(it){
-                val intent = Intent(this, MainActivity::class.java);
-                startActivity(intent);
-            }
-        }
+
     }
 }

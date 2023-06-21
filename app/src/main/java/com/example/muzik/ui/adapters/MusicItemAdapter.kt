@@ -49,18 +49,17 @@ class MusicItemAdapter(
              songName = itemView.findViewById(R.id.music_item_song_name);
              songArtist = itemView.findViewById(R.id.music_item_artist);
              moreBtn = itemView.findViewById(R.id.music_item_more);
-                moreBtn.setOnClickListener {
-                 Log.e("ClickListener","txt Artist Clicked")
-             }
+
         }
 
         fun bind(song: Song){
             songName.text = song.name;
             songArtist.text = Formatter.convertArrArtistToString(song.artist);
             if(!song.imageUri.isEmpty()){
-                Log.d("ImageUri",song.imageUri);
-
                 Picasso.get().load(song.imageUri).into(imgSong)
+            }
+            moreBtn.setOnClickListener {
+                playerViewModel.getShowBottomSheetMusic()?.showBottomSheet(song)
             }
         }
     }

@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.muzik.R
 import com.example.muzik.databinding.FragmentMusicPlayerBinding
 import com.example.muzik.utils.Formatter
+import com.example.muzik.viewmodels.authentication.AuthViewModel
 import com.example.muzik.viewmodels.musicplayer.ActionBarViewModel
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
 import com.google.android.exoplayer2.MediaItem
@@ -71,7 +72,8 @@ class MusicPlayer : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
         binding.viewmodel= viewModel;
         viewModel.currentSong.value?.songId
-        fragmentActionBar = BottomActionsBar.newInstance(viewModel.currentSong.value?.songId ?: "");
+        fragmentActionBar = BottomActionsBar.newInstance(viewModel.currentSong.value?.songId ?: "",
+        );
         val fragmentTransaction = parentFragmentManager.beginTransaction()
         fragmentTransaction.setCustomAnimations(R.anim.slide_up,R.anim.slide_down,R.anim.slide_up, R.anim.slide_down)
             .replace(R.id.actions_bar, fragmentActionBar).commit()
