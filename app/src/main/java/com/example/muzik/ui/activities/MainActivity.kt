@@ -123,6 +123,8 @@ class MainActivity : AppCompatActivity(),
         askNotificationPermission();
         binding.viewmodel = viewModel
         setObservation();
+
+        //for searching
     }
     private fun initFragments() {
         libFragment = Library();

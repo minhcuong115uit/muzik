@@ -82,6 +82,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.3"
 
-    //Dialog
     implementation 'com.github.chnouman:AwesomeDialog:1.0.5'
+
 }
