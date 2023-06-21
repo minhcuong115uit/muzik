@@ -5,12 +5,14 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.muzik.data.models.Comment
 import com.example.muzik.data.models.Song
 import com.example.muzik.data.models.User
 import com.example.muzik.data.repositories.ReactionRepository
 import com.example.muzik.viewmodels.authentication.AuthViewModel
 import com.google.firebase.Timestamp
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class ActionBarViewModel: ViewModel() {
@@ -38,6 +40,12 @@ class ActionBarViewModel: ViewModel() {
     fun setCurrentSongId (songId: String){
         this.currentSongId = songId
         loadComments(currentSongId!!);
+    }
+    fun getDefaultFavouriteValue(songId: String, userId: String) {
+        viewModelScope.launch {
+            _isFavorite.value = ReactionRepository.instance?.getFavouriteValue(songId, userId)
+            // Xử lý kết quả trả về
+        }
     }
     fun uploadComment(){
         Log.e("COMMENT CURRENT SONG ID",currentSongId.toString());
@@ -86,6 +94,9 @@ class ActionBarViewModel: ViewModel() {
         ReactionRepository.instance!!.getReplyComments (commentId,onSuccess)
     }
     fun handleToggleHeart() {
-        _isFavorite.value = !_isFavorite.value!!;
+        currentSongId?.let { ReactionRepository.instance?.sendReactToSong(it,AuthViewModel.getUser()!!.userId){
+            _isFavorite.value = !_isFavorite.value!!;
+        } }
     }
+
 }

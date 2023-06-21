@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.muzik.R
 import com.example.muzik.data.models.Song
 import com.example.muzik.databinding.FragmentBottomActionsBarBinding
+import com.example.muzik.viewmodels.authentication.AuthViewModel
 import com.example.muzik.viewmodels.authentication.SignInViewModel
 import com.example.muzik.viewmodels.musicplayer.ActionBarViewModel
 import com.example.muzik.viewmodels.musicplayer.PlayerViewModel
@@ -33,6 +34,7 @@ class BottomActionsBar : Fragment() {
         binding.viewmodel = viewModel;
         viewModel.setCurrentSongId(songId)
         comments = Comments()
+        AuthViewModel.getUser()?.let { viewModel.getDefaultFavouriteValue(songId, it.userId) };
         setObservations();
         return binding.root;
     }
@@ -65,6 +67,7 @@ class BottomActionsBar : Fragment() {
     }
     companion object {
         const val SONG_ID = "SongId"
+
         @JvmStatic
         fun newInstance(songId: String): BottomActionsBar {
             val fragment = BottomActionsBar()

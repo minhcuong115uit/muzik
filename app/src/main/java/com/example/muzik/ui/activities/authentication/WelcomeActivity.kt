@@ -32,8 +32,6 @@ class WelcomeActivity : AppCompatActivity()  {
         val createAccountBtn = binding.btnCreateAccount;
         val haveAnAccountBtn = binding.btnAlreadyHaveAccount
 
-        authViewModel =  ViewModelProvider(this)[AuthViewModel::class.java]
-
         createAccountBtn.setOnClickListener(View.OnClickListener {
             val intent = Intent(this, SignUpActivity::class.java);
             startActivity(intent);

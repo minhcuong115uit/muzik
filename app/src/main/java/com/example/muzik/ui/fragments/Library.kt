@@ -29,7 +29,7 @@ class Library : Fragment() {
 //    private val libraryViewmodel: PlayerViewModel by lazy {
 //        ViewModelProvider(requireActivity())[PlayerViewModel::class.java]
 //    }
-    private lateinit var libraryViewmodel: LibraryViewModel
+    private val libraryViewmodel: LibraryViewModel by activityViewModels()
     private val playerViewModel: PlayerViewModel by activityViewModels()
     private lateinit var binding: FragmentLibraryBinding;
     override fun onCreateView(
@@ -37,7 +37,7 @@ class Library : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         //get permission to device storage
-        libraryViewmodel = ViewModelProvider(requireActivity())[LibraryViewModel::class.java]
+
         requestPermission()
 
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_library, container,false);

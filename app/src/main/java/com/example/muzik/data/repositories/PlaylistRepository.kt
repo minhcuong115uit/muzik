@@ -37,23 +37,23 @@ class PlaylistRepository private constructor() {
 
     fun addSongToPlaylist(playlistId: String, songId: String, onSuccess: (() -> Unit)? = null) {
         db.collection("playlists")
-            .document(playlistId)
+            .whereEqualTo("playlistId", playlistId)
             .get()
-            .addOnSuccessListener { document ->
-                val playlist = document.toObject<Playlist>()
-                if (playlist != null && !playlist.songIds.contains(songId)) {
-                    db.collection("playlists")
-                        .document(playlistId)
-                        .update("songs", FieldValue.arrayUnion(songId))
-                        .addOnSuccessListener {
-                            Log.d("PLAYLIST", "Song added to playlist")
-                            onSuccess?.invoke()
-                        }
-                        .addOnFailureListener { e ->
-                            Log.w("PLAYLIST", "Error adding song to playlist", e)
-                        }
-                } else {
-                    Log.d("PLAYLIST", "Song already in playlist")
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val playlist = document.toObject<Playlist>()
+                    if (!playlist.songIds.contains(songId)) {
+                        document.reference.update("songIds", FieldValue.arrayUnion(songId))
+                            .addOnSuccessListener {
+                                Log.d("PLAYLIST", "Song added to playlist")
+                                onSuccess?.invoke()
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w("PLAYLIST", "Error adding song to playlist", e)
+                            }
+                    } else {
+                        Log.d("PLAYLIST", "Song already in playlist")
+                    }
                 }
             }
             .addOnFailureListener { e ->
@@ -63,17 +63,21 @@ class PlaylistRepository private constructor() {
 
     fun deleteSongFromPlaylist(playlistId: String, songId: String, onSuccess: (() -> Unit)? = null) {
         db.collection("playlists")
-            .document(playlistId)
-            .update("songIds", FieldValue.arrayRemove(songId))
-            .addOnSuccessListener {
-                Log.d("PLAYLIST", "Song removed from playlist")
-                onSuccess?.invoke()
-            }
-            .addOnFailureListener { e ->
-                Log.w("PLAYLIST", "Error removing song from playlist", e)
+            .whereEqualTo("playlistId", playlistId)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    document.reference.update("songIds", FieldValue.arrayRemove(songId))
+                        .addOnSuccessListener {
+                            Log.d("PLAYLIST", "Song removed from playlist")
+                            onSuccess?.invoke()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("PLAYLIST", "Error removing song from playlist", e)
+                        }
+                }
             }
     }
-
 
     fun createPlaylist(playlist: Playlist, onSuccess: ((newPlaylist: Playlist) -> Unit)? = null,  onFailure: (() -> Unit)? = null) {
         playlist.playlistId = db.collection("playlists").document().id
