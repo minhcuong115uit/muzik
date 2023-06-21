@@ -72,7 +72,7 @@
                     android:layout_margin="16dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_more"
-
+                    android:onClick="@{()->viewmodel.showBottomDialog()}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"

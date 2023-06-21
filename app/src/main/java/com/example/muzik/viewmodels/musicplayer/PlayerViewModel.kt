@@ -1,6 +1,7 @@
 package com.example.muzik.viewmodels.musicplayer
 
 import android.content.Context
+import android.os.CountDownTimer
 import android.text.TextUtils
 import android.util.Log
 import androidx.databinding.ObservableField
@@ -38,8 +39,9 @@ class PlayerViewModel(): ViewModel() {
     private var _listRemoteSongs = mutableListOf<Song>()
     private var _listLocalSongs = mutableListOf<Song>()
     lateinit var player:ExoPlayer;
+    private var timer: CountDownTimer? = null
     var isGettingSongs = MutableLiveData(false);
-
+    var currentTimerValue =  ObservableField<String>("")
     var currentSongIndex = -1;
     var ellipsizeType  =  ObservableField(TextUtils.TruncateAt.MARQUEE)
     var currentSong = MutableLiveData<Song?>(null);
@@ -95,6 +97,36 @@ class PlayerViewModel(): ViewModel() {
         return _showBottomSheetMusic;
     }
 
+    fun setTimer(time: String) {
+        // Hủy bỏ timer cũ (nếu có)
+        timer?.cancel()
+
+        // Chuyển đổi giá trị time sang miliseconds
+        val timeInMillis = time.toLongOrNull()?.times(60000) ?: 0
+        Log.d("Timer","$timeInMillis")
+        // Tạo timer mới với giá trị mới
+        timer = object : CountDownTimer(timeInMillis, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val minutes = (millisUntilFinished / 1000) / 60
+                val seconds = (millisUntilFinished / 1000) % 60
+                currentTimerValue.set(String.format("%02d:%02d", minutes, seconds))
+
+            }
+
+            override fun onFinish() {
+                // Dừng Player khi hết thời gian
+                Log.d("Timer","Finish")
+                currentTimerValue.set("")
+                if(player.isPlaying)
+                    player.pause()
+            }
+        }
+        timer?.start()
+    }
+
+    fun showBottomDialog(){
+        currentSong.value?.let { this.getShowBottomSheetMusic()?.showBottomSheet(it) };
+    }
 
     fun setShowBottomSheetMusic(listener: ShowBottomSheetListener){
         this._showBottomSheetMusic = listener

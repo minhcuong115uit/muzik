@@ -22,6 +22,8 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -72,6 +74,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var libFragment: Fragment
     private lateinit var bottomSheetDialog: Dialog;
     private lateinit var playlistSheetDialog: Dialog;
+    private lateinit var TimeOptionsSheetDialog: Dialog;
     private lateinit var homeFragment: Fragment
     private lateinit var libraryViewmodel: LibraryViewModel
     private var notificationVisibility = NotificationCompat.VISIBILITY_PUBLIC
@@ -118,7 +121,7 @@ class MainActivity : AppCompatActivity(),
         mediaSession = MediaSessionCompat(this,"PlayerAudio");
         bindService(intent,this, BIND_AUTO_CREATE);
         askNotificationPermission();
-
+        binding.viewmodel = viewModel
         setObservation();
     }
     private fun initFragments() {
@@ -272,6 +275,7 @@ class MainActivity : AppCompatActivity(),
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_layout)
 
         val editLayout = bottomSheetDialog.findViewById<LinearLayout>(R.id.layoutEdit)
+        val timerLayout = bottomSheetDialog.findViewById<LinearLayout>(R.id.layoutSetTime)
         val songImage = bottomSheetDialog.findViewById<CircleImageView>(R.id.bottom_sheet_img)
         val name = bottomSheetDialog.findViewById<TextView>(R.id.bottom_sheet_song_name)
         val artist = bottomSheetDialog.findViewById<TextView>(R.id.bottom_sheet_song_artist)
@@ -284,13 +288,13 @@ class MainActivity : AppCompatActivity(),
 //        val uploadLayout = dialog.findViewById<LinearLayout>(R.id.layoutUpload)
 //        val printLayout = dialog.findViewById<LinearLayout>(R.id.layoutPrint)
 
-        editLayout.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                showPlaylistSheet(song)
-//                dialog.dismiss()
-            }
-        })
-
+        editLayout.setOnClickListener {
+            showPlaylistSheet(song)
+            //                dialog.dismiss()
+        }
+        timerLayout.setOnClickListener {
+            showTimeOptionsSheet()
+        }
         bottomSheetDialog.show()
         bottomSheetDialog.window!!.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -299,6 +303,31 @@ class MainActivity : AppCompatActivity(),
         bottomSheetDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         bottomSheetDialog.window!!.attributes.windowAnimations = R.style.BottomSheetAnimation
         bottomSheetDialog.window!!.setGravity(Gravity.BOTTOM)
+    }
+
+    override fun showTimeOptionsSheet() {
+        TimeOptionsSheetDialog = Dialog(this)
+        TimeOptionsSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        TimeOptionsSheetDialog.setContentView(R.layout.timer_sheet_layout)
+
+
+        val edt: EditText = TimeOptionsSheetDialog.findViewById<EditText>(R.id.edt_time)
+        val saveBtn: ImageView = TimeOptionsSheetDialog.findViewById<ImageView>(R.id.save_time_btn)
+
+
+        saveBtn.setOnClickListener {
+            viewModel.setTimer(edt.text.toString())
+            TimeOptionsSheetDialog.dismiss()
+            bottomSheetDialog.dismiss()
+        }
+        TimeOptionsSheetDialog.show()
+        TimeOptionsSheetDialog.window!!.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        TimeOptionsSheetDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        TimeOptionsSheetDialog.window!!.attributes.windowAnimations = R.style.BottomSheetAnimation
+        TimeOptionsSheetDialog.window!!.setGravity(Gravity.BOTTOM)
     }
 
     override fun closePlaylistSheet() {
