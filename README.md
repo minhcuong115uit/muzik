@@ -66,13 +66,13 @@ NT118.N12
 10. Phát nhạc ngầm
 11. Cài đặt thời gian phát nhạc
 
-## Sơ đồ phân ra chức nnawg và hình ảnh minh hoạ
+## Sơ đồ phân ra chức năng và hình ảnh minh hoạ
 <p align=" justify">
 Sơ đồ phân rã chức năng
 </p>
 </p>
 <p align="center">
-  <img src="picture/phanrachucnang.png" alt="Star Schema Diagram">
+  <img src="picture/phanrachucnang.png" style="width: 240px; height: auto;">
   <br>
   <em>Sơ đồ phân rã chức năng</em>
 </p>
@@ -81,33 +81,33 @@ Sơ đồ phân rã chức năng
 
 Một số màn hình giao diện ứng dụng
 <p align="center">
-  <img src="picture/Sign_Up.png" alt="Star Schema Diagram">
+  <img src="picture/Sign_Up.png" style="width: 240px; height: auto;">
   <br>
   <em>Màn hình giao diện đăng ký</em>
 </p>
 
 <p align="center">
-  <img src="picture/Sign_In.png" alt="Star Schema Diagram">
+  <img src="picture/Sign_In.png" style="width: 240px; height: auto;">
   <br>
   <em>Giao diện màn hình đăng nhập</em>
 </p>
 
 <p align="center">
-  <img src="picture/Home.png" alt="Star Schema Diagram">
+  <img src="picture/Home.png" style="width: 240px; height: auto;">
   <br>
   <em>Giao diện màn hình trang chủ</em>
 </p>
 
 <p align=" justify">
 <p align="center">
-  <img src="picture/phatnhac.png" alt="Star Schema Diagram">
+  <img src="picture/phatnhac.png" style="width: 240px; height: auto;">
   <br>
   <em>Giao diện màn hình phát nhạc</em>
 </p>
 
 
 <p align="center">
-  <img src="picture/comment.png" alt="Star Schema Diagram">
+  <img src="picture/comment.png" style="width: 240px; height: auto;">
   <br>
   <em>Giao diện màn hình bình luận</em>
 </p>
@@ -115,7 +115,7 @@ Một số màn hình giao diện ứng dụng
 
 
 <p align="center">
-  <img src="picture/Playlist.png" alt="Star Schema Diagram">
+  <img src="picture/Playlist.png" style="width: 240px; height: auto;">
   <br>
   <em>Giao diện màn hình danh sách playlist</em>
 </p>
