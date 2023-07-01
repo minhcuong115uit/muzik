@@ -1,105 +1,127 @@
-<h1 align="center">Tiki Data Scraping and Datawarehouse Building Project
+<h1 align="center">ĐỒ ÁN MÔN PHÁT TRIỂN ỨNG DỤNG TRÊN THIẾT BỊ DI ĐỘNG
 </h1>
-<p align="center"><i>Nguyễn Đạt - Project intern tại DataGenius</i></p>
-<p align=" justify">
+<h1 align="center">
+NT118.N12
+</h1>
 
-- Người thực hiện: Nguyễn Đạt
+## NHÓM SINH VIÊN THỰC HIỆN
 
-- Địa chỉ email: nguyendat.uit@gmail.com
-</p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
+.tg .tg-7btt{border-color:inherit;font-weight:bold;text-align:center;vertical-align:top}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+</style>
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-7btt">STT</th>
+    <th class="tg-7btt">HỌ TÊN</th>
+    <th class="tg-7btt">HỌ TÊN SINH VIÊN</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-7btt">1</td>
+    <td class="tg-0pky">Trần Quốc Khánh</td>
+    <td class="tg-c3ow">20520578</td>
+  </tr>
+  <tr>
+    <td class="tg-7btt">2</td>
+    <td class="tg-0pky">Nguyễn Đạt</td>
+    <td class="tg-c3ow">20520434</td>
+  </tr>
+  <tr>
+    <td class="tg-7btt">3</td>
+    <td class="tg-0pky">Nguyễn Minh Cường</td>
+    <td class="tg-c3ow">20520422</td>
+  </tr>
+</tbody>
+</table>
 
 ## Giới thiệu
 <p align=" justify">
-- Đây là dự án được thiết kế và thực hiện để phục vụ cho vòng phỏng vấn vị trí Intern Data Engineer tại công ty DataGenius. Project này, tôi sử dụng API của tiki để xây dựng pipeline stream (luồng dữ liệu trực tiếp để crawl và đẩy vào mysql) được mô tả như sau: Từ list category là danh sách người dùng muốn thu thập dữ liệu từ tiki sau đó tiến hành crawl product_id và thông tin chi tiết mỗi sản phẩm, mỗi quá trình đều được tiền xử lý xoá các bản ghi trùng lặp trước khi đẩy vào database. Sau khi có dữ liệu tiến hành phân cấp dữ liệu theo cấu trúc Star Schema (lược đồ hình sao).
+- Project này là dự án được thiết kế và thực hiện để phục vụ Đồ án môn Phát triển ứng dụng trên thiết bị di động với đề tài Xây dựng Mạng Xã Hội chia sẽ âm nhạc 432Hz Musik. Thông qua project này các thành viên học các quản lý thời gian, quản lý công việc và hoàn thiện
+
 </p>
 <p>
-- Công nghệ và thư viện sử dụng: Python, MySQL, </p>
-- Tiki : https://tiki.vn/
-
+- Công nghệ và thư viện sử dụng: Kotlin, Firebase, Android Studio,... </p>
 </p>
 
 
-## Mô tả quá trình Crawl Data
+## Chức năng
+1. Đăng ký tài khoản
+2. Đăng nhập tài khoản
+3. Quên mật khẩu
+4. Thêm xoá sửa playlist
+5. Thích bài hát
+6. Bình luận, trả lời bình luận
+7. Tìm kiếm
+8. Phát nhạc được lưu trong thiết bị
+9. Điều khiển bài hát thông qua notifications
+10. Phát nhạc ngầm
+11. Cài đặt thời gian phát nhạc
+
+## Sơ đồ phân ra chức nnawg và hình ảnh minh hoạ
 <p align=" justify">
-- Phân tích trang tiki và thử tạo một mô hình datawarehouse theo Star Schema trước, mô hình này sẽ thay đổi liên tục để phù hợp với dữ liệu crawl được.
+Sơ đồ phân rã chức năng
+</p>
+</p>
+<p align="center">
+  <img src="picture/phanrachucnang.png" alt="Star Schema Diagram">
+  <br>
+  <em>Sơ đồ phân rã chức năng</em>
+</p>
+</p>
 </p>
 
-<p align=" justify">
-- Crawl sản phẩm dựa vào list category, ở đây tôi đã crawl 5 danh mục bao gồm: "dien-thoai-may-tinh-bang, lam-dep-suc-khoe, nha-cua-doi-song, thiet-bi-kts-phu-kien-so,dong-ho-va-trang-suc" được nhập từ file Categories.txt từ những danh mục này trích xuất ra các product_id, để mở rộng sản phẩm lấy được thêm sort để lấy tất cả sản phẩm bảo gồm: default,top_seller , newest, price_asc, price_desc bao gồm sắp xếp mặc định, bán chạy,... tuy nhiên trong quá trình craw thì các product_id trùng -> đã xử lý id trùng trước khi lưu vào mysql,... tổng cộng crawl được 36285 product_id
-</p>
-</p>
+Một số màn hình giao diện ứng dụng
 <p align="center">
-  <img src="picture/craw_id.png" alt="Star Schema Diagram">
+  <img src="picture/Sign_Up.png" alt="Star Schema Diagram">
   <br>
-  <em>Xử lý đa luồng khi crawl để tăng tốc</em>
-</p>
-</p>
-</p>
-<p align="center">
-  <img src="picture/Crawl_Product_id.png" alt="Star Schema Diagram">
-  <br>
-  <em>Product ID lưu trực tiếp vào mysql đã xoá các id trùng</em>
-</p>
-<p align=" justify">
-- Tiếp theo, load lại product_id từ mysql để crawl thông tin chi tiết mỗi sản phẩm, vì đây là luồng streams nên tôi đã sử dụng đa luồng để tăng tốc độ crawl xử lý 4 luồng, và ngoài ra vì luồng dữ liệu crawl lớn nên đã áp dụng các biện pháp để lặp lại đối với dữ liệu không thành công, vì quá trình streams với dữ liệu lớn nên không tránh được việc server chặn ip tuy nhiên đoạn code của tôi, tôi đã tối ưu trong khả năng việc bị chặn và lặp lại quá trình nếu lỗi,... chi tiết trong mã nguồn.
-</p>
-<p align="center">
-  <img src="picture/Crawl_product_data.png" alt="Star Schema Diagram">
-  <br>
-  <em>Quá trình crawl sản phẩm</em>
-</p>
-</p>
-<p align="center">
-  <img src="picture/data_save_mysql.png" alt="Star Schema Diagram">
-  <br>
-  <em>Thông tin 36285 product từ 5 danh mục được lưu vào bảng tạm thời</em>
-</p>
-<p align=" justify">
-
-## Mô tả quá trình Phân cấp dữ liệu và xây dựng Datawarehouse.
-<p align="justify">
-Vì hạn chế về dữ liệu crawl được nên tôi chỉ có thể xây dựng một mô hình datawarehouse theo cấu trúc Star Schema trong khả năng bao gồm 1 bảng fact: Fact_sales và 3 bản dim bao gồm Dim_Product, Dim_Brand, Dim_Category như sau:
-</p>
-<p align="center">
-  <img src="DWH/final_star_schema.png" alt="Star Schema Diagram">
-  <br>
-  <em>Mô hình Star Schema</em>
-</p>
-</p>
-<p align="center">
-  <img src="picture/fact_sales.png" alt="Star Schema Diagram">
-  <br>
-  <em>Dữ liệu sau khi được đẩy vào fact_sales</em>
-</p>
-</p>
-<p align="center">
-  <img src="picture/dim_product.png" alt="Star Schema Diagram">
-  <br>
-  <em>Dữ liệu sau khi được đẩy vào dim_product</em>
+  <em>Màn hình giao diện đăng ký</em>
 </p>
 
 <p align="center">
-  <img src="picture/dim_brand.png" alt="Star Schema Diagram">
+  <img src="picture/Sign_In.png" alt="Star Schema Diagram">
   <br>
-  <em>Dữ liệu sau khi được đẩy vào dim_brand</em>
+  <em>Giao diện màn hình đăng nhập</em>
 </p>
+
 <p align="center">
-  <img src="picture/dim_category.png" alt="Star Schema Diagram">
+  <img src="picture/Home.png" alt="Star Schema Diagram">
   <br>
-  <em>Dữ liệu sau khi được đẩy vào dim_category</em>
+  <em>Giao diện màn hình trang chủ</em>
 </p>
+
+<p align=" justify">
+<p align="center">
+  <img src="picture/phatnhac.png" alt="Star Schema Diagram">
+  <br>
+  <em>Giao diện màn hình phát nhạc</em>
+</p>
+
+
+<p align="center">
+  <img src="picture/comment.png" alt="Star Schema Diagram">
+  <br>
+  <em>Giao diện màn hình bình luận</em>
+</p>
+
+
+
+<p align="center">
+  <img src="picture/Playlist.png" alt="Star Schema Diagram">
+  <br>
+  <em>Giao diện màn hình danh sách playlist</em>
+</p>
+
 
 ## Cài đặt và hướng dẫn sử dụng:
-- Cài đặt các thư viện tenacity, sqlalchemy,... trước khi khởi chạy chương trình.
-- Thay đổi địa chỉ thư mục Categories.txt, mặc định phải tạo theo đường dẫn ./Data/Categories.txt
-- Môi trường thử nghiệm: Python 3.11.4.
-- Thay đổi tham số cấu hình MySQL phù hợp.
-- Chạy file Craw_product.ipynb: Chương trình sẽ tự động tạo bảng, crawl product_id, product tiền xử lý dữ liệu trước khi lưu vào database
-- Chạy file datawarehouse.ipynb: Để thực hiện quá trình connect, ETL,....
-
-## Nhận xét: 
-<p align="justify">
-- Thông qua bài kiểm tra, tôi nhận thấy bài test khá thú vị và tôi đã học được rất nhiều điều từ dự án này, tuy nhiên còn một số vấn đề tôi chưa xử lý được, tôi hi vọng trong tương lai sẽ áp dụng các công cụ như Apache NiFi, Talend, hay StreamSets để đưa dữ liệu vào DW mà sử dụng trực tiếp python vì thời gian gấp rút cũng như với lượng database nhỏ nên tôi áp dụng luôn python. Hi vọng nếu được làm việc với công ty tôi sẽ cố gắng học hỏi và hoàn thiện bản thân hơn. Qua đây, tôi cũng trân trọng cảm ơn phía công ty đã giao project khá thú vị này cho tôi.
-</p>
-
+- Clone github từ link: https://github.com/minhcuong115uit/muzik.git
+- Khởi chạy bằng ứng dụng Android Studio.
 
